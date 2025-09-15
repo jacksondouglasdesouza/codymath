@@ -1,0 +1,1 @@
+export { greekAlphabet } from './alphabets/greek';
