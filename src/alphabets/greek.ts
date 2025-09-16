@@ -1,6 +1,6 @@
 /**
  * @fileoverview Initial module for CodyMath containing the Greek alphabet.
- * @version 0.1.0
+ * @version 0.2.0
  * @license MIT
  * * @author Jackson Douglas de Souza
  * @see {@link https://www.linkedin.com/in/jacksondouglasdsouza/|LinkedIn}

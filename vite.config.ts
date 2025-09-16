@@ -7,12 +7,22 @@ import { defineConfig } from 'vite';
 export default defineConfig({
     build: {
         lib: {
-        entry: resolve(__dirname, 'src/index.ts'),
-        name: 'CodyMath', // UMD global variable name
-        fileName: (format) => `codymath.${format}.js`,
+            entry: resolve(__dirname, 'src/index.ts'),
+            name: 'CodyMath',
+            formats: ['es', 'cjs', 'umd'],
+            fileName: (format) => {
+                if (format === 'es') {
+                    return 'codymath.js';
+                }
+                if (format === 'cjs') {
+                    return 'codymath.cjs';
+                }
+                return `codymath.${format}.js`;
+            },
         },
+        sourcemap: true,
     },
     test: {
-        // Vitest config will go here
+        // ... Vitest config will go here
     },
 });
