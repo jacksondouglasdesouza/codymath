@@ -5,7 +5,7 @@
   <a href="https://www.npmjs.com/package/codymath" target="_blank">
     <img src="./assets/Npm-logo.svg" alt="NPM Package" width="100">
   </a>
-  <strong>Current Status: Early Development (v0.3.0)</strong>
+  <strong>Current Status: Early Development (v0.3.1)</strong>
 </div>
 CodyMath is on a mission to become the most complete open-source mathematics library for JavaScript and TypeScript. By implementing thousands of rigorously tested formulas from authoritative sources, we provide a universal toolbox for developers, students, and researchers worldwide.
 

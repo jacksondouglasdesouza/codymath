@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview Foundational mathematical constants for the CodyMath library.
- * @version 0.3.0
+ * @version 0.3.1
  * @license MIT
  * @author Jackson Douglas de Souza
  * @see {@link https://www.linkedin.com/in/jacksondouglasdsouza/|LinkedIn}
