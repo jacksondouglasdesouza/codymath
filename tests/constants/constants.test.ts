@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview Unit tests for the mathematical constants module.
- * @version 0.2.0
+ * @version 0.3.0
  * @license MIT
  * @author Jackson Douglas de Souza
  * @date 2025-09-16
