@@ -4,7 +4,7 @@ import { constants } from '../constants/constants';
 
 /**
  * @fileoverview Core arithmetic, number theory, and utility functions.
- * @version 0.3.1
+ * @version 0.4.0
  * @license MIT
  * @author Jackson Douglas de Souza
  * @see {@link https://www.linkedin.com/in/jacksondouglasdsouza/|LinkedIn}
@@ -176,3 +176,236 @@ export function log(n: number, base: number): number {
     return divide(ln(n), ln(base));
 }
 
+/**
+ * Finds the Greatest Common Divisor (GCD) of two integers using the Euclidean algorithm.
+ * Floats are truncated, and the absolute value of the numbers is used.
+ * @param {number} a The first integer.
+ * @param {number} b The second integer.
+ * @returns {number} The greatest common divisor of a and b.
+ */
+export function gcd(a: number, b: number): number {
+    let numA = Math.abs(Math.trunc(a));
+    let numB = Math.abs(Math.trunc(b));
+
+    while (numB) {
+        [numA, numB] = [numB, numA % numB];
+    }
+
+    return numA;
+}
+
+/**
+ * Finds the Least Common Multiple (LCM) of two integers.
+ * The calculation is based on the formula: lcm(a, b) = (|a * b|) / gcd(a, b).
+ * @param {number} a The first integer. Floats are truncated.
+ * @param {number} b The second integer. Floats are truncated.
+ * @returns {number} The least common multiple of a and b. Returns 0 if either a or b is 0.
+ */
+export function lcm(a: number, b: number): number {
+    const numA = Math.abs(Math.trunc(a));
+    const numB = Math.abs(Math.trunc(b));
+
+    // The LCM of any number and 0 is 0.
+    if (numA === 0 || numB === 0) {
+        return 0;
+    }
+
+    // Using the formula: |a * b| / gcd(a, b)
+    // We can use numA and numB directly in gcd because they are already processed.
+    return (numA * numB) / gcd(numA, numB);
+}
+
+/**
+ * Checks if a number is prime using an optimized trial division method.
+ * A number is prime if it is greater than 1 and has no positive divisors other than 1 and itself.
+ * @param {number} n The integer to check. Floats are truncated.
+ * @returns {boolean} `true` if the number is prime, otherwise `false`.
+ */
+export function isPrime(n: number): boolean {
+    const num = Math.trunc(n);
+
+    if (num <= 1) {
+        return false;
+    }
+
+    if (num === 2) {
+        return true;
+    }
+
+    if (num % 2 === 0) {
+        return false;
+    }
+
+    const limit = sqrt(num);
+    for (let i = 3; i <= limit; i += 2) {
+        if (num % i === 0) {
+            return false;
+        }
+    }
+
+    return true;
+}
+
+/**
+ * Checks if a number is even.
+ * @param {number} n The integer to check. Floats are truncated.
+ * @returns {boolean} `true` if the number is even, otherwise `false`.
+ */
+export function isEven(n: number): boolean {
+    const num = Math.trunc(n);
+    return num % 2 === 0;
+}
+
+/**
+ * Checks if a number is odd.
+ * @param {number} n The integer to check. Floats are truncated.
+ * @returns {boolean} `true` if the number is odd, otherwise `false`.
+ */
+export function isOdd(n: number): boolean {
+    // An odd number is simply not an even number.
+    // This ensures internal consistency with isEven().
+    return !isEven(n);
+}
+
+/**
+ * Calculates the factorial of a non-negative integer (n!).
+ * The factorial of n is the product of all positive integers up to n.
+ * Note: Factorials grow very quickly. This function will return `Infinity` for n > 170.
+ * @param {number} n The non-negative integer. Floats are truncated.
+ * @returns {number} The factorial of n. Returns 1 for n = 0. Returns NaN for negative inputs.
+ */
+export function factorial(n: number): number {
+    const num = Math.trunc(n);
+
+    // Factorial is not defined for negative numbers.
+    if (num < 0) {
+        return NaN;
+    }
+
+    if (num === 0) {
+        return 1;
+    }
+
+    let result = 1;
+    for (let i = 2; i <= num; i++) {
+        result *= i;
+    }
+
+    return result;
+}
+
+/**
+ * Returns the absolute value of a number.
+ * The absolute value of a number is its distance from zero, always non-negative.
+ * @param {number} n The number to find the absolute value of.
+ * @returns {number} The absolute value of the number.
+ */
+export function absolute(n: number): number {
+    return Math.abs(n);
+}
+
+/**
+ * Rounds a number to a specified number of decimal places.
+ * Supports rounding to negative decimal places (e.g., rounding to the nearest 10 or 100).
+ * @param {number} n The number to round.
+ * @param {number} decimals The number of decimal places to round to. Can be negative. Defaults to 0.
+ * @returns {number} The rounded number.
+ */
+export function round(n: number, decimals: number = 0): number {
+    const d = Math.trunc(decimals);
+    
+    const factor = power(10, d);
+    const rounded = Math.round(n * factor) / factor;
+    
+    return Number(rounded.toPrecision(15));
+}
+
+/**
+ * Returns the largest integer less than or equal to a given number (rounding down).
+ * @param {number} n The number to apply the floor operation to.
+ * @returns {number} The largest integer less than or equal to n.
+ */
+export function floor(n: number): number {
+    return Math.floor(n);
+}
+
+/**
+ * Returns the smallest integer greater than or equal to a given number (rounding up).
+ * @param {number} n The number to apply the ceil operation to.
+ * @returns {number} The smallest integer greater than or equal to n.
+ */
+export function ceil(n: number): number {
+    return Math.ceil(n);
+}
+
+/**
+ * Returns the integer part of a number by removing any fractional digits.
+ * @param {number} n The number to truncate.
+ * @returns {number} The integer part of the number.
+ */
+export function trunc(n: number): number {
+    return Math.trunc(n);
+}
+
+/**
+ * Returns the sign of a number, indicating whether the number is positive, negative, or zero.
+ * @param {number} n The number to check the sign of.
+ * @returns {number} -1 if n is negative, 0 if n is zero, 1 if n is positive.
+ */
+export function sign(n: number): number {
+    return Math.sign(n);
+}
+
+/**
+ * Clamps a number within the inclusive lower and upper bounds.
+ * @param {number} value The number to clamp.
+ * @param {number} min The lower bound.
+ * @param {number} max The upper bound.
+ * @returns {number} The clamped number. Returns NaN if any argument is NaN.
+ */
+export function clamp(value: number, min: number, max: number): number {
+    return Math.min(Math.max(value, min), max);
+}
+
+/**
+ * Performs linear interpolation between two numbers.
+ * @param {number} a The start point.
+ * @param {number} b The end point.
+ * @param {number} t The interpolation factor, typically between 0 and 1.
+ * @returns {number} The interpolated value.
+ */
+export function lerp(a: number, b: number, t: number): number {
+    return a * (1 - t) + b * t;
+}
+
+/**
+ * Checks if a number is within a given range (inclusive).
+ * @param {number} n The number to check.
+ * @param {number} start The start of the range.
+ * @param {number} end The end of the range.
+ * @returns {boolean} `true` if the number is within the range, otherwise `false`.
+ */
+export function isInRange(n: number, start: number, end: number): boolean {
+    return n >= start && n <= end;
+}
+
+/**
+ * Calculates the mathematical modulo of two numbers.
+ * This differs from the JavaScript remainder operator (%) in its handling of negative numbers.
+ * The result will always have the same sign as the divisor.
+ * @param {number} a The dividend.
+ * @param {number} b The divisor.
+ * @returns {number} The result of the modulo operation.
+ */
+export function mod(a: number, b: number): number {
+    return ((a % b) + b) % b;
+}
+
+/**
+ * Checks if a number is negative zero (-0).
+ * @param {number} n The number to check.
+ * @returns {boolean} `true` if the number is negative zero, otherwise `false`.
+ */
+export function isNegativeZero(n: number): boolean {
+    return n === 0 && (1 / n) === -Infinity;
+}
