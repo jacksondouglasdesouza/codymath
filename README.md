@@ -22,8 +22,10 @@ Thank you for your support!
 | Method | Address / Link |
 | :--- | :--- |
 | ![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white) | [`Click here to donate via PayPal`](https://www.paypal.com/donate/?hosted_button_id=8XYHYQNR2E27J) |
+| ![Coinbase](https://img.shields.io/badge/Coinbase-0052FF?style=for-the-badge&logo=coinbase&logoColor=white) | [`Click here to donate via Coinbase`](https://commerce.coinbase.com/checkout/959b8db0-848e-4e3b-8620-3a24dab24baf) |
 | ![Bitcoin](https://img.shields.io/badge/Bitcoin-000000?style=for-the-badge&logo=bitcoin&logoColor=white) | `bc1q3zu0nng6765ptpmr86jcfn68h6e62sda7382e3` |
 | ![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white) | `0xF7Eb1D45cDD527b11BC49416DDfA51AD38e26ca1` |
+
 ## Usage
 
 ### Installation
@@ -1070,6 +1072,7 @@ Thank you for your support!
 | Method | Address / Link |
 | :--- | :--- |
 | ![PayPal](https://img.shields.io/badge/PayPal-00457C?style=for-the-badge&logo=paypal&logoColor=white) | [`Click here to donate via PayPal`](https://www.paypal.com/donate/?hosted_button_id=8XYHYQNR2E27J) |
+| ![Coinbase](https://img.shields.io/badge/Coinbase-0052FF?style=for-the-badge&logo=coinbase&logoColor=white) | [`Click here to donate via Coinbase`](https://commerce.coinbase.com/checkout/959b8db0-848e-4e3b-8620-3a24dab24baf) |
 | ![Bitcoin](https://img.shields.io/badge/Bitcoin-000000?style=for-the-badge&logo=bitcoin&logoColor=white) | `bc1q3zu0nng6765ptpmr86jcfn68h6e62sda7382e3` |
 | ![Ethereum](https://img.shields.io/badge/Ethereum-3C3C3D?style=for-the-badge&logo=ethereum&logoColor=white) | `0xF7Eb1D45cDD527b11BC49416DDfA51AD38e26ca1` |
 
