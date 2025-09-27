@@ -1,11 +1,11 @@
 <p align="center">
-  <img src="./assets/logoCodyMath.svg" alt="CodyMath Logo" width="400">
+  <img src="./assets/CodyMathLibBanner.png" alt="CodyMath Logo">
 </p>
 <div style="display: flex; align-items: center; gap: 20px;">
   <a href="https://www.npmjs.com/package/codymath" target="_blank">
     <img src="./assets/Npm-logo.svg" alt="NPM Package" width="100">
   </a>
-  | <strong> Current Status: Early Development (v0.4.0)</strong>
+  | <strong> Current Status: Early Development (v0.5.0)</strong>
 </div>
 CodyMath is on a mission to become the most complete open-source mathematics library for JavaScript and TypeScript. By implementing thousands of rigorously tested formulas from authoritative sources, we provide a universal toolbox for developers, students, and researchers worldwide.
 
@@ -392,8 +392,6 @@ console.log(`Γ(1/4) = ${constants.gammaOneFourth}`);
 // Output: Γ(1/4) = 3.6256099082219083
 
 ```
---- 
-
 <details>
 <summary><strong>🧪Click here to see the test result </strong></summary>
 
@@ -1057,6 +1055,186 @@ console.log(`isNegativeZero(-5): ${arithmetic.isNegativeZero(-5)}`);
 </details>
 
 ---
+### Module: `utils/utils`
+
+This module provides a comprehensive toolkit of high-level utility functions, designed to tackle common, real-world problems across domains such as data formatting, geometry, and numerical analysis.
+A standout feature is the powerful toWords function suite, offering robust number-to-word conversion for over 30 of the world's most spoken languages. Each translation is meticulously engineered to handle the complex grammatical and orthographic rules of its locale—from English and Spanish to Brazilian Portuguese and beyond—making it a truly global and reliable utility for any application.
+
+| Function | Syntax | Description | Key |
+| :--- | :--- | :--- | :--- |
+| **Map** | `map(value, inMin, inMax, outMin, outMax)` | Remaps a number from one range to another. | `map` |
+| **Random** | `random(min?, max?)` | Generates a pseudo-random floating-point number within a specified range. | `random` |
+| **Random Float** | `randomFloat()` | Generates a pseudo-random floating-point number between 0 (inclusive) and 1 (exclusive). | `randomFloat` |
+| **Is Nearly Equal** | `isNearlyEqual(a, b, epsilon?)` | Compares two floating-point numbers for approximate equality within a tolerance. | `isNearlyEqual`|
+| **Is Power of Two**| `isPowerOfTwo(n)` | Checks if a number or BigInt is a power of two. | `isPowerOfTwo`|
+| **Distance** | `distance(x1, y1, x2, y2)` | Calculates the 2D Euclidean distance between two points. | `distance` |
+| **Format Currency**| `formatCurrency(n, options?)` | Formats a number as a customizable currency string. | `formatCurrency`|
+| **To Words (Pure)**| `toWordsPure(n, lang?)` | Converts a number into its written-out 'pure' representation. | `toWordsPure` |
+| **To Words (Currency)**|`toWordsCurrency(n, options?)`| Converts a number into its written-out currency representation. | `toWordsCurrency`|
+| **Get Integer Part**|`getIntegerPart(n)`| Returns the integer part of a number, with handling for unsafe integers. | `getIntegerPart`|
+| **Get Fractional Part**|`getFractionalPart(n)`| Returns the fractional part of a number, with precision correction. | `getFractionalPart`|
+| **Count Digits**| `countDigits(n)` | Counts the number of digits in the integer part of a number. | `countDigits`|
+| **Count Digits Detailed**|`countDigitsDetailed(n)`| Returns an object with the digit counts of the integer and fractional parts. | `countDigitsDetailed`|
+| **Pad Zeroes** | `padZeroes(n, length)` | Pads the integer part of a number with leading zeros to a specified length. | `padZeroes`|
+
+```javascript
+import { utils } from 'codymath';
+
+// --- map ---
+console.log(`map(50, 0, 100, 0, 1): ${utils.map(50, 0, 100, 0, 1)}`);
+// Output: map(50, 0, 100, 0, 1): 0.5
+console.log(`map(25, 0, 50, 100, 0): ${utils.map(25, 0, 50, 100, 0)}`);
+// Output: map(25, 0, 50, 100, 0): 50
+console.log(`map(10, -10, 30, 0, 1): ${utils.map(10, -10, 30, 0, 1)}`);
+// Output: map(10, -10, 30, 0, 1): 0.5
+
+// --- random ---
+console.log(`random(): ${utils.random()}`);
+// Output: random(): 0.763... (example)
+console.log(`random(10, 20): ${utils.random(10, 20)}`);
+// Output: random(10, 20): 15.234... (example)
+console.log(`random(-50, -25): ${utils.random(-50, -25)}`);
+// Output: random(-50, -25): -35.817... (example)
+
+// --- randomFloat ---
+console.log(`randomFloat(): ${utils.randomFloat()}`);
+// Output: randomFloat(): 0.481... (example)
+console.log(`randomFloat(): ${utils.randomFloat()}`);
+// Output: randomFloat(): 0.915... (example)
+console.log(`randomFloat(): ${utils.randomFloat()}`);
+// Output: randomFloat(): 0.203... (example)
+
+// --- isNearlyEqual ---
+console.log(`isNearlyEqual(0.1 + 0.2, 0.3): ${utils.isNearlyEqual(0.1 + 0.2, 0.3)}`);
+// Output: isNearlyEqual(0.1 + 0.2, 0.3): true
+console.log(`isNearlyEqual(5, 5.01): ${utils.isNearlyEqual(5, 5.01)}`);
+// Output: isNearlyEqual(5, 5.01): false
+console.log(`isNearlyEqual(5, 5.01, 0.1): ${utils.isNearlyEqual(5, 5.01, 0.1)}`);
+// Output: isNearlyEqual(5, 5.01, 0.1): true
+
+// --- isPowerOfTwo ---
+console.log(`isPowerOfTwo(16): ${utils.isPowerOfTwo(16)}`);
+// Output: isPowerOfTwo(16): true
+console.log(`isPowerOfTwo(15.999): ${utils.isPowerOfTwo(15.999)}`);
+// Output: isPowerOfTwo(15.999): false
+console.log(`isPowerOfTwo(2n ** 100n): ${utils.isPowerOfTwo(2n ** 100n)}`);
+// Output: isPowerOfTwo(2n ** 100n): true
+
+// --- distance ---
+console.log(`distance(0, 0, 3, 4): ${utils.distance(0, 0, 3, 4)}`);
+// Output: distance(0, 0, 3, 4): 5
+console.log(`distance(-1, -1, 1, 1): ${utils.distance(-1, -1, 1, 1)}`);
+// Output: distance(-1, -1, 1, 1): 2.8284271247461903
+console.log(`distance(50, 50, 50, 50): ${utils.distance(50, 50, 50, 50)}`);
+// Output: distance(50, 50, 50, 50): 0
+
+// --- formatCurrency ---
+console.log(`formatCurrency(1234.5): "${utils.formatCurrency(1234.5)}"`);
+// Output: formatCurrency(1234.5): "$1,234.50"
+console.log(`formatCurrency(1234.5, { currencySymbol: 'R$ ', thousandsSeparator: '.', decimalSeparator: ',' }): "${utils.formatCurrency(1234.5, { currencySymbol: 'R$ ', thousandsSeparator: '.', decimalSeparator: ',' })}"`);
+// Output: formatCurrency(1234.5, { ... }): "R$ 1.234,50"
+console.log(`formatCurrency(99.995, { decimals: 2, currencySymbol: '€' }): "${utils.formatCurrency(99.995, { decimals: 2, currencySymbol: '€' })}"`);
+// Output: formatCurrency(99.995, { ... }): "€100.00"
+
+```
+#### Natural Language: `toWords`
+
+The `toWords` suite is one of the most powerful features of CodyMath, offering highly detailed and grammatically correct number-to-word conversions. It is divided into two main functions to cover distinct use cases.
+
+##### `toWordsPure(n, lang?)`
+
+This function provides a "pure" or literal representation of a number in words. The fractional part is handled by spelling out each digit individually after the separator word (e.g., "point", "vírgula", "coma").
+
+**Example:**
+`toWordsPure(120.01, 'pt-BR')` returns `"cento e vinte vírgula zero um"`.
+
+##### `toWordsCurrency(n, options?)`
+
+This function converts a number into a proper currency representation, correctly handling rounding to two decimal places, singular vs. plural forms for both major and minor currency units, and the appropriate connectors.
+
+**Example:**
+`toWordsCurrency(1.01, { lang: 'es-ES' })` returns `"un euro con un céntimo"`.
+
+##### Multi-Language Support
+
+Our goal for this feature is ambitious: to provide grammatically accurate support for **over 30 of the world's most spoken languages**. This is an ongoing effort, and we will be rolling out new languages incrementally.
+
+**Currently Supported Languages:**
+* `en-US` (Default)
+* `pt-BR` (Brazilian Portuguese)
+* `es-ES` (Spanish)
+
+##### A Note on Complexity & Community Contributions
+
+Converting numbers to words is a deceptively complex task, as grammatical rules can be incredibly intricate and vary significantly between languages. We have strived for maximum accuracy based on formal grammar rules and extensive testing.
+
+However, some regional variations or subtle exceptions may still exist. If you find any grammatical inconsistency or have a suggestion for improving a translation, **we kindly ask you to open an Issue on our GitHub repository**. Community feedback is invaluable in making this feature truly world-class and reliable for everyone.
+
+```javascript
+
+// --- toWordsPure ---
+console.log(`toWordsPure(-99.01): "${utils.toWordsPure(-99.01)}"`);
+// Output: toWordsPure(-99.01): "minus ninety nine point zero one"
+console.log(`toWordsPure(1001, 'pt-BR'): "${utils.toWordsPure(1001, 'pt-BR')}"`);
+// Output: toWordsPure(1001, 'pt-BR'): "mil e um"
+console.log(`toWordsPure(21000000, 'es-ES'): "${utils.toWordsPure(21000000, 'es-ES')}"`);
+// Output: toWordsPure(21000000, 'es-ES'): "veintiún millones"
+
+// --- toWordsCurrency ---
+console.log(`toWordsCurrency(1.01): "${utils.toWordsCurrency(1.01)}"`);
+// Output: toWordsCurrency(1.01): "one dollar and one cent"
+console.log(`toWordsCurrency(25.995, { lang: 'pt-BR' }): "${utils.toWordsCurrency(25.995, { lang: 'pt-BR' })}"`);
+// Output: toWordsCurrency(25.995, { lang: 'pt-BR' }): "vinte e seis reais"
+console.log(`toWordsCurrency(1, { lang: 'es-ES', majorSingular: 'peso', majorPlural: 'pesos' }): "${utils.toWordsCurrency(1, { lang: 'es-ES', majorSingular: 'peso', majorPlural: 'pesos' })}"`);
+// Output: toWordsCurrency(1, { ... }): "un peso"
+
+// --- getIntegerPart ---
+console.log(`getIntegerPart(123.45): ${utils.getIntegerPart(123.45)}`);
+// Output: getIntegerPart(123.45): 123
+console.log(`getIntegerPart(-99.99): ${utils.getIntegerPart(-99.99)}`);
+// Output: getIntegerPart(-99.99): -99
+try {
+    utils.getIntegerPart(Number.MAX_SAFE_INTEGER + 10);
+} catch (e) {
+    console.log(`getIntegerPart(unsafe): ${e.message}`);
+}
+// Output: getIntegerPart(unsafe): Input number is outside the safe integer range and may cause precision loss.
+
+// --- getFractionalPart ---
+console.log(`getFractionalPart(-99.99): ${utils.getFractionalPart(-99.99)}`);
+// Output: getFractionalPart(-99.99): -0.99
+console.log(`getFractionalPart(0.1 + 0.2): ${utils.getFractionalPart(0.1 + 0.2)}`);
+// Output: getFractionalPart(0.1 + 0.2): 0.3
+console.log(`getFractionalPart(50): ${utils.getFractionalPart(50)}`);
+// Output: getFractionalPart(50): 0
+
+// --- countDigits ---
+console.log(`countDigits(12345): ${utils.countDigits(12345)}`);
+// Output: countDigits(12345): 5
+console.log(`countDigits(-123.45): ${utils.countDigits(-123.45)}`);
+// Output: countDigits(-123.45): 3
+console.log(`countDigits(0): ${utils.countDigits(0)}`);
+// Output: countDigits(0): 1
+
+// --- countDigitsDetailed ---
+console.log(`countDigitsDetailed(123.45):`, utils.countDigitsDetailed(123.45));
+// Output: countDigitsDetailed(123.45): { integer: 3, fractional: 2 }
+console.log(`countDigitsDetailed(-987):`, utils.countDigitsDetailed(-987));
+// Output: countDigitsDetailed(-987): { integer: 3, fractional: 0 }
+console.log(`countDigitsDetailed(0.12345):`, utils.countDigitsDetailed(0.12345));
+// Output: countDigitsDetailed(0.12345): { integer: 1, fractional: 5 }
+
+// --- padZeroes ---
+console.log(`padZeroes(42, 5): "${utils.padZeroes(42, 5)}"`);
+// Output: padZeroes(42, 5): "00042"
+console.log(`padZeroes(-42.8, 5): "${utils.padZeroes(-42.8, 5)}"`);
+// Output: padZeroes(-42.8, 5): "-00042"
+console.log(`padZeroes(12345, 3): "${utils.padZeroes(12345, 3)}"`);
+// Output: padZeroes(12345, 3): "12345"
+
+```
+
+---
 
 ## Author
 
@@ -1086,9 +1264,13 @@ This library is built upon the foundational knowledge established by generations
 -   The [Wolfram MathWorld](https://pt.wikipedia.org/wiki/MathWorld), a comprehensive online mathematical encyclopedia.
 -   Gradshteyn, I. S., & Ryzhik, I. M. *Table of Integrals, Series, and Products*.
 -   The [ECMA International. (2025). *ECMAScript® 2025 Language Specification](https://tc39.es/ecma262/)
+-   Linguistic & Number-to-Word Rules | <strong>toWordsCurrency()</strong> | <strong>toWordsPure()</strong>
+-   Real Academia Española (RAE). *Diccionario panhispánico de dudas*. for Spanish numeral writing rules.
+-   Academia Brasileira de Letras (ABL). *Vocabulário Ortográfico da Língua Portuguesa*. for Portuguese vocabulary and standards.
+-   Cunha, C., & Cintra, L. F. L. *Nova Gramática do Português Contemporâneo*. for detailed Portuguese grammar rules.
+-   The University of Chicago. *The Chicago Manual of Style, 17th Edition*. for English numeral writing conventions.
 ## Security Policy
 
 We take the security of this library seriously. If you find a security vulnerability, please refer to our [Security Policy](./SECURITY.md) for information on how to responsibly disclose it.
 ## License
-
 CodyMath is licensed under the MIT License. See the [LICENSE](./LICENSE.md) file for more details.

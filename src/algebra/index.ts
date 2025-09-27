@@ -3,4 +3,6 @@ import * as arithmeticFuncs from './arithmetic';
 
 export const arithmetic = {
     ...arithmeticFuncs
-}; // OK 0.4.0
+};
+
+// OK 0.5.0

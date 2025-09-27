@@ -9,7 +9,8 @@
  */
 
 import { describe, it, expect } from 'vitest';
-import { distance, formatCurrency, isNearlyEqual, isPowerOfTwo, map, random, randomFloat, toWordsCurrency, toWordsPure } from '../../src/utils/utils';
+
+import { countDigits, countDigitsDetailed, distance, formatCurrency, getFractionalPart, getIntegerPart, isNearlyEqual, isPowerOfTwo, map, padZeroes, random, randomFloat, toWordsCurrency, toWordsPure } from '../../src/utils/utils';
 import { absolute, divide, floor, multiply, power, round, sqrt, subtract, sum } from '../../src/algebra/arithmetic';
 
 describe('map', () => {
@@ -773,4 +774,229 @@ describe('toWordsCurrency (es-ES)', () => {
         }
     });
 });
+
+//--
+
+describe('getIntegerPart', () => {
+    it('should return the integer itself for whole numbers within the safe range', () => {
+        expect(getIntegerPart(10)).toBe(10);
+        expect(getIntegerPart(-25)).toBe(-25);
+        expect(getIntegerPart(0)).toBe(0);
+        expect(getIntegerPart(Number.MAX_SAFE_INTEGER)).toBe(Number.MAX_SAFE_INTEGER);
+    });
+
+    it('should return the integer part of floating-point numbers within the safe range', () => {
+        expect(getIntegerPart(123.45)).toBe(123);
+        expect(getIntegerPart(-99.999)).toBe(-99);
+        expect(getIntegerPart(Number.MAX_SAFE_INTEGER - 0.5)).toBe(Number.MAX_SAFE_INTEGER - 1);
+    });
+
+    it('should throw an error for numbers GREATER than the safe integer range', () => {
+        const unsafeBigNumber = Number.MAX_SAFE_INTEGER + 10;
+        // Testamos se a função LANÇA um erro com a mensagem esperada
+        expect(() => getIntegerPart(unsafeBigNumber))
+            .toThrow('Input number is outside the safe integer range and may cause precision loss.');
+    });
+
+    it('should throw an error for numbers LESS than the safe integer range', () => {
+        const unsafeSmallNumber = Number.MIN_SAFE_INTEGER - 10;
+        expect(() => getIntegerPart(unsafeSmallNumber))
+            .toThrow('Input number is outside the safe integer range and may cause precision loss.');
+    });
+    
+    it('should perform consistently under a brutal stress test with safe numbers', () => {
+        const iterations = 5000;
+        for (let i = 0; i < iterations; i++) {
+            // Geramos números aleatórios dentro de um intervalo seguro
+            const randomNum = random(-1e15, 1e15);
+            expect(getIntegerPart(randomNum)).toBe(Math.trunc(randomNum));
+        }
+    });
+});
+
+//--
+
+describe('getFractionalPart', () => {
+    it('should return 0 for whole numbers', () => {
+        expect(getFractionalPart(50)).toBe(0);
+        expect(getFractionalPart(-100)).toBe(0);
+        expect(getFractionalPart(0)).toBe(0);
+    });
+
+    it('should return the correct fractional part for positive floating-point numbers', () => {
+        expect(getFractionalPart(12.34)).toBe(0.34);
+        expect(getFractionalPart(0.999)).toBe(0.999);
+        expect(getFractionalPart(1.0001)).toBe(0.0001);
+    });
+
+    it('should return the correct fractional part for negative floating-point numbers', () => {
+        expect(getFractionalPart(-12.34)).toBe(-0.34);
+        expect(getFractionalPart(-0.999)).toBe(-0.999);
+        expect(getFractionalPart(-1.0001)).toBe(-0.0001);
+    });
+
+    it('should handle potential floating-point inaccuracies correctly', () => {
+        //
+        const numWithPrecisionError = subtract(10.2, 10);
+        expect(getFractionalPart(numWithPrecisionError)).toBe(0.2);
+        //
+        const negNumWithPrecisionError = subtract(-10.2, -10);
+        expect(getFractionalPart(negNumWithPrecisionError)).toBe(-0.2);
+    });
+    
+    it('should perform consistently under a brutal stress test', () => {
+        const iterations = 5000;
+        for (let i = 0; i < iterations; i++) {
+            const randomNum = random(-1e6, 1e6);
+            //
+            const expected = randomNum - Math.trunc(randomNum);
+            //
+            expect(getFractionalPart(randomNum)).toBeCloseTo(expected);
+        }
+    });
+
+    it('should handle and correct floating-point inaccuracies', () => {
+        //
+        const impreciseResult = subtract(10.2, 10);
+        expect(getFractionalPart(impreciseResult)).toBe(0.2);
+
+        const negImpreciseResult = subtract(-10.2, -10);
+        expect(getFractionalPart(negImpreciseResult)).toBe(-0.2);
+    });
+
+});
+
+//--
+
+describe('countDigits', () => {
+    it('should count the digits of positive integers correctly', () => {
+        expect(countDigits(0)).toBe(1);
+        expect(countDigits(5)).toBe(1);
+        expect(countDigits(123)).toBe(3);
+        expect(countDigits(123456789)).toBe(9);
+    });
+
+    it('should count the digits of negative integers, ignoring the sign', () => {
+        expect(countDigits(-5)).toBe(1);
+        expect(countDigits(-123)).toBe(3);
+        expect(countDigits(-123456789)).toBe(9);
+    });
+
+    it('should count only the integer part of positive floating-point numbers', () => {
+        expect(countDigits(123.45)).toBe(3);
+        expect(countDigits(99.999)).toBe(2);
+        expect(countDigits(0.123)).toBe(1);
+    });
+
+    it('should count only the integer part of negative floating-point numbers', () => {
+        expect(countDigits(-123.45)).toBe(3);
+        expect(countDigits(-0.123)).toBe(1);
+        expect(countDigits(-999.99)).toBe(3);
+    });
+    
+    it('should perform consistently under a brutal stress test', () => {
+        const iterations = 5000;
+        for (let i = 0; i < iterations; i++) {
+            const randomNum = random(-1e12, 1e12);
+            
+            // Usamos a lógica nativa como "gabarito" para o nosso teste
+            const expected = Math.trunc(Math.abs(randomNum)).toString().length;
+            
+            expect(countDigits(randomNum)).toBe(expected);
+        }
+    });
+});
+
+//--
+
+describe('countDigitsDetailed', () => {
+    it('should correctly count digits for positive integers', () => {
+        //
+        expect(countDigitsDetailed(123)).toEqual({ integer: 3, fractional: 0 });
+        expect(countDigitsDetailed(5)).toEqual({ integer: 1, fractional: 0 });
+        expect(countDigitsDetailed(0)).toEqual({ integer: 1, fractional: 0 });
+    });
+
+    it('should correctly count digits for negative integers, ignoring the sign', () => {
+        expect(countDigitsDetailed(-123)).toEqual({ integer: 3, fractional: 0 });
+        expect(countDigitsDetailed(-9)).toEqual({ integer: 1, fractional: 0 });
+    });
+
+    it('should correctly count digits for positive floating-point numbers', () => {
+        expect(countDigitsDetailed(123.45)).toEqual({ integer: 3, fractional: 2 });
+        expect(countDigitsDetailed(0.12345)).toEqual({ integer: 1, fractional: 5 });
+        expect(countDigitsDetailed(98765.4)).toEqual({ integer: 5, fractional: 1 });
+    });
+
+    it('should correctly count digits for negative floating-point numbers', () => {
+        expect(countDigitsDetailed(-123.45)).toEqual({ integer: 3, fractional: 2 });
+        expect(countDigitsDetailed(-0.987)).toEqual({ integer: 1, fractional: 3 });
+    });
+    
+    it('should perform consistently under a brutal stress test', () => {
+        const iterations = 5000;
+        for (let i = 0; i < iterations; i++) {
+            const randomNum = random(-1e6, 1e6);
+            const absNumStr = absolute(randomNum).toString();
+            const parts = absNumStr.split('.');
+            const expectedIntegerCount = parts[0] === '0' && parts.length > 1 ? 1 : parts[0].length;
+            const expectedFractionalCount = parts.length > 1 ? parts[1].length : 0;
+            
+            const expected = {
+                integer: expectedIntegerCount,
+                fractional: expectedFractionalCount
+            };
+            
+            expect(countDigitsDetailed(randomNum)).toEqual(expected);
+        }
+    });
+});
+
+//--
+
+describe('padZeroes', () => {
+    it('should pad positive integers correctly', () => {
+        expect(padZeroes(123, 5)).toBe('00123');
+        expect(padZeroes(5, 3)).toBe('005');
+        expect(padZeroes(0, 4)).toBe('0000');
+    });
+
+    it('should handle negative integers correctly, placing the sign first', () => {
+        expect(padZeroes(-123, 5)).toBe('-00123');
+        expect(padZeroes(-5, 3)).toBe('-005');
+        // Testa um número negativo que não precisa de padding
+        expect(padZeroes(-123, 2)).toBe('-123');
+    });
+
+    it('should ignore the fractional part of numbers', () => {
+        expect(padZeroes(123.45, 5)).toBe('00123');
+        expect(padZeroes(-5.99, 3)).toBe('-005');
+        expect(padZeroes(0.123, 3)).toBe('000');
+    });
+
+    it('should not truncate numbers that are already longer than the specified length', () => {
+        expect(padZeroes(12345, 4)).toBe('12345');
+        // Testa o caso de comprimento igual
+        expect(padZeroes(99, 2)).toBe('99');
+        expect(padZeroes(-12345, 4)).toBe('-12345');
+    });
+    
+    it('should perform consistently under a brutal stress test', () => {
+        const iterations = 5000;
+        for (let i = 0; i < iterations; i++) {
+            const randomNum = random(-1e6, 1e6);
+            const randomLength = floor(random(1, 10));
+            
+            // Lógica do "gabarito" para o teste
+            const isNegative = randomNum < 0;
+            const integerPart = Math.abs(Math.trunc(randomNum));
+            const expectedPadded = integerPart.toString().padStart(randomLength, '0');
+            const expected = isNegative ? `-${expectedPadded}` : expectedPadded;
+            
+            expect(padZeroes(randomNum, randomLength)).toBe(expected);
+        }
+    });
+});
+
+//--
 

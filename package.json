@@ -1,6 +1,6 @@
 {
     "name": "codymath",
-    "version": "0.4.0",
+    "version": "0.5.0",
     "description": "The largest and most complete mathematics library for NPM, built for the global community.",
     "author": "Jackson Douglas de Souza",
     "license": "MIT",
@@ -9,35 +9,35 @@
     "module": "./dist/codymath.js",
     "types": "./dist/index.d.ts",
     "exports": {
-      ".": {
-        "import": "./dist/codymath.js",
-        "require": "./dist/codymath.cjs"
-      }
+        ".": {
+            "import": "./dist/codymath.js",
+            "require": "./dist/codymath.cjs"
+        }
     },
     "files": [
-      "dist"
+        "dist"
     ],
     "scripts": {
-      "dev": "vite",
-      "build": "vite build && tsc",
-      "test": "vitest"
+        "dev": "vite",
+        "build": "vite build && tsc",
+        "test": "vitest"
     },
     "keywords": [
-      "math",
-      "mathematics",
-      "algebra",
-      "geometry",
-      "calculus",
-      "typescript"
+        "math",
+        "mathematics",
+        "algebra",
+        "geometry",
+        "calculus",
+        "typescript"
     ],
     "devDependencies": {
-      "@types/node": "^20.14.9",
-      "typescript": "^5.5.2",
-      "vite": "^5.3.1",
-      "vitest": "^1.6.0"
+        "@types/node": "^20.14.9",
+        "typescript": "^5.5.2",
+        "vite": "^7.1.7",
+        "vitest": "^3.2.4"
     },
     "repository": {
-      "type": "git",
-      "url": "git+https://github.com/jacksondouglasdesouza/codymath.git"
+        "type": "git",
+        "url": "git+https://github.com/jacksondouglasdesouza/codymath.git"
     }
 }

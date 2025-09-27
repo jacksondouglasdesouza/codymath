@@ -1,6 +1,6 @@
 // src/utils/utils.ts
 
-import { absolute, divide, floor, log2, multiply, power, sqrt, subtract, sum, trunc } from "../algebra/arithmetic";
+import { absolute, divide, floor, log2, multiply, power, round, sqrt, subtract, sum, trunc } from "../algebra/arithmetic";
 import { dictionaries } from "./toWords/index";
 
 /**
@@ -271,4 +271,118 @@ export function toWordsCurrency(
 }
 
 //-- 
+
+/**
+ * Returns the integer part of a number, throwing an error for unsafe integers.
+ * @param {number} n The number to get the integer part from.
+ * @returns {number} The integer part of the number.
+ * @throws {Error} If the number is outside the safe integer range.
+ * @description This function ensures safety by first checking if the number is within
+ * JavaScript's safe integer bounds before returning the truncated value.
+ * @see `trunc`
+ */
+export function getIntegerPart(n: number): number {
+    if (n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER) {
+        throw new Error('Input number is outside the safe integer range and may cause precision loss.');
+    }
+    return trunc(n);
+}
+
+//--
+
+/**
+ * Returns the fractional part of a number, correcting for floating-point inaccuracies.
+ * @param {number} n The number to get the fractional part from.
+ * @returns {number} The fractional part of the number.
+ * @description This function calculates the fractional part and cleans the result
+ * to avoid common floating-point precision errors, such as those that occur in `0.1 + 0.2`.
+ * It leverages the library's own `getIntegerPart` and `subtract`.
+ */
+export function getFractionalPart(n: number): number {
+    // Para números fora da faixa segura, a parte fracionária já foi perdida, então retornamos 0.
+    if (n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER) {
+        return 0;
+    }
+
+    const integerPart = getIntegerPart(n);
+    const fractional = subtract(n, integerPart);
+    
+    return parseFloat(fractional.toFixed(12));
+}
+
+//--
+
+/**
+ * Counts the number of digits in the integer part of a number.
+ * @param {number} n The number to count the digits of.
+ * @returns {number} The number of digits in the integer part.
+ * @description This function counts the digits of the integer part of a number,
+ * ignoring the sign and any fractional digits, as per our agreed-upon rules.
+ * It leverages the library's own `absolute` and `getIntegerPart` functions.
+ * @see `absolute`
+ * @see `getIntegerPart`
+ */
+export function countDigits(n: number): number {
+    const absNum = absolute(n);
+    const integerPart = getIntegerPart(absNum);
+    return integerPart.toString().length;
+}
+
+//--
+
+/**
+ * Counts the number of digits in both the integer and fractional parts of a number.
+ * @param {number} n The number to analyze.
+ * @returns {{integer: number, fractional: number}} An object containing the count of digits.
+ * @description Returns an object with the count of digits for the integer and fractional
+ * parts of a number, ignoring the sign.
+ * e.g., `countDigitsDetailed(-123.45)` returns `{ integer: 3, fractional: 2 }`.
+ * @see `countDigits`
+ */
+export function countDigitsDetailed(n: number): { integer: number, fractional: number } {
+    const absNum = absolute(n);
+    const integerCount = countDigits(absNum);
+    let fractionalCount = 0;
+    const parts = absNum.toString().split('.');
+    
+    if (parts.length > 1) {
+        fractionalCount = parts[1].length;
+    }
+    
+    return {
+        integer: integerCount,
+        fractional: fractionalCount
+    };
+}
+
+//--
+
+
+/**
+ * Pads the integer part of a number with leading zeros to a specified length.
+ * @param {number} n The number to pad.
+ * @param {number} length The total desired length of the number's integer part as a string.
+ * @returns {string} The zero-padded number as a string.
+ * @description
+ * Handles negative numbers by placing the sign before the padding (e.g., -15 -> "-0015").
+ * Ignores the fractional part of the number, considering only the integer part.
+ * If the number's integer part is already longer than the target length,
+ * it returns the number as a string without modification.
+ * @see `absolute`
+ * @see `getIntegerPart`
+ */
+export function padZeroes(n: number, length: number): string {
+    const isNegative = n < 0;
+    
+    // Usamos nossas funções para tratar negativos e decimais, como combinado (dogfooding).
+    const absNum = absolute(n);
+    const integerPart = getIntegerPart(absNum);
+    
+    const numberString = integerPart.toString();
+    const paddedString = numberString.padStart(length, '0');
+    
+    return isNegative ? `-${paddedString}` : paddedString;
+}
+
+//--
 
