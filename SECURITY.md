@@ -10,22 +10,24 @@ We are committed to working with the community to verify and respond to any pote
 
 Instead, please use one of the following private methods:
 
-1.  **GitHub's Private Vulnerability Reporting:** The preferred method for reporting vulnerabilities is through GitHub's private vulnerability reporting feature. This will ensure your report is directly and confidentially sent to the project maintainers. You can submit a report by going to the "Security" tab of our repository and clicking "Report a vulnerability".
+1. **GitHub's Private Vulnerability Reporting:** The preferred method for reporting vulnerabilities is through GitHub's private vulnerability reporting feature. This will ensure your report is directly and confidentially sent to the project maintainers. You can submit a report by going to the "Security" tab of our repository and clicking "Report a vulnerability".
 
-2.  **Private Email:** If you prefer, you can send an email directly to **`codymath@proton.me`**. Please provide us with a detailed description of the vulnerability, including steps to reproduce it.
+2. **Private Email:** If you prefer, you can send an email directly to **`codymath@proton.me`**. Please provide us with a detailed description of the vulnerability, including steps to reproduce it.
 
 You can expect to receive an initial response from us within 48 hours.
 
 ---
+
 ## Proactive Security Measures
 
 To ensure the security of our library, we employ the following proactive measures:
 
-* **Dependency Monitoring:** We use **GitHub Dependabot** to automatically scan our dependencies for known vulnerabilities. Dependabot alerts us to any risks and helps us keep all packages up-to-date with the latest security patches.
+- **Dependency Monitoring:** We use **GitHub Dependabot** to automatically scan our dependencies for known vulnerabilities. Dependabot alerts us to any risks and helps us keep all packages up-to-date with the latest security patches.
 
-* **Regular Audits:** In addition to automated monitoring, our team performs regular security audits of our dependencies using the `npm audit` command to identify and address potential issues.
+- **Regular Audits:** In addition to automated monitoring, our team performs regular security audits of our dependencies using the `npm audit` command to identify and address potential issues.
 
 ---
+
 ## Supported Versions
 
 The following table shows which versions of the library are currently receiving security updates.
@@ -36,6 +38,8 @@ The following table shows which versions of the library are currently receiving 
 | `0.2.x` | :white_check_mark: |
 | `0.3.x` | :white_check_mark: |
 | `0.4.x` | :white_check_mark: |
+| `0.5.x` | :white_check_mark: |
+| `0.6.x` | :white_check_mark: |
 
 ---
 

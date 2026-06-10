@@ -1,43 +1,45 @@
 {
-    "name": "codymath",
-    "version": "0.5.0",
-    "description": "The largest and most complete mathematics library for NPM, built for the global community.",
-    "author": "Jackson Douglas de Souza",
-    "license": "MIT",
-    "type": "module",
-    "main": "./dist/codymath.cjs",
-    "module": "./dist/codymath.js",
-    "types": "./dist/index.d.ts",
-    "exports": {
-        ".": {
-            "import": "./dist/codymath.js",
-            "require": "./dist/codymath.cjs"
-        }
-    },
-    "files": [
-        "dist"
-    ],
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build && tsc",
-        "test": "vitest"
-    },
-    "keywords": [
-        "math",
-        "mathematics",
-        "algebra",
-        "geometry",
-        "calculus",
-        "typescript"
-    ],
-    "devDependencies": {
-        "@types/node": "^20.14.9",
-        "typescript": "^5.5.2",
-        "vite": "^7.1.7",
-        "vitest": "^4.1.0"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git+https://github.com/jacksondouglasdesouza/codymath.git"
-    }
+   "name": "codymath",
+   "version": "0.6.0",
+   "description": "The largest and most complete mathematics library for NPM, built for the global community.",
+   "author": "Jackson Douglas de Souza",
+   "license": "MIT",
+   "type": "module",
+   "sideEffects": false,
+   "main": "./dist/codymath.cjs",
+   "module": "./dist/codymath.js",
+   "types": "./dist/index.d.ts",
+   "exports": {
+      ".": {
+         "types": "./dist/index.d.ts",
+         "import": "./dist/codymath.js",
+         "require": "./dist/codymath.cjs"
+      }
+   },
+   "files": [
+      "dist"
+   ],
+   "scripts": {
+      "dev": "vite",
+      "build": "vite build && tsc",
+      "test": "vitest"
+   },
+   "keywords": [
+      "math",
+      "mathematics",
+      "algebra",
+      "geometry",
+      "calculus",
+      "typescript"
+   ],
+   "devDependencies": {
+      "@types/node": "^25.9.2",
+      "typescript": "^6.0.3",
+      "vite": "^8.0.16",
+      "vitest": "^4.1.8"
+   },
+   "repository": {
+      "type": "git",
+      "url": "git+https://github.com/jacksondouglasdesouza/codymath.git"
+   }
 }

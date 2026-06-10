@@ -7,3 +7,5 @@ dist/
 # Logs e arquivos de ambiente
 .env
 npm-debug.log*
+
+.vscode

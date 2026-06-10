@@ -1,11 +1,23 @@
 // src/utils/utils.ts
 
-import { absolute, divide, floor, log2, multiply, power, round, sqrt, subtract, sum, trunc } from "../algebra/arithmetic";
+import {
+   absolute,
+   divide,
+   floor,
+   log2,
+   multiply,
+   power,
+   round,
+   sqrt,
+   subtract,
+   sum,
+   trunc,
+} from "../algebra/arithmetic";
 import { dictionaries } from "./toWords/index";
 
 /**
  * @fileoverview A collection of high-level utility, statistical, and real-world calculation functions.
- * @version 0.5.0
+ * @version 0.6.0
  * @license MIT
  * @author Jackson Douglas de Souza
  * @see {@link https://www.linkedin.com/in/jacksondouglasdsouza/|LinkedIn}
@@ -28,7 +40,6 @@ import { dictionaries } from "./toWords/index";
  * 8. The University of Chicago. *The Chicago Manual of Style, 17th Edition*. for English numeral writing conventions.
  */
 
-
 /**
  * Re-maps a number from one range to another.
  * @param {number} value The incoming value to be converted.
@@ -38,21 +49,26 @@ import { dictionaries } from "./toWords/index";
  * @param {number} outMax The upper bound of the value's target range.
  * @returns {number} The re-mapped number.
  */
-export function map(value: number, inMin: number, inMax: number, outMin: number, outMax: number): number {
-    if (inMin === inMax) {
-        return outMin;
-    }
-    const term1 = subtract(value, inMin);
-    const term2 = subtract(outMax, outMin);
-    const term3 = subtract(inMax, inMin);
-    
-    const multiplicationResult = multiply(term1, term2);
-    const divisionResult = divide(multiplicationResult, term3);
-    const finalResult = sum(divisionResult, outMin);
+export function map(
+   value: number,
+   inMin: number,
+   inMax: number,
+   outMin: number,
+   outMax: number,
+): number {
+   if (inMin === inMax) {
+      return outMin;
+   }
+   const term1 = subtract(value, inMin);
+   const term2 = subtract(outMax, outMin);
+   const term3 = subtract(inMax, inMin);
 
-    return finalResult;
+   const multiplicationResult = multiply(term1, term2);
+   const divisionResult = divide(multiplicationResult, term3);
+   const finalResult = sum(divisionResult, outMin);
+
+   return finalResult;
 }
-
 
 /**
  * Generates a pseudo-random floating-point number within a specified range.
@@ -66,10 +82,10 @@ export function map(value: number, inMin: number, inMax: number, outMin: number,
  * The implementation uses the library's own arithmetic functions for consistency.
  */
 export function random(min: number = 0, max: number = 1): number {
-    const baseRandom = Math.random();
-    const range = subtract(max, min);
-    const scaledRandom = multiply(baseRandom, range);
-    return sum(scaledRandom, min);
+   const baseRandom = Math.random();
+   const range = subtract(max, min);
+   const scaledRandom = multiply(baseRandom, range);
+   return sum(scaledRandom, min);
 }
 
 /**
@@ -82,7 +98,7 @@ export function random(min: number = 0, max: number = 1): number {
  * useful when a simple random float is needed without a specific range.
  */
 export function randomFloat(): number {
-    return Math.random();
+   return Math.random();
 }
 
 /**
@@ -92,11 +108,15 @@ export function randomFloat(): number {
  * @param {number} [epsilon=0.00001] The small tolerance within which the numbers are considered equal. Defaults to 1e-5.
  * @returns {boolean} `true` if the absolute difference between a and b is less than epsilon, otherwise `false`.
  */
-export function isNearlyEqual(a: number, b: number, epsilon: number = 0.00001): boolean {
-    const difference = subtract(a, b);
-    const absoluteDifference = absolute(difference);
+export function isNearlyEqual(
+   a: number,
+   b: number,
+   epsilon: number = 0.00001,
+): boolean {
+   const difference = subtract(a, b);
+   const absoluteDifference = absolute(difference);
 
-    return absoluteDifference < epsilon;
+   return absoluteDifference < epsilon;
 }
 
 /**
@@ -110,24 +130,24 @@ export function isNearlyEqual(a: number, b: number, epsilon: number = 0.00001): 
  * handles non-integers by returning false.
  */
 export function isPowerOfTwo(n: number | bigint): boolean {
-    // A primeira verificação, que funciona para ambos os tipos, é se o número é positivo.
-    // Usamos `> 0` e `> 0n` para evitar erros de tipo.
-    if (n <= 0) {
-        return false;
-    }
+   // A primeira verificação, que funciona para ambos os tipos, é se o número é positivo.
+   // Usamos `> 0` e `> 0n` para evitar erros de tipo.
+   if (n <= 0) {
+      return false;
+   }
 
-    // Se for do tipo 'number', primeiro garantimos que é um inteiro.
-    if (typeof n === 'number') {
-        if (!Number.isInteger(n)) {
-            return false;
-        }
-        // Lógica bitwise para 'number'
-        return (n & (n - 1)) === 0;
-    }
+   // Se for do tipo 'number', primeiro garantimos que é um inteiro.
+   if (typeof n === "number") {
+      if (!Number.isInteger(n)) {
+         return false;
+      }
+      // Lógica bitwise para 'number'
+      return (n & (n - 1)) === 0;
+   }
 
-    // Se chegou aqui, 'n' é um 'bigint'. A lógica bitwise é a mesma, mas com literais BigInt.
-    // BigInts são sempre inteiros, então não precisamos da verificação isInteger.
-    return (n & (n - 1n)) === 0n;
+   // Se chegou aqui, 'n' é um 'bigint'. A lógica bitwise é a mesma, mas com literais BigInt.
+   // BigInts são sempre inteiros, então não precisamos da verificação isInteger.
+   return (n & (n - 1n)) === 0n;
 }
 
 /**
@@ -138,15 +158,19 @@ export function isPowerOfTwo(n: number | bigint): boolean {
  * @param {number} y2 The y-coordinate of the second point.
  * @returns {number} The Euclidean distance between the two points.
  */
-export function distance(x1: number, y1: number, x2: number, y2: number): number {
+export function distance(
+   x1: number,
+   y1: number,
+   x2: number,
+   y2: number,
+): number {
+   const deltaX = subtract(x2, x1);
+   const deltaY = subtract(y2, y1);
+   const xSquared = power(deltaX, 2);
+   const ySquared = power(deltaY, 2);
+   const sumOfSquares = sum(xSquared, ySquared);
 
-    const deltaX = subtract(x2, x1);
-    const deltaY = subtract(y2, y1);
-    const xSquared = power(deltaX, 2);
-    const ySquared = power(deltaY, 2);
-    const sumOfSquares = sum(xSquared, ySquared);
-    
-    return sqrt(sumOfSquares);
+   return sqrt(sumOfSquares);
 }
 
 /**
@@ -160,37 +184,36 @@ export function distance(x1: number, y1: number, x2: number, y2: number): number
  * @returns {string} The formatted currency string.
  */
 export function formatCurrency(
-    n: number,
-    options: {
-        currencySymbol?: string;
-        decimalSeparator?: string;
-        thousandsSeparator?: string;
-        decimals?: number;
-    } = {}
+   n: number,
+   options: {
+      currencySymbol?: string;
+      decimalSeparator?: string;
+      thousandsSeparator?: string;
+      decimals?: number;
+   } = {},
 ): string {
-    const {
-        currencySymbol = '$',
-        decimalSeparator = '.',
-        thousandsSeparator = ',',
-        decimals = 2
-    } = options;
+   const {
+      currencySymbol = "$",
+      decimalSeparator = ".",
+      thousandsSeparator = ",",
+      decimals = 2,
+   } = options;
 
-    const formatter = new Intl.NumberFormat('en-US', {
-        minimumFractionDigits: decimals,
-        maximumFractionDigits: decimals,
-    });
-    
-    let formatted = formatter.format(n);
+   const formatter = new Intl.NumberFormat("en-US", {
+      minimumFractionDigits: decimals,
+      maximumFractionDigits: decimals,
+   });
 
-    if (decimalSeparator !== '.' || thousandsSeparator !== ',') {
-        const parts = formatted.split('.');
-        parts[0] = parts[0].replace(/,/g, thousandsSeparator);
-        formatted = parts.join(decimalSeparator);
-    }
-    
-    return `${currencySymbol}${formatted}`;
+   let formatted = formatter.format(n);
+
+   if (decimalSeparator !== "." || thousandsSeparator !== ",") {
+      const parts = formatted.split(".");
+      parts[0] = parts[0].replace(/,/g, thousandsSeparator);
+      formatted = parts.join(decimalSeparator);
+   }
+
+   return `${currencySymbol}${formatted}`;
 }
-
 
 //-- toWordsPure and theWordsCurrency functions --//
 
@@ -199,20 +222,23 @@ export function formatCurrency(
  * Defines the required structure for a language dictionary.
  */
 interface ToWordsDictionary {
-    pureConverter: (n: number) => string;
-    currencyConverter: (n: number, options: {
-        majorSingular: string;
-        majorPlural: string;
-        minorSingular: string;
-        minorPlural: string;
-    }) => string;
+   pureConverter: (n: number) => string;
+   currencyConverter: (
+      n: number,
+      options: {
+         majorSingular: string;
+         majorPlural: string;
+         minorSingular: string;
+         minorPlural: string;
+      },
+   ) => string;
 
-    currencyDefaults: {
-        majorSingular: string;
-        majorPlural: string;
-        minorSingular: string;
-        minorPlural: string;
-    };
+   currencyDefaults: {
+      majorSingular: string;
+      majorPlural: string;
+      minorSingular: string;
+      minorPlural: string;
+   };
 }
 
 //-- toWordsPure --//
@@ -223,19 +249,20 @@ interface ToWordsDictionary {
  * @param {string} [lang='en-US'] The target language code (e.g., 'en-US', 'pt-BR').
  * @returns {string} The number represented in words.
  */
-export function toWordsPure(n: number, lang: string = 'en-US'): string {
-    const dictionary: ToWordsDictionary = dictionaries[lang.toLowerCase() as keyof typeof dictionaries];
+export function toWordsPure(n: number, lang: string = "en-US"): string {
+   const dictionary: ToWordsDictionary =
+      dictionaries[lang.toLowerCase() as keyof typeof dictionaries];
 
-    if (!dictionary) {
-        return `Language '${lang}' is not supported.`;
-    }
-    if (typeof n !== 'number' || !isFinite(n)) {
-        return "Invalid number input.";
-    }
-    return dictionary.pureConverter(n);
+   if (!dictionary) {
+      return `Language '${lang}' is not supported.`;
+   }
+   if (typeof n !== "number" || !isFinite(n)) {
+      return "Invalid number input.";
+   }
+   return dictionary.pureConverter(n);
 }
 
-//-- toWordsCurrency --// 
+//-- toWordsCurrency --//
 
 /**
  * Converts a number into its written-out currency representation.
@@ -249,28 +276,32 @@ export function toWordsPure(n: number, lang: string = 'en-US'): string {
  * @returns {string} The number represented in currency words.
  */
 export function toWordsCurrency(
-    n: number,
-    options: {
-        lang?: string;
-        majorSingular?: string;
-        majorPlural?: string;
-        minorSingular?: string;
-        minorPlural?: string;
-    } = {}
+   n: number,
+   options: {
+      lang?: string;
+      majorSingular?: string;
+      majorPlural?: string;
+      minorSingular?: string;
+      minorPlural?: string;
+   } = {},
 ): string {
-    const { lang = 'en-US', ...currencyOptions } = options;
-    const dictionary = dictionaries[lang.toLowerCase() as keyof typeof dictionaries];
-    if (!dictionary || !dictionary.currencyConverter) {
-        return `Currency conversion for language '${lang}' is not supported.`;
-    }
-    if (typeof n !== 'number' || !isFinite(n)) {
-        return "Invalid number input.";
-    }
-    const finalCurrencyOptions = { ...dictionary.currencyDefaults, ...currencyOptions };
-    return dictionary.currencyConverter(n, finalCurrencyOptions);
+   const { lang = "en-US", ...currencyOptions } = options;
+   const dictionary =
+      dictionaries[lang.toLowerCase() as keyof typeof dictionaries];
+   if (!dictionary || !dictionary.currencyConverter) {
+      return `Currency conversion for language '${lang}' is not supported.`;
+   }
+   if (typeof n !== "number" || !isFinite(n)) {
+      return "Invalid number input.";
+   }
+   const finalCurrencyOptions = {
+      ...dictionary.currencyDefaults,
+      ...currencyOptions,
+   };
+   return dictionary.currencyConverter(n, finalCurrencyOptions);
 }
 
-//-- 
+//--
 
 /**
  * Returns the integer part of a number, throwing an error for unsafe integers.
@@ -282,10 +313,12 @@ export function toWordsCurrency(
  * @see `trunc`
  */
 export function getIntegerPart(n: number): number {
-    if (n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER) {
-        throw new Error('Input number is outside the safe integer range and may cause precision loss.');
-    }
-    return trunc(n);
+   if (n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER) {
+      throw new Error(
+         "Input number is outside the safe integer range and may cause precision loss.",
+      );
+   }
+   return trunc(n);
 }
 
 //--
@@ -299,15 +332,15 @@ export function getIntegerPart(n: number): number {
  * It leverages the library's own `getIntegerPart` and `subtract`.
  */
 export function getFractionalPart(n: number): number {
-    // Para números fora da faixa segura, a parte fracionária já foi perdida, então retornamos 0.
-    if (n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER) {
-        return 0;
-    }
+   // Para números fora da faixa segura, a parte fracionária já foi perdida, então retornamos 0.
+   if (n > Number.MAX_SAFE_INTEGER || n < Number.MIN_SAFE_INTEGER) {
+      return 0;
+   }
 
-    const integerPart = getIntegerPart(n);
-    const fractional = subtract(n, integerPart);
-    
-    return parseFloat(fractional.toFixed(12));
+   const integerPart = getIntegerPart(n);
+   const fractional = subtract(n, integerPart);
+
+   return parseFloat(fractional.toFixed(12));
 }
 
 //--
@@ -323,9 +356,9 @@ export function getFractionalPart(n: number): number {
  * @see `getIntegerPart`
  */
 export function countDigits(n: number): number {
-    const absNum = absolute(n);
-    const integerPart = getIntegerPart(absNum);
-    return integerPart.toString().length;
+   const absNum = absolute(n);
+   const integerPart = getIntegerPart(absNum);
+   return integerPart.toString().length;
 }
 
 //--
@@ -339,24 +372,26 @@ export function countDigits(n: number): number {
  * e.g., `countDigitsDetailed(-123.45)` returns `{ integer: 3, fractional: 2 }`.
  * @see `countDigits`
  */
-export function countDigitsDetailed(n: number): { integer: number, fractional: number } {
-    const absNum = absolute(n);
-    const integerCount = countDigits(absNum);
-    let fractionalCount = 0;
-    const parts = absNum.toString().split('.');
-    
-    if (parts.length > 1) {
-        fractionalCount = parts[1].length;
-    }
-    
-    return {
-        integer: integerCount,
-        fractional: fractionalCount
-    };
+export function countDigitsDetailed(n: number): {
+   integer: number;
+   fractional: number;
+} {
+   const absNum = absolute(n);
+   const integerCount = countDigits(absNum);
+   let fractionalCount = 0;
+   const parts = absNum.toString().split(".");
+
+   if (parts.length > 1) {
+      fractionalCount = parts[1].length;
+   }
+
+   return {
+      integer: integerCount,
+      fractional: fractionalCount,
+   };
 }
 
 //--
-
 
 /**
  * Pads the integer part of a number with leading zeros to a specified length.
@@ -372,17 +407,16 @@ export function countDigitsDetailed(n: number): { integer: number, fractional: n
  * @see `getIntegerPart`
  */
 export function padZeroes(n: number, length: number): string {
-    const isNegative = n < 0;
-    
-    // Usamos nossas funções para tratar negativos e decimais, como combinado (dogfooding).
-    const absNum = absolute(n);
-    const integerPart = getIntegerPart(absNum);
-    
-    const numberString = integerPart.toString();
-    const paddedString = numberString.padStart(length, '0');
-    
-    return isNegative ? `-${paddedString}` : paddedString;
+   const isNegative = n < 0;
+
+   // Usamos nossas funções para tratar negativos e decimais, como combinado (dogfooding).
+   const absNum = absolute(n);
+   const integerPart = getIntegerPart(absNum);
+
+   const numberString = integerPart.toString();
+   const paddedString = numberString.padStart(length, "0");
+
+   return isNegative ? `-${paddedString}` : paddedString;
 }
 
 //--
-
