@@ -1,8 +1,4 @@
 // src/algebra/index.ts
-import * as arithmeticFuncs from "./arithmetic";
+export * as arithmetic from "./arithmetic";
 
-export const arithmetic = {
-   ...arithmeticFuncs,
-};
-
-// OK 0.6.0
+// OK 0.7.0

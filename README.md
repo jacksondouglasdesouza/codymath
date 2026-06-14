@@ -5,7 +5,7 @@
   <a href="https://www.npmjs.com/package/codymath" target="_blank">
     <img src="./assets/Npm-logo.svg" alt="NPM Package" width="100">
   </a>
-  | <strong> Current Status: Early Development (v0.6.0)</strong>
+  | <strong> Current Status: Early Development (v0.7.0)</strong>
 </div>
 CodyMath is on a mission to become the most complete open-source mathematics library for JavaScript and TypeScript. By implementing thousands of rigorously tested formulas from authoritative sources, we provide a universal toolbox for developers, students, and researchers worldwide.
 
@@ -660,53 +660,78 @@ const libraryCheckInterval = setInterval(() => {
 
 ### Module: `algebra/arithmetic`
 
-This module provides a comprehensive set of functions for fundamental arithmetic, exponentiation, roots, and logarithms.
+This module provides a comprehensive set of pure functions spanning fundamental arithmetic, exponentiation, roots, logarithms, number theory, combinatorics, statistics, interpolation, and signal shaping.
 
-| Function                    | Syntax                     | Description                                                           | Library Key      |
-| :-------------------------- | :------------------------- | :-------------------------------------------------------------------- | :--------------- |
-| **Sum**                     | `sum(...numbers)`          | Returns the sum of a set of numbers.                                  | `sum`            |
-| **Subtraction**             | `subtract(a, b)`           | Returns the difference between two numbers (`a - b`).                 | `subtract`       |
-| **Multiplication**          | `multiply(...numbers)`     | Returns the product of a set of numbers.                              | `multiply`       |
-| **Division**                | `divide(a, b)`             | Returns the division of `a` by `b`, handling division by zero.        | `divide`         |
-| **Mean**                    | `mean(...numbers)`         | Calculates the arithmetic mean of a set of numbers.                   | `mean`           |
-| **Power**                   | `power(base, exp)`         | Calculates a `base` number raised to an `exponent`.                   | `power`          |
-| **Square Root**             | `sqrt(n)`                  | Calculates the square root ($\sqrt{n}$) of a number.                  | `sqrt`           |
-| **Cube Root**               | `cbrt(n)`                  | Calculates the cube root ($\sqrt[3]{n}$) of a number.                 | `cbrt`           |
-| **Nth Root**                | `nthRoot(n, root)`         | Calculates the nth root ($\sqrt[root]{n}$) of a number.               | `nthRoot`        |
-| **Exponential**             | `exp(n)`                   | Calculates the value of `e` raised to the power of `n` ($e^n$).       | `exp`            |
-| **Natural Log**             | `ln(n)`                    | Calculates the natural logarithm (base `e`) of a number, $ln(n)$.     | `ln`             |
-| **Log Base 10**             | `log10(n)`                 | Calculates the common logarithm (base 10), $log_{10}(n)$.             | `log10`          |
-| **Log Base 2**              | `log2(n)`                  | Calculates the binary logarithm (base 2), $log_{2}(n)$.               | `log2`           |
-| **Generic Log**             | `log(n, base)`             | Calculates the logarithm of `n` in a custom `base`, $log_{base}(n)$.  | `log`            |
-| **Greatest Common Divisor** | `gcd(a, b)`                | Finds the Greatest Common Divisor (GCD) of two integers.              | `gcd`            |
-| **Least Common Multiple**   | `lcm(a, b)`                | Finds the Least Common Multiple (LCM) of two integers.                | `lcm`            |
-| **Is Prime**                | `isPrime(n)`               | Checks if a number is prime.                                          | `isPrime`        |
-| **Is Even**                 | `isEven(n)`                | Checks if a number is even.                                           | `isEven`         |
-| **Is Odd**                  | `isOdd(n)`                 | Checks if a number is odd.                                            | `isOdd`          |
-| **Factorial**               | `factorial(n)`             | Calculates the factorial (`n!`) of a non-negative integer.            | `factorial`      |
-| **Absolute**                | `absolute(n)`              | Returns the absolute value of a number.                               | `absolute`       |
-| **Round**                   | `round(n, decimals)`       | Rounds a number to a specified number of decimal places.              | `round`          |
-| **Floor**                   | `floor(n)`                 | Rounds a number down to the nearest integer.                          | `floor`          |
-| **Ceiling**                 | `ceil(n)`                  | Rounds a number up to the nearest integer.                            | `ceil`           |
-| **Truncate**                | `trunc(n)`                 | Removes the decimal part of a number.                                 | `trunc`          |
-| **Sign**                    | `sign(n)`                  | Returns the sign of a number (-1, 0, or 1).                           | `sign`           |
-| **Clamp**                   | `clamp(value, min, max)`   | Clamps a number within an inclusive range.                            | `clamp`          |
-| **Lerp**                    | `lerp(a, b, t)`            | Performs linear interpolation between two points.                     | `lerp`           |
-| **Is In Range**             | `isInRange(n, start, end)` | Checks if a number is within a given range (inclusive).               | `isInRange`      |
-| **Modulo**                  | `mod(a, b)`                | Calculates the mathematical modulo (handles negatives correctly).     | `mod`            |
-| **Is Negative Zero**        | `isNegativeZero(n)`        | Checks if a number is strictly equal to `-0`.                         | `isNegativeZero` |
-| **Coprime**                 | `coprime(a, b)`            | Checks if two integers are coprime (their GCD is 1).                  | `coprime`        |
-| **Safe Division**           | `safeDiv(a, b, fallback)`  | Divides `a` by `b`, returning `fallback` instead of throwing on zero. | `safeDiv`        |
-| **Digits**                  | `digits(n)`                | Counts the decimal digits of an integer, ignoring the sign.           | `digits`         |
-| **Sum of Squares**          | `sumOfSquares(...numbers)` | Returns the sum of the squares of a set of numbers ($\sum x_i^2$).    | `sumOfSquares`   |
-| **Divisors**                | `divisors(n)`              | Returns all positive divisors of an integer, in ascending order.      | `divisors`       |
-| **Fibonacci**               | `fibonacci(n)`             | Returns the nth Fibonacci number (0-indexed), iteratively.            | `fibonacci`      |
-| **Inverse Lerp**            | `inverseLerp(a, b, value)` | Returns the factor `t` such that `lerp(a, b, t)` equals `value`.      | `inverseLerp`    |
-| **GCD (Multiple)**          | `gcdMultiple(...numbers)`  | Finds the GCD of any quantity of integers.                            | `gcdMultiple`    |
-| **LCM (Multiple)**          | `lcmMultiple(...numbers)`  | Finds the LCM of any quantity of integers.                            | `lcmMultiple`    |
-| **Modular Exponentiation**  | `modPow(base, exp, mod)`   | Computes `(base^exp) % mod` efficiently — core of RSA-style crypto.   | `modPow`         |
-| **Percent Of**              | `percentOf(value, total)`  | Calculates what percentage `value` represents of `total`.             | `percentOf`      |
-| **From Percent**            | `fromPercent(pct, total)`  | Calculates the value corresponding to a percentage of a total.        | `fromPercent`    |
+| Function                    | Syntax                                          | Description                                                           | Library Key          |
+| :-------------------------- | :---------------------------------------------- | :-------------------------------------------------------------------- | :------------------- |
+| **Sum**                     | `sum(...numbers)`                               | Returns the sum of a set of numbers.                                  | `sum`                |
+| **Subtraction**             | `subtract(a, b)`                                | Returns the difference between two numbers (`a - b`).                 | `subtract`           |
+| **Multiplication**          | `multiply(...numbers)`                          | Returns the product of a set of numbers.                              | `multiply`           |
+| **Division**                | `divide(a, b)`                                  | Returns the division of `a` by `b`, handling division by zero.        | `divide`             |
+| **Mean**                    | `mean(...numbers)`                              | Calculates the arithmetic mean of a set of numbers.                   | `mean`               |
+| **Power**                   | `power(base, exp)`                              | Calculates a `base` number raised to an `exponent`.                   | `power`              |
+| **Square Root**             | `sqrt(n)`                                       | Calculates the square root ($\sqrt{n}$) of a number.                  | `sqrt`               |
+| **Cube Root**               | `cbrt(n)`                                       | Calculates the cube root ($\sqrt[3]{n}$) of a number.                 | `cbrt`               |
+| **Nth Root**                | `nthRoot(n, root)`                              | Calculates the nth root ($\sqrt[root]{n}$) of a number.               | `nthRoot`            |
+| **Exponential**             | `exp(n)`                                        | Calculates the value of `e` raised to the power of `n` ($e^n$).       | `exp`                |
+| **Natural Log**             | `ln(n)`                                         | Calculates the natural logarithm (base `e`) of a number, $ln(n)$.     | `ln`                 |
+| **Log Base 10**             | `log10(n)`                                      | Calculates the common logarithm (base 10), $log_{10}(n)$.             | `log10`              |
+| **Log Base 2**              | `log2(n)`                                       | Calculates the binary logarithm (base 2), $log_{2}(n)$.               | `log2`               |
+| **Generic Log**             | `log(n, base)`                                  | Calculates the logarithm of `n` in a custom `base`, $log_{base}(n)$.  | `log`                |
+| **Greatest Common Divisor** | `gcd(a, b)`                                     | Finds the Greatest Common Divisor (GCD) of two integers.              | `gcd`                |
+| **Least Common Multiple**   | `lcm(a, b)`                                     | Finds the Least Common Multiple (LCM) of two integers.                | `lcm`                |
+| **Is Prime**                | `isPrime(n)`                                    | Checks if a number is prime.                                          | `isPrime`            |
+| **Is Even**                 | `isEven(n)`                                     | Checks if a number is even.                                           | `isEven`             |
+| **Is Odd**                  | `isOdd(n)`                                      | Checks if a number is odd.                                            | `isOdd`              |
+| **Factorial**               | `factorial(n)`                                  | Calculates the factorial (`n!`) of a non-negative integer.            | `factorial`          |
+| **Absolute**                | `absolute(n)`                                   | Returns the absolute value of a number.                               | `absolute`           |
+| **Round**                   | `round(n, decimals)`                            | Rounds a number to a specified number of decimal places.              | `round`              |
+| **Floor**                   | `floor(n)`                                      | Rounds a number down to the nearest integer.                          | `floor`              |
+| **Ceiling**                 | `ceil(n)`                                       | Rounds a number up to the nearest integer.                            | `ceil`               |
+| **Truncate**                | `trunc(n)`                                      | Removes the decimal part of a number.                                 | `trunc`              |
+| **Sign**                    | `sign(n)`                                       | Returns the sign of a number (-1, 0, or 1).                           | `sign`               |
+| **Clamp**                   | `clamp(value, min, max)`                        | Clamps a number within an inclusive range.                            | `clamp`              |
+| **Lerp**                    | `lerp(a, b, t)`                                 | Performs linear interpolation between two points.                     | `lerp`               |
+| **Is In Range**             | `isInRange(n, start, end)`                      | Checks if a number is within a given range (inclusive).               | `isInRange`          |
+| **Modulo**                  | `mod(a, b)`                                     | Calculates the mathematical modulo (handles negatives correctly).     | `mod`                |
+| **Is Negative Zero**        | `isNegativeZero(n)`                             | Checks if a number is strictly equal to `-0`.                         | `isNegativeZero`     |
+| **Coprime**                 | `coprime(a, b)`                                 | Checks if two integers are coprime (their GCD is 1).                  | `coprime`            |
+| **Safe Division**           | `safeDiv(a, b, fallback)`                       | Divides `a` by `b`, returning `fallback` instead of throwing on zero. | `safeDiv`            |
+| **Digits**                  | `digits(n)`                                     | Counts the decimal digits of an integer, ignoring the sign.           | `digits`             |
+| **Sum of Squares**          | `sumOfSquares(...numbers)`                      | Returns the sum of the squares of a set of numbers ($\sum x_i^2$).    | `sumOfSquares`       |
+| **Divisors**                | `divisors(n)`                                   | Returns all positive divisors of an integer, in ascending order.      | `divisors`           |
+| **Fibonacci**               | `fibonacci(n)`                                  | Returns the nth Fibonacci number (0-indexed), iteratively.            | `fibonacci`          |
+| **Inverse Lerp**            | `inverseLerp(a, b, value)`                      | Returns the factor `t` such that `lerp(a, b, t)` equals `value`.      | `inverseLerp`        |
+| **GCD (Multiple)**          | `gcdMultiple(...numbers)`                       | Finds the GCD of any quantity of integers.                            | `gcdMultiple`        |
+| **LCM (Multiple)**          | `lcmMultiple(...numbers)`                       | Finds the LCM of any quantity of integers.                            | `lcmMultiple`        |
+| **Modular Exponentiation**  | `modPow(base, exp, mod)`                        | Computes `(base^exp) % mod` efficiently — core of RSA-style crypto.   | `modPow`             |
+| **Percent Of**              | `percentOf(value, total)`                       | Calculates what percentage `value` represents of `total`.             | `percentOf`          |
+| **From Percent**            | `fromPercent(pct, total)`                       | Calculates the value corresponding to a percentage of a total.        | `fromPercent`        |
+| **Sum of Digits**           | `sumOfDigits(n)`                                | Returns the sum of the decimal digits of an integer.                  | `sumOfDigits`        |
+| **Is Perfect Square**       | `isPerfectSquare(n)`                            | Checks if an integer is a perfect square.                             | `isPerfectSquare`    |
+| **Hypotenuse**              | `hypot(...values)`                              | Returns the n-dimensional hypotenuse, $\sqrt{\sum x_i^2}$.            | `hypot`              |
+| **Clamped Lerp**            | `clampedLerp(a, b, t)`                          | Performs linear interpolation with `t` clamped to `[0, 1]`.           | `clampedLerp`        |
+| **Map Range**               | `mapRange(value, inMin, inMax, outMin, outMax)` | Remaps a value from one numeric range to another.                     | `mapRange`           |
+| **Is Perfect Number**       | `isPerfectNumber(n)`                            | Checks if an integer equals the sum of its proper divisors.           | `isPerfectNumber`    |
+| **Prime Factors**           | `primeFactors(n)`                               | Returns the prime factorization of an integer as an array.            | `primeFactors`       |
+| **Multiply (Multiple)**     | `multiplyMultiple(...numbers)`                  | Returns the product of any quantity of numbers (empty = 1).           | `multiplyMultiple`   |
+| **Binomial Coefficient**    | `binomial(n, k)`                                | Computes the binomial coefficient $\binom{n}{k}$.                     | `binomial`           |
+| **Modular Inverse**         | `modInverse(a, m)`                              | Finds the modular multiplicative inverse of `a` modulo `m`.           | `modInverse`         |
+| **Permutations**            | `permutations(n, k)`                            | Returns the number of ordered arrangements, $P(n, k)$.                | `permutations`       |
+| **Euler's Totient**         | `totient(n)`                                    | Counts the integers up to `n` that are coprime to it, $\varphi(n)$.   | `totient`            |
+| **Median**                  | `median(...numbers)`                            | Returns the median (middle value) of a dataset.                       | `median`             |
+| **Minimum**                 | `min(...numbers)`                               | Returns the smallest value, or `NaN` for an empty input.              | `min`                |
+| **Maximum**                 | `max(...numbers)`                               | Returns the largest value, or `NaN` for an empty input.               | `max`                |
+| **Variance**                | `variance(...numbers)`                          | Returns the population variance of a dataset.                         | `variance`           |
+| **Standard Deviation**      | `standardDeviation(...numbers)`                 | Returns the population standard deviation of a dataset.               | `standardDeviation`  |
+| **Mode**                    | `mode(...numbers)`                              | Returns the most frequent value(s) as an array.                       | `mode`               |
+| **Cumulative Sum**          | `cumulativeSum(...numbers)`                     | Returns the running totals (partial sums) of a sequence.              | `cumulativeSum`      |
+| **Dead Zone**               | `deadzone(value, threshold)`                    | Applies a dead zone with continuous rescaling to an axis value.       | `deadzone`           |
+| **Signed Power**            | `signedPow(base, exp)`                          | Raises the magnitude of `base` to `exp` while preserving its sign.    | `signedPow`          |
+| **Round to Significant**    | `roundToSignificant(n, sigFigs)`                | Rounds to a count of significant figures, not decimal places.         | `roundToSignificant` |
+| **Normalize to Sum**        | `normalizeToSum(values, target)`                | Rescales a list to sum to `target`, preserving proportions.           | `normalizeToSum`     |
+| **Geometric Lerp**          | `geometricLerp(a, b, t)`                        | Multiplicative interpolation; the midpoint is $\sqrt{a \cdot b}$.     | `geometricLerp`      |
+| **Proportional Split**      | `proportionalSplit(total, ...weights)`          | Splits an integer total into whole parts that sum exactly to it.      | `proportionalSplit`  |
 
 ```javascript
 // #Usage Example
@@ -1241,6 +1266,331 @@ console.log(
    `fromPercent(percentOf(25, 200), 200): ${arithmetic.fromPercent(arithmetic.percentOf(25, 200), 200)}`,
 );
 // Output: fromPercent(percentOf(25, 200), 200): 25
+
+// #### 10. Statistics
+
+// --- median(...numbers) ---
+// Basic: Median of an odd-sized dataset
+console.log(`median(1, 3, 5, 7, 9): ${arithmetic.median(1, 3, 5, 7, 9)}`);
+// Output: median(1, 3, 5, 7, 9): 5
+// Intermediate: Even size averages the two central values
+console.log(`median(10, 2, 8, 4): ${arithmetic.median(10, 2, 8, 4)}`);
+// Output: median(10, 2, 8, 4): 6
+// Advanced: An empty dataset has no median
+console.log(`median(): ${arithmetic.median()}`);
+// Output: median(): NaN
+
+// --- min(...numbers) ---
+// Basic: Smallest of several values
+console.log(`min(3, 1, 4, 1, 5): ${arithmetic.min(3, 1, 4, 1, 5)}`);
+// Output: min(3, 1, 4, 1, 5): 1
+// Intermediate: Works with negatives
+console.log(`min(-10, -5, -20): ${arithmetic.min(-10, -5, -20)}`);
+// Output: min(-10, -5, -20): -20
+// Advanced: Empty input is NaN, never Infinity
+console.log(`min(): ${arithmetic.min()}`);
+// Output: min(): NaN
+
+// --- max(...numbers) ---
+// Basic: Largest of several values
+console.log(`max(3, 1, 4, 1, 5): ${arithmetic.max(3, 1, 4, 1, 5)}`);
+// Output: max(3, 1, 4, 1, 5): 5
+// Intermediate: Works with negatives
+console.log(`max(-10, -5, -20): ${arithmetic.max(-10, -5, -20)}`);
+// Output: max(-10, -5, -20): -5
+// Advanced: Empty input is NaN, never -Infinity
+console.log(`max(): ${arithmetic.max()}`);
+// Output: max(): NaN
+
+// --- variance(...numbers) ---
+// Basic: Population variance of a dataset
+console.log(
+   `variance(2, 4, 4, 4, 5, 5, 7, 9): ${arithmetic.variance(2, 4, 4, 4, 5, 5, 7, 9)}`,
+);
+// Output: variance(2, 4, 4, 4, 5, 5, 7, 9): 4
+// Intermediate: Identical values have zero spread
+console.log(`variance(5, 5, 5, 5): ${arithmetic.variance(5, 5, 5, 5)}`);
+// Output: variance(5, 5, 5, 5): 0
+// Advanced: An empty dataset is undefined
+console.log(`variance(): ${arithmetic.variance()}`);
+// Output: variance(): NaN
+
+// --- standardDeviation(...numbers) ---
+// Basic: Population standard deviation (sqrt of variance)
+console.log(
+   `standardDeviation(2, 4, 4, 4, 5, 5, 7, 9): ${arithmetic.standardDeviation(2, 4, 4, 4, 5, 5, 7, 9)}`,
+);
+// Output: standardDeviation(2, 4, 4, 4, 5, 5, 7, 9): 2
+// Intermediate: No spread, no deviation
+console.log(
+   `standardDeviation(10, 10, 10): ${arithmetic.standardDeviation(10, 10, 10)}`,
+);
+// Output: standardDeviation(10, 10, 10): 0
+// Advanced: An empty dataset is undefined
+console.log(`standardDeviation(): ${arithmetic.standardDeviation()}`);
+// Output: standardDeviation(): NaN
+
+// --- mode(...numbers) ---
+// Basic: The single most frequent value
+console.log(`mode(1, 2, 2, 3, 4): ${arithmetic.mode(1, 2, 2, 3, 4)}`);
+// Output: mode(1, 2, 2, 3, 4): 2
+// Intermediate: Multimodal data returns every top value
+console.log(`mode(1, 1, 2, 2, 3): ${arithmetic.mode(1, 1, 2, 2, 3)}`);
+// Output: mode(1, 1, 2, 2, 3): 1,2
+// Advanced: No data, no mode
+console.log(`mode(): ${arithmetic.mode()}`);
+// Output: mode():
+
+// #### 11. Number Theory (Extended)
+
+// --- sumOfDigits(n) ---
+// Basic: Sum of the decimal digits
+console.log(`sumOfDigits(12345): ${arithmetic.sumOfDigits(12345)}`);
+// Output: sumOfDigits(12345): 15
+// Intermediate: The sign is ignored
+console.log(`sumOfDigits(-9876): ${arithmetic.sumOfDigits(-9876)}`);
+// Output: sumOfDigits(-9876): 30
+// Advanced: Floats are truncated before summing
+console.log(`sumOfDigits(99.9): ${arithmetic.sumOfDigits(99.9)}`);
+// Output: sumOfDigits(99.9): 18
+
+// --- isPerfectSquare(n) ---
+// Basic: 144 is 12 squared
+console.log(`isPerfectSquare(144): ${arithmetic.isPerfectSquare(144)}`);
+// Output: isPerfectSquare(144): true
+// Intermediate: 150 is not a perfect square
+console.log(`isPerfectSquare(150): ${arithmetic.isPerfectSquare(150)}`);
+// Output: isPerfectSquare(150): false
+// Advanced: Non-integers are never perfect squares (no truncation)
+console.log(`isPerfectSquare(15.21): ${arithmetic.isPerfectSquare(15.21)}`);
+// Output: isPerfectSquare(15.21): false
+
+// --- isPerfectNumber(n) ---
+// Basic: 6 = 1 + 2 + 3, the smallest perfect number
+console.log(`isPerfectNumber(6): ${arithmetic.isPerfectNumber(6)}`);
+// Output: isPerfectNumber(6): true
+// Intermediate: 28 = 1 + 2 + 4 + 7 + 14
+console.log(`isPerfectNumber(28): ${arithmetic.isPerfectNumber(28)}`);
+// Output: isPerfectNumber(28): true
+// Advanced: 12 is abundant, not perfect
+console.log(`isPerfectNumber(12): ${arithmetic.isPerfectNumber(12)}`);
+// Output: isPerfectNumber(12): false
+
+// --- primeFactors(n) ---
+// Basic: Factorization with multiplicity
+console.log(`primeFactors(60): ${arithmetic.primeFactors(60)}`);
+// Output: primeFactors(60): 2,2,3,5
+// Intermediate: A prime factors into itself
+console.log(`primeFactors(97): ${arithmetic.primeFactors(97)}`);
+// Output: primeFactors(97): 97
+// Advanced: 1 has no prime factors
+console.log(`primeFactors(1): ${arithmetic.primeFactors(1)}`);
+// Output: primeFactors(1):
+
+// --- modInverse(a, m) ---
+// Basic: 3 x 4 = 12 = 1 (mod 11)
+console.log(`modInverse(3, 11): ${arithmetic.modInverse(3, 11)}`);
+// Output: modInverse(3, 11): 4
+// Intermediate: Inverse of 10 modulo 17
+console.log(`modInverse(10, 17): ${arithmetic.modInverse(10, 17)}`);
+// Output: modInverse(10, 17): 12
+// Advanced: No inverse exists when a and m share a factor
+console.log(`modInverse(2, 4): ${arithmetic.modInverse(2, 4)}`);
+// Output: modInverse(2, 4): NaN
+
+// --- totient(n) ---
+// Basic: Six integers below 9 are coprime to it
+console.log(`totient(9): ${arithmetic.totient(9)}`);
+// Output: totient(9): 6
+// Intermediate: For a prime p, the totient is p - 1
+console.log(`totient(7): ${arithmetic.totient(7)}`);
+// Output: totient(7): 6
+// Advanced: totient(1) is 1 by convention
+console.log(`totient(1): ${arithmetic.totient(1)}`);
+// Output: totient(1): 1
+
+// #### 12. Combinatorics
+
+// --- binomial(n, k) ---
+// Basic: Choose 2 from 5
+console.log(`binomial(5, 2): ${arithmetic.binomial(5, 2)}`);
+// Output: binomial(5, 2): 10
+// Intermediate: There is exactly one way to choose nothing
+console.log(`binomial(10, 0): ${arithmetic.binomial(10, 0)}`);
+// Output: binomial(10, 0): 1
+// Advanced: Distinct 5-card poker hands from 52
+console.log(`binomial(52, 5): ${arithmetic.binomial(52, 5)}`);
+// Output: binomial(52, 5): 2598960
+
+// --- permutations(n, k) ---
+// Basic: Ordered arrangements of 2 from 5
+console.log(`permutations(5, 2): ${arithmetic.permutations(5, 2)}`);
+// Output: permutations(5, 2): 20
+// Intermediate: Arrangements of 3 from 10
+console.log(`permutations(10, 3): ${arithmetic.permutations(10, 3)}`);
+// Output: permutations(10, 3): 720
+// Advanced: P(6, 6) equals 6 factorial
+console.log(`permutations(6, 6): ${arithmetic.permutations(6, 6)}`);
+// Output: permutations(6, 6): 720
+
+// --- multiplyMultiple(...numbers) ---
+// Basic: Product of several numbers
+console.log(
+   `multiplyMultiple(2, 3, 4): ${arithmetic.multiplyMultiple(2, 3, 4)}`,
+);
+// Output: multiplyMultiple(2, 3, 4): 24
+// Intermediate: A negative factor flips the sign
+console.log(
+   `multiplyMultiple(5, -2, 10): ${arithmetic.multiplyMultiple(5, -2, 10)}`,
+);
+// Output: multiplyMultiple(5, -2, 10): -100
+// Advanced: The empty product is the identity, 1
+console.log(`multiplyMultiple(): ${arithmetic.multiplyMultiple()}`);
+// Output: multiplyMultiple(): 1
+
+// #### 13. Geometry, Interpolation & Signal Shaping
+
+// --- hypot(...values) ---
+// Basic: The classic 3-4-5 right triangle
+console.log(`hypot(3, 4): ${arithmetic.hypot(3, 4)}`);
+// Output: hypot(3, 4): 5
+// Intermediate: Works in any dimension
+console.log(`hypot(1, 2, 2): ${arithmetic.hypot(1, 2, 2)}`);
+// Output: hypot(1, 2, 2): 3
+// Advanced: The 5-12-13 triple
+console.log(`hypot(5, 12): ${arithmetic.hypot(5, 12)}`);
+// Output: hypot(5, 12): 13
+
+// --- clampedLerp(a, b, t) ---
+// Basic: Halfway between 0 and 100
+console.log(`clampedLerp(0, 100, 0.5): ${arithmetic.clampedLerp(0, 100, 0.5)}`);
+// Output: clampedLerp(0, 100, 0.5): 50
+// Intermediate: t above 1 is clamped (no extrapolation)
+console.log(`clampedLerp(0, 100, 1.5): ${arithmetic.clampedLerp(0, 100, 1.5)}`);
+// Output: clampedLerp(0, 100, 1.5): 100
+// Advanced: t below 0 is clamped to the start
+console.log(
+   `clampedLerp(0, 100, -0.5): ${arithmetic.clampedLerp(0, 100, -0.5)}`,
+);
+// Output: clampedLerp(0, 100, -0.5): 0
+
+// --- mapRange(value, inMin, inMax, outMin, outMax) ---
+// Basic: Remap 5 from [0,10] onto [0,100]
+console.log(
+   `mapRange(5, 0, 10, 0, 100): ${arithmetic.mapRange(5, 0, 10, 0, 100)}`,
+);
+// Output: mapRange(5, 0, 10, 0, 100): 50
+// Intermediate: Remap a percentage onto [-1, 1]
+console.log(
+   `mapRange(25, 0, 100, -1, 1): ${arithmetic.mapRange(25, 0, 100, -1, 1)}`,
+);
+// Output: mapRange(25, 0, 100, -1, 1): -0.5
+// Advanced: Map a normalized axis onto degrees
+console.log(
+   `mapRange(0, -1, 1, 0, 360): ${arithmetic.mapRange(0, -1, 1, 0, 360)}`,
+);
+// Output: mapRange(0, -1, 1, 0, 360): 180
+
+// --- geometricLerp(a, b, t) ---
+// Basic: The midpoint is the geometric mean
+console.log(
+   `geometricLerp(1, 100, 0.5): ${arithmetic.geometricLerp(1, 100, 0.5)}`,
+);
+// Output: geometricLerp(1, 100, 0.5): 10
+// Intermediate: Each quarter-step multiplies the scale by 2
+console.log(
+   `geometricLerp(1, 16, 0.25): ${arithmetic.geometricLerp(1, 16, 0.25)}`,
+);
+// Output: geometricLerp(1, 16, 0.25): 2
+// Advanced: Endpoints must be positive
+console.log(
+   `geometricLerp(-1, 10, 0.5): ${arithmetic.geometricLerp(-1, 10, 0.5)}`,
+);
+// Output: geometricLerp(-1, 10, 0.5): NaN
+
+// --- signedPow(base, exp) ---
+// Basic: Solves the (-4) ** 0.5 = NaN trap
+console.log(`signedPow(-4, 0.5): ${arithmetic.signedPow(-4, 0.5)}`);
+// Output: signedPow(-4, 0.5): -2
+// Intermediate: The sign survives even an even exponent
+console.log(`signedPow(-3, 2): ${arithmetic.signedPow(-3, 2)}`);
+// Output: signedPow(-3, 2): -9
+// Advanced: Softening a small positive value
+console.log(`signedPow(0.25, 0.5): ${arithmetic.signedPow(0.25, 0.5)}`);
+// Output: signedPow(0.25, 0.5): 0.5
+
+// --- deadzone(value, threshold) ---
+// Basic: Input inside the dead zone collapses to 0
+console.log(`deadzone(0.05, 0.1): ${arithmetic.deadzone(0.05, 0.1)}`);
+// Output: deadzone(0.05, 0.1): 0
+// Intermediate: Output is continuously rescaled past the edge
+console.log(`deadzone(0.75, 0.5): ${arithmetic.deadzone(0.75, 0.5)}`);
+// Output: deadzone(0.75, 0.5): 0.5
+// Advanced: Full deflection is preserved at the extreme
+console.log(`deadzone(-1, 0.2): ${arithmetic.deadzone(-1, 0.2)}`);
+// Output: deadzone(-1, 0.2): -1
+
+// #### 14. Sequences, Allocation & Formatting
+
+// --- cumulativeSum(...numbers) ---
+// Basic: Running totals of a sequence
+console.log(
+   `cumulativeSum(1, 2, 3, 4): ${arithmetic.cumulativeSum(1, 2, 3, 4)}`,
+);
+// Output: cumulativeSum(1, 2, 3, 4): 1,3,6,10
+// Intermediate: A bank-statement-style balance
+console.log(`cumulativeSum(10, -5, 3): ${arithmetic.cumulativeSum(10, -5, 3)}`);
+// Output: cumulativeSum(10, -5, 3): 10,5,8
+// Advanced: An empty sequence yields an empty array
+console.log(`cumulativeSum(): ${arithmetic.cumulativeSum()}`);
+// Output: cumulativeSum():
+
+// --- normalizeToSum(values, target) ---
+// Basic: Turn weights into a distribution summing to 1
+console.log(`normalizeToSum([1, 3]): ${arithmetic.normalizeToSum([1, 3])}`);
+// Output: normalizeToSum([1, 3]): 0.25,0.75
+// Intermediate: Rescale to percentages (target 100)
+console.log(
+   `normalizeToSum([1, 1, 2], 100): ${arithmetic.normalizeToSum([1, 1, 2], 100)}`,
+);
+// Output: normalizeToSum([1, 1, 2], 100): 25,25,50
+// Advanced: A zero-sum list cannot be normalized
+console.log(`normalizeToSum([2, -2]): ${arithmetic.normalizeToSum([2, -2])}`);
+// Output: normalizeToSum([2, -2]): NaN,NaN
+
+// --- roundToSignificant(n, sigFigs) ---
+// Basic: Two significant figures of a large integer
+console.log(
+   `roundToSignificant(123456, 2): ${arithmetic.roundToSignificant(123456, 2)}`,
+);
+// Output: roundToSignificant(123456, 2): 120000
+// Intermediate: Significant figures adapt to tiny magnitudes
+console.log(
+   `roundToSignificant(0.00098, 1): ${arithmetic.roundToSignificant(0.00098, 1)}`,
+);
+// Output: roundToSignificant(0.00098, 1): 0.001
+// Advanced: Rounds figures, not decimal places
+console.log(
+   `roundToSignificant(9.876, 2): ${arithmetic.roundToSignificant(9.876, 2)}`,
+);
+// Output: roundToSignificant(9.876, 2): 9.9
+
+// --- proportionalSplit(total, ...weights) ---
+// Basic: Split 100 three ways with no cent lost
+console.log(
+   `proportionalSplit(100, 1, 1, 1): ${arithmetic.proportionalSplit(100, 1, 1, 1)}`,
+);
+// Output: proportionalSplit(100, 1, 1, 1): 34,33,33
+// Intermediate: Split by proportional weights
+console.log(
+   `proportionalSplit(10, 1, 2, 2): ${arithmetic.proportionalSplit(10, 1, 2, 2)}`,
+);
+// Output: proportionalSplit(10, 1, 2, 2): 2,4,4
+// Advanced: The odd unit goes to the largest remainder
+console.log(
+   `proportionalSplit(7, 50, 50): ${arithmetic.proportionalSplit(7, 50, 50)}`,
+);
+// Output: proportionalSplit(7, 50, 50): 4,3
 ```
 
 <details>
@@ -1302,6 +1652,416 @@ console.log(
 ![CodyMath Logo][testAlgebra01]
 
 [testAlgebra01]: ./assets/img/testsImgs/algebra/testAlgebra01.png
+
+```javascript
+import { arithmetic } from "codymath";
+
+const app = document.querySelector<HTMLDivElement>("#app")!;
+
+app.innerHTML = `
+  <h1>CodyMath — Espiral de Fibonacci</h1>
+  <div style="margin: 12px 0; display: flex; align-items: center; gap: 12px;">
+    <label for="terms">Termos:</label>
+    <input type="range" id="terms" min="2" max="12" step="1" value="8" />
+    <strong id="terms-out">8</strong>
+  </div>
+  <p>Sequência: <code id="seq"></code></p>
+  <p>F(n)/F(n−1) = <code id="ratio"></code> (φ ≈ 1.6180339887)</p>
+  <canvas id="canvas" width="800" height="500" style="border: 1px solid #ccc; max-width: 100%;"></canvas>
+`;
+
+const canvas = document.querySelector<HTMLCanvasElement>("#canvas")!;
+const ctx = canvas.getContext("2d")!;
+const slider = document.querySelector<HTMLInputElement>("#terms")!;
+const out = document.querySelector<HTMLElement>("#terms-out")!;
+const seqEl = document.querySelector<HTMLElement>("#seq")!;
+const ratioEl = document.querySelector<HTMLElement>("#ratio")!;
+
+interface Square {
+   x: number;
+   y: number;
+   s: number;
+   k: number;
+}
+
+// Calcula a posição de cada quadrado F(k) girando 90° a cada passo
+function layout(n: number): {
+   squares: Square[];
+   bx: number;
+   by: number;
+   bw: number;
+   bh: number;
+} {
+   let x = 0,
+      y = 0,
+      w = 1,
+      h = 1;
+   const squares: Square[] = [{ x: 0, y: 0, s: 1, k: 1 }];
+   let dir = 0;
+
+   for (let k = 2; k <= n; k++) {
+      const s = arithmetic.fibonacci(k);
+      let nx: number, ny: number;
+
+      if (dir === 0) {
+         nx = x + w;
+         ny = y + h - s;
+      } // direita
+      else if (dir === 1) {
+         nx = x;
+         ny = y - s;
+      } // cima
+      else if (dir === 2) {
+         nx = x - s;
+         ny = y;
+      } // esquerda
+      else {
+         nx = x + w - s;
+         ny = y + h;
+      } // baixo
+
+      squares.push({ x: nx, y: ny, s, k });
+
+      const minX = Math.min(x, nx),
+         minY = Math.min(y, ny);
+      const maxX = Math.max(x + w, nx + s),
+         maxY = Math.max(y + h, ny + s);
+      x = minX;
+      y = minY;
+      w = maxX - minX;
+      h = maxY - minY;
+      dir = (dir + 1) % 4;
+   }
+
+   return { squares, bx: x, by: y, bw: w, bh: h };
+}
+
+function render(n: number): void {
+   const { squares, bx, by, bw, bh } = layout(n);
+   const pad = 20;
+   const scale = Math.min(
+      (canvas.width - 2 * pad) / bw,
+      (canvas.height - 2 * pad) / bh,
+   );
+   const ox = pad + (canvas.width - 2 * pad - bw * scale) / 2 - bx * scale;
+   const oy = pad + (canvas.height - 2 * pad - bh * scale) / 2 - by * scale;
+
+   ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+   // Quadrados
+   for (const q of squares) {
+      const px = ox + q.x * scale;
+      const py = oy + q.y * scale;
+      const side = q.s * scale;
+
+      ctx.fillStyle = "#EEEDFE";
+      ctx.strokeStyle = "#534AB7";
+      ctx.fillRect(px, py, side, side);
+      ctx.strokeRect(px, py, side, side);
+
+      if (side >= 24) {
+         ctx.fillStyle = "#3C3489";
+         ctx.font = `${Math.min(26, side * 0.3)}px monospace`;
+         ctx.textAlign = "center";
+         ctx.textBaseline = "middle";
+         ctx.fillText(
+            String(arithmetic.fibonacci(q.k)),
+            px + side / 2,
+            py + side / 2,
+         );
+      }
+   }
+
+   // Espiral: um quarto de círculo por quadrado (centro e ângulos por direção)
+   ctx.strokeStyle = "#D85A30";
+   ctx.lineWidth = 2.5;
+   ctx.beginPath();
+   for (const q of squares) {
+      // O quadrado-semente (k=1) se comporta como dir 3; os demais usam (k-2) % 4
+      const da = q.k === 1 ? 3 : (q.k - 2) % 4;
+      const r = q.s * scale;
+      let cx: number, cy: number, a0: number, a1: number;
+
+      if (da === 0) {
+         cx = q.x;
+         cy = q.y;
+         a0 = 0.5 * Math.PI;
+         a1 = 0;
+      } // centro: canto sup. esquerdo
+      else if (da === 1) {
+         cx = q.x;
+         cy = q.y + q.s;
+         a0 = 0;
+         a1 = 1.5 * Math.PI;
+      } // centro: canto inf. esquerdo
+      else if (da === 2) {
+         cx = q.x + q.s;
+         cy = q.y + q.s;
+         a0 = 1.5 * Math.PI;
+         a1 = Math.PI;
+      } // centro: canto inf. direito
+      else {
+         cx = q.x + q.s;
+         cy = q.y;
+         a0 = Math.PI;
+         a1 = 0.5 * Math.PI;
+      } // centro: canto sup. direito
+
+      ctx.arc(ox + cx * scale, oy + cy * scale, r, a0, a1, true);
+   }
+   ctx.stroke();
+   ctx.lineWidth = 1;
+
+   // Sequência e razão áurea — mais dogfooding da lib
+   const seq = Array.from({ length: n }, (_, i) => arithmetic.fibonacci(i + 1));
+   seqEl.textContent = seq.join(", ");
+   const ratio = arithmetic.divide(
+      arithmetic.fibonacci(n),
+      arithmetic.fibonacci(n - 1),
+   );
+   ratioEl.textContent = arithmetic.round(ratio, 10).toString();
+}
+
+slider.addEventListener("input", () => {
+   out.textContent = slider.value;
+   render(Number(slider.value));
+});
+
+render(8);
+
+```
+
+![CodyMath Logo][testAlgebra02]
+
+[testAlgebra02]: ./assets/img/testsImgs/algebra/fib.png/
+
+```javascript
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodyMath CDN Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/codymath@latest/dist/codymath.umd.js"></script>
+</head>
+<body>
+  <h1>CodyMath Test</h1>
+  <div id="output1"></div>
+  <div id="output2"></div>
+  <div id="output3"></div>
+  <div id="output4"></div>
+  <div id="output5"></div>
+  <div id="output6"></div>
+  <div id="output7"></div>
+  <div id="output8"></div>
+  <div id="output9"></div>
+  <div id="output10"></div>
+  <div id="output11"></div>
+  <div id="output12"></div>
+  <div id="output13"></div>
+  <div id="output14"></div>
+  <div id="output15"></div>
+  <div id="output16"></div>
+  <div id="output17"></div>
+  <div id="output18"></div>
+  <div id="output19"></div>
+  <div id="output20"></div>
+  <div id="output21"></div>
+  <div id="output22"></div>
+  <div id="output23"></div>
+  <div id="output24"></div>
+  <div id="output25"></div>
+  <div id="output26"></div>
+  <div id="output27"></div>
+  <div id="output28"></div>
+  <div id="output29"></div>
+  <div id="output30"></div>
+  <div id="output31"></div>
+  <div id="output32"></div>
+  <div id="output33"></div>
+  <div id="output34"></div>
+  <div id="output35"></div>
+  <div id="output36"></div>
+  <div id="output37"></div>
+</body>
+</html>
+
+
+-
+
+const { arithmetic } = CodyMath;
+
+// #### 7. Number Theory & Divisibility (Extended)
+// --- coprime(a, b) ---
+// Basic: Two numbers with no common factor
+ document.getElementById('output1').innerText = `coprime(8, 15): ${arithmetic.coprime(8, 15)}`;
+// Output: coprime(8, 15): true
+
+// Intermediate: Two numbers sharing a factor (2)
+document.getElementById('output2').innerText = `coprime(4, 6): ${arithmetic.coprime(4, 6)}`;
+// Output: coprime(4, 6): false
+
+// Advanced: Consecutive integers are always coprime
+document.getElementById('output3').innerText = `coprime(14, 15): ${arithmetic.coprime(14, 15)}`;
+// Output: coprime(14, 15): true
+
+// --- divisors(n) ---
+// Basic: All divisors of a composite number
+document.getElementById('output4').innerText = `divisors(12): ${arithmetic.divisors(12)}`;
+// Output: divisors(12): 1,2,3,4,6,12
+
+// Intermediate: A prime number has exactly two divisors
+document.getElementById('output5').innerText = `divisors(7): ${arithmetic.divisors(7)}`;
+// Output: divisors(7): 1,7
+
+// Advanced: Perfect squares list their root only once
+document.getElementById('output6').innerText = `divisors(36): ${arithmetic.divisors(36)}`;
+// Output: divisors(36): 1,2,3,4,6,9,12,18,36
+
+// --- digits(n) ---
+// Basic: Counting digits of a positive integer
+document.getElementById('output7').innerText = `digits(12345): ${arithmetic.digits(12345)}`;
+// Output: digits(12345): 5
+
+// Intermediate: The sign is not a digit
+document.getElementById('output8').innerText = `digits(-9876): ${arithmetic.digits(-9876)}`;
+// Output: digits(-9876): 4
+
+// Advanced: Zero has exactly one digit
+document.getElementById('output9').innerText = `digits(0): ${arithmetic.digits(0)}`;
+// Output: digits(0): 1
+
+// --- fibonacci(n) ---
+// Basic: The 10th Fibonacci number (0-indexed)
+document.getElementById('output10').innerText = `fibonacci(10): ${arithmetic.fibonacci(10)}`;
+// Output: fibonacci(10): 55
+
+// Intermediate: The sequence starts at F(0) = 0
+document.getElementById('output11').innerText = `fibonacci(0): ${arithmetic.fibonacci(0)}`;
+// Output: fibonacci(0): 0
+
+// Advanced: Large indices, iteratively — no stack overflow
+document.getElementById('output12').innerText = `fibonacci(50): ${arithmetic.fibonacci(50)}`;
+// Output: fibonacci(50): 12586269025
+
+// --- gcdMultiple(...numbers) ---
+// Basic: GCD of three integers
+document.getElementById('output13').innerText = `gcdMultiple(12, 18, 24): ${arithmetic.gcdMultiple(12, 18, 24)}`;
+// Output: gcdMultiple(12, 18, 24): 6
+
+// Intermediate: GCD of four integers
+document.getElementById('output14').innerText = `gcdMultiple(10, 20, 30, 40): ${arithmetic.gcdMultiple(10, 20, 30, 40)}`;
+// Output: gcdMultiple(10, 20, 30, 40): 10
+
+// Advanced: Distinct primes — GCD is 1 (early exit kicks in)
+document.getElementById('output15').innerText = `gcdMultiple(17, 13, 11): ${arithmetic.gcdMultiple(17, 13, 11)}`;
+// Output: gcdMultiple(17, 13, 11): 1
+
+// --- lcmMultiple(...numbers) ---
+// Basic: LCM of three integers
+document.getElementById('output16').innerText = `lcmMultiple(2, 3, 4): ${arithmetic.lcmMultiple(2, 3, 4)}`;
+// Output: lcmMultiple(2, 3, 4): 12
+
+// Intermediate: Smallest number divisible by all of 1..10
+document.getElementById('output17').innerText = `lcmMultiple(1, 2, 3, 4, 5, 6, 7, 8, 9, 10): ${arithmetic.lcmMultiple(1, 2, 3, 4, 5, 6, 7, 8, 9, 10)}`;
+// Output: lcmMultiple(1, 2, 3, 4, 5, 6, 7, 8, 9, 10): 2520
+
+// Advanced: Zero absorbs everything
+document.getElementById('output18').innerText = `lcmMultiple(4, 0, 6): ${arithmetic.lcmMultiple(4, 0, 6)}`;
+// Output: lcmMultiple(4, 0, 6): 0
+
+// --- modPow(base, exponent, modulus) ---
+// Basic: (2^10) % 1000
+document.getElementById('output19').innerText = `modPow(2, 10, 1000): ${arithmetic.modPow(2, 10, 1000)}`;
+// Output: modPow(2, 10, 1000): 24
+
+// Intermediate: Astronomical exponents without overflow — power() would return Infinity
+document.getElementById('output20').innerText = `modPow(7, 1e15, 13): ${arithmetic.modPow(7, 1e15, 13)}`;
+// Output: modPow(7, 1e15, 13): 9
+
+// Advanced: Real RSA roundtrip (textbook keys: n=3233, e=17, d=2753)
+const encrypted = arithmetic.modPow(65, 17, 3233);
+document.getElementById('output21').innerText = `encrypt: ${encrypted}`;
+// Output: encrypt: 2790
+
+document.getElementById('output22').innerText = `decrypt: ${arithmetic.modPow(encrypted, 2753, 3233)}`;
+// Output: decrypt: 65
+
+// #### 8. Safe Operations & Aggregations
+
+// --- safeDiv(a, b, fallback) ---
+// Basic: Normal division
+document.getElementById('output23').innerText = `safeDiv(10, 2): ${arithmetic.safeDiv(10, 2)}`;
+// Output: safeDiv(10, 2): 5
+
+// Intermediate: Division by zero returns the default fallback (0)
+document.getElementById('output24').innerText = `safeDiv(10, 0): ${arithmetic.safeDiv(10, 0)}`;
+// Output: safeDiv(10, 0): 0
+
+// Advanced: Custom fallback value
+document.getElementById('output25').innerText = `safeDiv(10, 0, -1): ${arithmetic.safeDiv(10, 0, -1)}`;
+// Output: safeDiv(10, 0, -1): -1
+
+// --- sumOfSquares(...numbers) ---
+// Basic: Pythagorean pair — 3² + 4²
+document.getElementById('output26').innerText = `sumOfSquares(3, 4): ${arithmetic.sumOfSquares(3, 4)}`;
+// Output: sumOfSquares(3, 4): 25
+
+// Intermediate: Multiple values
+document.getElementById('output27').innerText = `sumOfSquares(1, 2, 3): ${arithmetic.sumOfSquares(1, 2, 3)}`;
+// Output: sumOfSquares(1, 2, 3): 14
+
+// Advanced: Squaring removes the sign
+document.getElementById('output28').innerText = `sumOfSquares(-3, 4): ${arithmetic.sumOfSquares(-3, 4)}`;
+// Output: sumOfSquares(-3, 4): 25
+
+// #### 9. Interpolation & Percentages
+
+// --- inverseLerp(a, b, value) ---
+// Basic: Where does 7.5 sit between 0 and 10?
+document.getElementById('output29').innerText = `inverseLerp(0, 10, 7.5): ${arithmetic.inverseLerp(0, 10, 7.5)}`;
+// Output: inverseLerp(0, 10, 7.5): 0.75
+
+// Intermediate: Values beyond the range extrapolate (t > 1)
+document.getElementById('output30').innerText = `inverseLerp(0, 10, 20): ${arithmetic.inverseLerp(0, 10, 20)}`;
+// Output: inverseLerp(0, 10, 20): 2
+
+// Advanced: Degenerate range (a === b) has no meaningful t
+document.getElementById('output31').innerText = `inverseLerp(5, 5, 5): ${arithmetic.inverseLerp(5, 5, 5)}`;
+// Output: inverseLerp(5, 5, 5): NaN
+
+// --- percentOf(value, total) ---
+// Basic: What percentage is 25 of 200?
+document.getElementById('output32').innerText = `percentOf(25, 200): ${arithmetic.percentOf(25, 200)}`;
+// Output: percentOf(25, 200): 12.5
+
+// Intermediate: A value equal to its total is always 100%
+document.getElementById('output33').innerText = `percentOf(7, 7): ${arithmetic.percentOf(7, 7)}`;
+// Output: percentOf(7, 7): 100
+
+// Advanced: Repeating decimals are preserved
+document.getElementById('output34').innerText = `percentOf(1, 3): ${arithmetic.percentOf(1, 3)}`;
+// Output: percentOf(1, 3): 33.33333333333333
+
+// --- fromPercent(percent, total) ---
+// Basic: What is 12.5% of 200?
+document.getElementById('output35').innerText = `fromPercent(12.5, 200): ${arithmetic.fromPercent(12.5, 200)}`;
+// Output: fromPercent(12.5, 200): 25
+
+// Intermediate: 100% is the identity
+document.getElementById('output36').innerText = `fromPercent(100, 89.9): ${arithmetic.fromPercent(100, 89.9)}`;
+// Output: fromPercent(100, 89.9): 89.9
+
+// Advanced: Perfect inverse of percentOf (roundtrip)
+document.getElementById('output37').innerText = `fromPercent(percentOf(25, 200), 200): ${arithmetic.fromPercent(arithmetic.percentOf(25, 200), 200)}`;
+// Output: fromPercent(percentOf(25, 200), 200): 25
+
+
+```
+
+![CodyMath Logo][testAlgebra03]
+
+[testAlgebra03]: ./assets/img/testsImgs/algebra/cdn.png/
 
 </details>
 
@@ -1539,6 +2299,10 @@ This library is built upon the foundational knowledge established by generations
 - Academia Brasileira de Letras (ABL). _Vocabulário Ortográfico da Língua Portuguesa_. for Portuguese vocabulary and standards.
 - Cunha, C., & Cintra, L. F. L. _Nova Gramática do Português Contemporâneo_. for detailed Portuguese grammar rules.
 - The University of Chicago. _The Chicago Manual of Style, 17th Edition_. for English numeral writing conventions.
+- Knuth, D. E. (1997). _The Art of Computer Programming, Vol. 2: Seminumerical Algorithms, 3rd Edition_. Addison-Wesley.
+- Cormen, T. H., et al. (2022). _Introduction to Algorithms, 4th Edition_. MIT Press.
+- Goldberg, D. (1991). _What Every Computer Scientist Should Know About Floating-Point Arithmetic_. ACM Computing Surveys, 23(1), 5-48.
+- OEIS Foundation Inc. _The On-Line Encyclopedia of Integer Sequences_. Retrieved from https://oeis.org/
 
 ## Security Policy
 

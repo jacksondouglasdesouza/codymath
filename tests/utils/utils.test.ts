@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview Unit tests for the high-level utility functions module.
- * @version 0.6.0
+ * @version 0.7.0
  * @license MIT
  * @author Jackson Douglas de Souza
  * @date 2025-09-22 | Last tested on: 2025-09-24 | 2025-09-26

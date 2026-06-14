@@ -4,10 +4,10 @@ import { constants } from "../../src/constants/constants";
 
 /**
  * @fileoverview Unit tests for the core arithmetic module.
- * @version 0.6.0
+ * @version 0.7.0
  * @license MIT
  * @author Jackson Douglas de Souza
- * @date initial 2025-09-17 | Last updated test: 2026-06-10
+ * @date initial 2025-09-17 | Last updated test: 2026-06-13
  */
 
 import { describe, it, expect } from "vitest";
@@ -55,6 +55,31 @@ import {
    modPow,
    fromPercent,
    percentOf,
+   sumOfDigits,
+   isPerfectSquare,
+   hypot,
+   clampedLerp,
+   mapRange,
+   isPerfectNumber,
+   primeFactors,
+   multiplyMultiple,
+   binomial,
+   modInverse,
+   permutations,
+   totient,
+   median,
+   min,
+   max,
+   variance,
+   standardDeviation,
+   mode,
+   cumulativeSum,
+   deadzone,
+   signedPow,
+   roundToSignificant,
+   normalizeToSum,
+   geometricLerp,
+   proportionalSplit,
 } from "../../src/algebra/arithmetic";
 
 describe("Function: sum", () => {
@@ -2273,6 +2298,3511 @@ describe("Function: fromPercent", () => {
       const price = 89.9;
       const discount = fromPercent(15, price);
       expect(round(price - discount, 2)).toBe(76.42);
+   });
+});
+
+//--
+
+describe("Function: sumOfDigits", () => {
+   // ── BÁSICO ──
+   it("should sum the digits of simple positive integers", () => {
+      expect(sumOfDigits(12345)).toBe(15); // 1+2+3+4+5
+      expect(sumOfDigits(999)).toBe(27); // 9+9+9
+      expect(sumOfDigits(1000)).toBe(1); // 1+0+0+0
+      expect(sumOfDigits(7)).toBe(7);
+   });
+
+   // ── MÉDIO ──
+   it("should handle zero, negatives, and floats", () => {
+      // Zero
+      expect(sumOfDigits(0)).toBe(0);
+      expect(sumOfDigits(-0)).toBe(0);
+
+      // Sinal ignorado
+      expect(sumOfDigits(-12345)).toBe(15);
+      expect(sumOfDigits(-999)).toBe(27);
+
+      // Floats truncados
+      expect(sumOfDigits(45.9)).toBe(9); // sumOfDigits(45)
+      expect(sumOfDigits(-99.99)).toBe(18); // sumOfDigits(99)
+      expect(sumOfDigits(0.7)).toBe(0); // sumOfDigits(0)
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with digits and mod (dogfooding)", () => {
+      // A soma máxima possível é 9 * digits(n)
+      for (const n of [5, 99, 12345, 999999, 1000001]) {
+         expect(sumOfDigits(n)).toBeLessThanOrEqual(9 * digits(n));
+         expect(sumOfDigits(n)).toBeGreaterThanOrEqual(1);
+      }
+
+      // Repunits e repdigits: sumOfDigits(ddd...d) = d * digits
+      expect(sumOfDigits(1111)).toBe(4);
+      expect(sumOfDigits(7777777)).toBe(multiply(7, digits(7777777)));
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with non-finite inputs", () => {
+      // Sem a guarda, String(Infinity) somaria charCodes de letras!
+      expect(sumOfDigits(Infinity)).toBeNaN();
+      expect(sumOfDigits(-Infinity)).toBeNaN();
+      expect(sumOfDigits(NaN)).toBeNaN();
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality at the boundaries of safe integers", () => {
+      // MAX_SAFE_INTEGER = 9007199254740991 -> 9+0+0+7+1+9+9+2+5+4+7+4+0+9+9+1 = 76
+      expect(sumOfDigits(Number.MAX_SAFE_INTEGER)).toBe(76);
+      expect(sumOfDigits(-Number.MAX_SAFE_INTEGER)).toBe(76);
+
+      // Maior soma possível em 15 dígitos: 999999999999999
+      expect(sumOfDigits(999999999999999)).toBe(135); // 9 * 15
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (digit-sum theorems at scale)", () => {
+      // Teorema 1: congruência módulo 9 — n ≡ sumOfDigits(n) (mod 9)
+      // É a base da "prova dos nove" e das regras de divisibilidade por 3 e 9
+      for (let n = 0; n <= 3000; n += 7) {
+         expect(mod(sumOfDigits(n), 9)).toBe(mod(n, 9));
+      }
+
+      // Teorema 2: divisível por 9 <=> soma dos dígitos divisível por 9
+      expect(mod(sumOfDigits(9 * 12345), 9)).toBe(0);
+      expect(mod(sumOfDigits(9 * 987654), 9)).toBe(0);
+
+      // Teorema 3: divisível por 3 <=> soma divisível por 3 (dogfooding com mod)
+      for (const n of [3, 33, 123, 12345, 999999, 3000003]) {
+         expect(mod(sumOfDigits(n), 3)).toBe(mod(n, 3));
+      }
+
+      // Propriedade: multiplicar por 10 NÃO muda a soma (só acrescenta zeros)
+      let value = 123;
+      for (let step = 1; step <= 10; step++) {
+         value = value * 10;
+         expect(sumOfDigits(value)).toBe(sumOfDigits(123));
+      }
+
+      // Invariância de sinal — varredura
+      for (let n = 0; n <= 1000; n += 13) {
+         expect(sumOfDigits(-n)).toBe(sumOfDigits(n));
+      }
+   });
+});
+
+//--
+
+describe("Function: isPerfectSquare", () => {
+   // ── BÁSICO ──
+   it("should identify simple perfect squares and non-squares", () => {
+      expect(isPerfectSquare(4)).toBe(true);
+      expect(isPerfectSquare(9)).toBe(true);
+      expect(isPerfectSquare(36)).toBe(true);
+      expect(isPerfectSquare(144)).toBe(true);
+
+      expect(isPerfectSquare(2)).toBe(false);
+      expect(isPerfectSquare(10)).toBe(false);
+      expect(isPerfectSquare(35)).toBe(false);
+      expect(isPerfectSquare(37)).toBe(false);
+   });
+
+   // ── MÉDIO ──
+   it("should handle zero, one, negatives, and non-integers", () => {
+      // 0 = 0² e 1 = 1²
+      expect(isPerfectSquare(0)).toBe(true);
+      expect(isPerfectSquare(-0)).toBe(true);
+      expect(isPerfectSquare(1)).toBe(true);
+
+      // Negativos nunca são quadrados perfeitos (nos reais)
+      expect(isPerfectSquare(-4)).toBe(false);
+      expect(isPerfectSquare(-9)).toBe(false);
+
+      // Floats NÃO são truncados: propriedade de inteiros
+      expect(isPerfectSquare(36.5)).toBe(false);
+      expect(isPerfectSquare(35.99999)).toBe(false);
+      expect(isPerfectSquare(4.0)).toBe(true); // 4.0 É inteiro em JS
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with power, divisors, and isOdd (dogfooding)", () => {
+      // Todo power(k, 2) é quadrado perfeito — varredura
+      for (let k = 0; k <= 100; k++) {
+         expect(isPerfectSquare(power(k, 2))).toBe(true);
+      }
+
+      // Teorema: n é quadrado perfeito <=> tem quantidade ÍMPAR de divisores
+      for (let n = 1; n <= 200; n++) {
+         expect(isPerfectSquare(n)).toBe(isOdd(divisors(n).length));
+      }
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with non-finite inputs and neighbors", () => {
+      expect(isPerfectSquare(NaN)).toBe(false);
+      expect(isPerfectSquare(Infinity)).toBe(false);
+      expect(isPerfectSquare(-Infinity)).toBe(false);
+
+      // Vizinhos imediatos de quadrados: o teste clássico de off-by-one
+      for (const k of [5, 12, 50, 100, 1000]) {
+         const sq = k * k;
+         expect(isPerfectSquare(sq)).toBe(true);
+         expect(isPerfectSquare(sq - 1)).toBe(false);
+         expect(isPerfectSquare(sq + 1)).toBe(false);
+      }
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with giant squares near the float limit", () => {
+      // Quadrados de números grandes: onde Math.sqrt sozinho tropeçaria
+      expect(isPerfectSquare(94906265 * 94906265)).toBe(true); // maior raiz segura
+      expect(isPerfectSquare(94906265 * 94906265 - 1)).toBe(false);
+      expect(isPerfectSquare(99991 * 99991)).toBe(true);
+      expect(isPerfectSquare(999999937 * 4)).toBe(false); // 4·primo: nunca quadrado
+
+      // Quadrado de primo grande (estrutura p²)
+      expect(isPerfectSquare(1000003 * 1000003)).toBe(true);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (square theorems at scale)", () => {
+      // Teorema 1: soma dos k primeiros ímpares = k² (Gauss pitagórico!)
+      // 1 = 1², 1+3 = 2², 1+3+5 = 3², ...
+      let acc = 0;
+      for (let k = 1; k <= 200; k++) {
+         acc += 2 * k - 1;
+         expect(isPerfectSquare(acc)).toBe(true);
+         expect(acc).toBe(power(k, 2));
+      }
+
+      // Teorema 2: quadrados perfeitos terminam só em 0,1,4,5,6,9 (base 10)
+      for (let k = 1; k <= 300; k++) {
+         const lastDigit = mod(power(k, 2), 10);
+         expect([0, 1, 4, 5, 6, 9]).toContain(lastDigit);
+      }
+
+      // Teorema 3: produto de dois quadrados é quadrado
+      expect(isPerfectSquare(4 * 9)).toBe(true); // 36
+      expect(isPerfectSquare(16 * 25)).toBe(true); // 400
+      expect(isPerfectSquare(49 * 121)).toBe(true); // 5929
+
+      // Densidade: entre 10000 e 10200 existem EXATAMENTE 1 quadrado (10000 = 100²)
+      let count = 0;
+      for (let n = 10000; n <= 10200; n++) {
+         if (isPerfectSquare(n)) count++;
+      }
+      expect(count).toBe(1);
+
+      // Quadrado de Fibonacci: F(12) = 144 = 12² (o ÚNICO Fibonacci > 1 que é quadrado!)
+      expect(isPerfectSquare(fibonacci(12))).toBe(true);
+      expect(isPerfectSquare(fibonacci(11))).toBe(false);
+      expect(isPerfectSquare(fibonacci(13))).toBe(false);
+   });
+});
+
+//--
+
+describe("Function: hypot", () => {
+   // ── BÁSICO ──
+   it("should calculate the hypotenuse of classic right triangles", () => {
+      expect(hypot(3, 4)).toBe(5);
+      expect(hypot(5, 12)).toBe(13);
+      expect(hypot(8, 15)).toBe(17);
+      expect(hypot(7, 24)).toBe(25);
+   });
+
+   // ── MÉDIO ──
+   it("should handle single arguments, zeros, negatives, and the empty case", () => {
+      // Um único argumento: |n|
+      expect(hypot(5)).toBe(5);
+      expect(hypot(-5)).toBe(5);
+
+      // Zeros não contribuem
+      expect(hypot(0, 0)).toBe(0);
+      expect(hypot(3, 0, 4)).toBe(5);
+
+      // Sinais são irrelevantes (quadrado anula)
+      expect(hypot(-3, 4)).toBe(5);
+      expect(hypot(3, -4)).toBe(5);
+      expect(hypot(-3, -4)).toBe(5);
+
+      // Vazio: sqrt(0) = 0, consistente com sumOfSquares()
+      expect(hypot()).toBe(0);
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with sumOfSquares, sqrt, and Math.hypot (dogfooding)", () => {
+      // Definição: hypot(...) === sqrt(sumOfSquares(...))
+      const cases: number[][] = [
+         [3, 4],
+         [1, 2, 2],
+         [5, 12],
+         [1, 1, 1, 1],
+      ];
+      for (const c of cases) {
+         expect(hypot(...c)).toBe(sqrt(sumOfSquares(...c)));
+      }
+
+      // Paridade com o nativo na faixa normal
+      expect(hypot(3, 4)).toBe(Math.hypot(3, 4));
+      expect(hypot(1.5, 2.5)).toBeCloseTo(Math.hypot(1.5, 2.5), 12);
+      expect(hypot(1, 2, 3, 4, 5)).toBeCloseTo(Math.hypot(1, 2, 3, 4, 5), 12);
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with 3D, irrationals, and special values", () => {
+      // Quádrupla pitagórica 3D: 1² + 2² + 2² = 3²
+      expect(hypot(1, 2, 2)).toBe(3);
+      expect(hypot(2, 3, 6)).toBe(7);
+      expect(hypot(1, 4, 8)).toBe(9);
+
+      // Diagonais irracionais clássicas
+      expect(hypot(1, 1)).toBeCloseTo(Math.SQRT2, 12); // diagonal do quadrado
+      expect(hypot(1, 1, 1)).toBeCloseTo(Math.sqrt(3), 12); // diagonal do cubo
+
+      // Especiais
+      expect(hypot(NaN, 3)).toBeNaN();
+      expect(hypot(Infinity, 1)).toBe(Infinity);
+      expect(hypot(-Infinity, 1)).toBe(Infinity);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with scaled Pythagorean triples", () => {
+      // Escalar uma tripla por k mantém ela pitagórica: (3k, 4k, 5k)
+      for (const k of [2, 10, 100, 1000, 100000]) {
+         expect(hypot(3 * k, 4 * k)).toBe(5 * k);
+         expect(hypot(5 * k, 12 * k)).toBe(13 * k);
+      }
+
+      // Componentes minúsculos (precisão na ponta de baixo)
+      expect(hypot(3e-8, 4e-8)).toBeCloseTo(5e-8, 18);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (Euclidean geometry at scale)", () => {
+      // Fórmula de Euclides gera TODAS as triplas: a=m²-n², b=2mn, c=m²+n²
+      for (let m = 2; m <= 15; m++) {
+         for (let n = 1; n < m; n++) {
+            const a = power(m, 2) - power(n, 2);
+            const b = 2 * m * n;
+            const c = power(m, 2) + power(n, 2);
+            expect(hypot(a, b)).toBe(c);
+         }
+      }
+
+      // Desigualdade triangular: hypot(a, b) <= |a| + |b| — varredura
+      for (let a = -20; a <= 20; a += 4) {
+         for (let b = -20; b <= 20; b += 4) {
+            expect(hypot(a, b)).toBeLessThanOrEqual(
+               absolute(a) + absolute(b) + 1e-12,
+            );
+            // E nunca menor que o maior componente
+            expect(hypot(a, b)).toBeGreaterThanOrEqual(
+               Math.max(absolute(a), absolute(b)),
+            );
+         }
+      }
+
+      // Invariância de ordem e homogeneidade: hypot(ka, kb) === k * hypot(a, b)
+      expect(hypot(4, 3)).toBe(hypot(3, 4));
+      expect(hypot(6, 8)).toBeCloseTo(2 * hypot(3, 4), 12);
+      expect(hypot(30, 40)).toBeCloseTo(10 * hypot(3, 4), 12);
+
+      // Composição dimensional: hypot(a, b, c) === hypot(hypot(a, b), c)
+      expect(hypot(1, 2, 2)).toBeCloseTo(hypot(hypot(1, 2), 2), 12);
+      expect(hypot(2, 3, 6)).toBeCloseTo(hypot(hypot(2, 3), 6), 12);
+   });
+});
+
+//--
+
+describe("Function: clampedLerp", () => {
+   // ── BÁSICO ──
+   it("should interpolate normally when t is within [0, 1]", () => {
+      expect(clampedLerp(0, 10, 0)).toBe(0);
+      expect(clampedLerp(0, 10, 0.5)).toBe(5);
+      expect(clampedLerp(0, 10, 1)).toBe(10);
+      expect(clampedLerp(0, 10, 0.75)).toBe(7.5);
+   });
+
+   // ── MÉDIO ──
+   it("should clamp t outside [0, 1] instead of extrapolating", () => {
+      // t > 1: trava em b
+      expect(clampedLerp(0, 10, 2)).toBe(10);
+      expect(clampedLerp(0, 10, 100)).toBe(10);
+
+      // t < 0: trava em a
+      expect(clampedLerp(0, 10, -1)).toBe(0);
+      expect(clampedLerp(0, 10, -50)).toBe(0);
+
+      // Intervalos invertidos (b < a) também travam corretamente
+      expect(clampedLerp(10, 0, 2)).toBe(0);
+      expect(clampedLerp(10, 0, -1)).toBe(10);
+
+      // Negativos
+      expect(clampedLerp(-10, -5, 0.5)).toBe(-7.5);
+      expect(clampedLerp(-10, -5, 5)).toBe(-5);
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with lerp, clamp, and inverseLerp (dogfooding)", () => {
+      // Dentro de [0,1]: idêntica à lerp pura
+      for (const t of [0, 0.1, 0.25, 0.5, 0.9, 1]) {
+         expect(clampedLerp(3, 17, t)).toBe(lerp(3, 17, t));
+      }
+
+      // Definição: clampedLerp(a, b, t) === lerp(a, b, clamp(t, 0, 1))
+      for (const t of [-2, -0.5, 0.3, 1.5, 7]) {
+         expect(clampedLerp(2, 8, t)).toBe(lerp(2, 8, clamp(t, 0, 1)));
+      }
+
+      // Roundtrip com inverseLerp dentro do intervalo
+      const v = clampedLerp(0, 20, 0.35);
+      expect(inverseLerp(0, 20, v)).toBeCloseTo(0.35, 12);
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values", () => {
+      // a === b: sempre retorna o próprio valor, qualquer t
+      expect(clampedLerp(5, 5, 0.5)).toBe(5);
+      expect(clampedLerp(5, 5, 100)).toBe(5);
+      expect(clampedLerp(5, 5, -100)).toBe(5);
+
+      // t infinito: clamp domestica para 0 ou 1
+      expect(clampedLerp(0, 10, Infinity)).toBe(10);
+      expect(clampedLerp(0, 10, -Infinity)).toBe(0);
+
+      // NaN propaga
+      expect(clampedLerp(NaN, 10, 0.5)).toBeNaN();
+      expect(clampedLerp(0, 10, NaN)).toBeNaN();
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality and NEVER overshoot", () => {
+      // A garantia central: resultado SEMPRE dentro de [min(a,b), max(a,b)]
+      // — varredura com t selvagem, intervalos normais e invertidos
+      const wildT = [-1e9, -777, -1.001, 1.001, 42, 1e9];
+      const ranges: [number, number][] = [
+         [0, 10],
+         [10, 0],
+         [-5, 5],
+         [100, -100],
+      ];
+
+      for (const [a, b] of ranges) {
+         const lo = Math.min(a, b);
+         const hi = Math.max(a, b);
+         for (const t of wildT) {
+            const result = clampedLerp(a, b, t);
+            expect(result).toBeGreaterThanOrEqual(lo);
+            expect(result).toBeLessThanOrEqual(hi);
+         }
+      }
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (interpolation laws at scale)", () => {
+      // Lei 1: monotonicidade — t maior nunca diminui o resultado (a < b)
+      let prev = clampedLerp(0, 100, -1);
+      for (let t = -1; t <= 2; t += 0.05) {
+         const current = clampedLerp(0, 100, t);
+         expect(current).toBeGreaterThanOrEqual(prev);
+         prev = current;
+      }
+
+      // Lei 2: simetria — clampedLerp(a, b, t) === clampedLerp(b, a, 1 - t) para t em [0,1]
+      for (let t = 0; t <= 1; t += 0.1) {
+         expect(clampedLerp(3, 13, t)).toBeCloseTo(
+            clampedLerp(13, 3, 1 - t),
+            12,
+         );
+      }
+
+      // Lei 3: saturação total — fora de [0,1] o resultado é EXATAMENTE a ou b
+      for (const t of [1.0001, 2, 50, 1e6]) {
+         expect(clampedLerp(7, 21, t)).toBe(21);
+      }
+      for (const t of [-0.0001, -2, -50, -1e6]) {
+         expect(clampedLerp(7, 21, t)).toBe(7);
+      }
+
+      // Lei 4: composição com mapas afins — escalar o intervalo escala o resultado
+      for (let t = -0.5; t <= 1.5; t += 0.25) {
+         expect(clampedLerp(0, 50, t)).toBeCloseTo(
+            5 * clampedLerp(0, 10, t),
+            12,
+         );
+      }
+
+      // Simulação real: barra de progresso alimentada com valores caóticos
+      // (o caso de uso que justifica a função existir)
+      const chaos = [-3, 0.2, 0.7, 1.4, 0.99, 2.5, -0.1, 1];
+      for (const t of chaos) {
+         const percent = clampedLerp(0, 100, t);
+         expect(percent).toBeGreaterThanOrEqual(0);
+         expect(percent).toBeLessThanOrEqual(100);
+      }
+   });
+});
+
+//--
+
+describe("Function: mapRange", () => {
+   // ── BÁSICO ──
+   it("should map values between simple ranges", () => {
+      expect(mapRange(5, 0, 10, 0, 100)).toBe(50);
+      expect(mapRange(0, 0, 10, 0, 100)).toBe(0);
+      expect(mapRange(10, 0, 10, 0, 100)).toBe(100);
+      expect(mapRange(2.5, 0, 10, 0, 100)).toBe(25);
+   });
+
+   // ── MÉDIO ──
+   it("should handle inverted ranges, negatives, and offsets", () => {
+      // Range de saída invertido (espelhar)
+      expect(mapRange(2, 0, 10, 100, 0)).toBe(80);
+      expect(mapRange(0, 0, 10, 100, 0)).toBe(100);
+
+      // Range de entrada invertido
+      expect(mapRange(8, 10, 0, 0, 100)).toBe(20);
+
+      // Ranges negativos e com offset
+      expect(mapRange(0, -10, 10, 0, 100)).toBe(50);
+      expect(mapRange(-5, -10, 0, 0, 1)).toBe(0.5);
+      expect(mapRange(15, 10, 20, 100, 200)).toBe(150);
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with lerp and inverseLerp (dogfooding)", () => {
+      // Definição: mapRange === lerp(outMin, outMax, inverseLerp(inMin, inMax, v))
+      for (const v of [0, 2.5, 5, 7.5, 10, -3, 13]) {
+         expect(mapRange(v, 0, 10, 50, 150)).toBe(
+            lerp(50, 150, inverseLerp(0, 10, v)),
+         );
+      }
+
+      // Mapear [0,1] -> [a,b] é exatamente lerp
+      for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+         expect(mapRange(t, 0, 1, 30, 70)).toBe(lerp(30, 70, t));
+      }
+
+      // Mapear [a,b] -> [0,1] é exatamente inverseLerp
+      for (const v of [0, 5, 10]) {
+         expect(mapRange(v, 0, 10, 0, 1)).toBe(inverseLerp(0, 10, v));
+      }
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with extrapolation and special values", () => {
+      // Extrapolação proporcional (sem clamp, como a lerp)
+      expect(mapRange(20, 0, 10, 0, 100)).toBe(200);
+      expect(mapRange(-10, 0, 10, 0, 100)).toBe(-100);
+
+      // Range de entrada degenerado: NaN (herdado da inverseLerp)
+      expect(mapRange(5, 5, 5, 0, 100)).toBeNaN();
+
+      // Range de SAÍDA degenerado: todo input vai pro mesmo ponto (válido!)
+      expect(mapRange(3, 0, 10, 42, 42)).toBe(42);
+      expect(mapRange(9.7, 0, 10, 42, 42)).toBe(42);
+
+      // NaN propaga
+      expect(mapRange(NaN, 0, 10, 0, 100)).toBeNaN();
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with real-world conversions", () => {
+      // Celsius -> Fahrenheit: mapRange(c, 0, 100, 32, 212)
+      expect(mapRange(0, 0, 100, 32, 212)).toBe(32);
+      expect(mapRange(100, 0, 100, 32, 212)).toBe(212);
+      expect(mapRange(37, 0, 100, 32, 212)).toBeCloseTo(98.6, 10);
+      expect(mapRange(-40, 0, 100, 32, 212)).toBeCloseTo(-40, 10);
+
+      // Sensor 10-bit (Arduino analogRead) -> PWM 8-bit
+      expect(mapRange(1023, 0, 1023, 0, 255)).toBe(255);
+      expect(mapRange(0, 0, 1023, 0, 255)).toBe(0);
+      expect(mapRange(511.5, 0, 1023, 0, 255)).toBeCloseTo(127.5, 10);
+
+      // Nota de prova [0,10] -> escala SAT [400,1600]
+      expect(mapRange(7, 0, 10, 400, 1600)).toBeCloseTo(1240, 10);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (affine map laws at scale)", () => {
+      // Lei 1: roundtrip — mapear ida e volta devolve o valor original
+      for (let v = -20; v <= 40; v += 3) {
+         const mapped = mapRange(v, 0, 10, 100, 500);
+         expect(mapRange(mapped, 100, 500, 0, 10)).toBeCloseTo(v, 10);
+      }
+
+      // Lei 2: composição — A->B->C === A->C direto
+      for (let v = 0; v <= 10; v += 0.5) {
+         const viaB = mapRange(mapRange(v, 0, 10, 0, 100), 0, 100, 32, 212);
+         const direct = mapRange(v, 0, 10, 32, 212);
+         expect(viaB).toBeCloseTo(direct, 10);
+      }
+
+      // Lei 3: preservação de proporção — o ponto médio vai no ponto médio
+      for (const [inMin, inMax, outMin, outMax] of [
+         [0, 10, 0, 100],
+         [-5, 5, 200, 300],
+         [10, 20, -1, 1],
+      ]) {
+         const midIn = (inMin + inMax) / 2;
+         const midOut = (outMin + outMax) / 2;
+         expect(mapRange(midIn, inMin, inMax, outMin, outMax)).toBeCloseTo(
+            midOut,
+            10,
+         );
+      }
+
+      // Lei 4: identidade — mapear um range nele mesmo não muda nada
+      // (toBeCloseTo: t = v/20 gera dízimas binárias, ex. 0.7)
+      for (let v = -10; v <= 10; v += 2) {
+         expect(mapRange(v, -10, 10, -10, 10)).toBeCloseTo(v, 12);
+      }
+
+      // Lei 5: linearidade — espaçamentos iguais na entrada geram
+      // espaçamentos iguais na saída (varredura com diferenças)
+      const step = mapRange(1, 0, 10, 0, 70) - mapRange(0, 0, 10, 0, 70);
+      for (let v = 1; v < 10; v++) {
+         const diff = mapRange(v + 1, 0, 10, 0, 70) - mapRange(v, 0, 10, 0, 70);
+         expect(diff).toBeCloseTo(step, 10);
+      }
+   });
+});
+
+//--
+
+describe("Function: isPerfectNumber", () => {
+   // ── BÁSICO ──
+   it("should identify the first perfect numbers", () => {
+      expect(isPerfectNumber(6)).toBe(true); // 1+2+3
+      expect(isPerfectNumber(28)).toBe(true); // 1+2+4+7+14
+      expect(isPerfectNumber(496)).toBe(true);
+      expect(isPerfectNumber(8128)).toBe(true);
+   });
+
+   // ── MÉDIO ──
+   it("should reject non-perfect numbers, edge values, and non-integers", () => {
+      // Vizinhos e números comuns
+      expect(isPerfectNumber(5)).toBe(false);
+      expect(isPerfectNumber(7)).toBe(false);
+      expect(isPerfectNumber(27)).toBe(false);
+      expect(isPerfectNumber(29)).toBe(false);
+      expect(isPerfectNumber(100)).toBe(false);
+
+      // Casos de borda: 0 e 1 não são perfeitos
+      expect(isPerfectNumber(0)).toBe(false);
+      expect(isPerfectNumber(1)).toBe(false);
+
+      // Negativos nunca (definição exige positivo)
+      expect(isPerfectNumber(-6)).toBe(false);
+      expect(isPerfectNumber(-28)).toBe(false);
+
+      // Floats NÃO truncam (consistente com isPerfectSquare)
+      expect(isPerfectNumber(6.5)).toBe(false);
+      expect(isPerfectNumber(28.0)).toBe(true); // 28.0 É inteiro em JS
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with divisors and sum (dogfooding)", () => {
+      // Definição manual: soma dos divisores próprios === n
+      for (const n of [6, 28, 496]) {
+         const proper = divisors(n);
+         proper.pop();
+         expect(sum(...proper)).toBe(n);
+      }
+
+      // Deficientes (soma < n) e abundantes (soma > n) — as outras duas castas
+      const proper12 = divisors(12);
+      proper12.pop();
+      expect(sum(...proper12)).toBeGreaterThan(12); // 12 é abundante (16)
+      expect(isPerfectNumber(12)).toBe(false);
+
+      const proper8 = divisors(8);
+      proper8.pop();
+      expect(sum(...proper8)).toBeLessThan(8); // 8 é deficiente (7)
+      expect(isPerfectNumber(8)).toBe(false);
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values and primes", () => {
+      expect(isPerfectNumber(NaN)).toBe(false);
+      expect(isPerfectNumber(Infinity)).toBe(false);
+      expect(isPerfectNumber(-Infinity)).toBe(false);
+
+      // Nenhum primo é perfeito (divisor próprio único: 1)
+      for (const p of [2, 3, 5, 7, 11, 13, 97, 7919]) {
+         expect(isPerfectNumber(p)).toBe(false);
+      }
+
+      // Nenhuma potência de 2 é perfeita (soma = 2^k - 1, sempre deficiente por 1!)
+      for (let k = 1; k <= 20; k++) {
+         expect(isPerfectNumber(power(2, k))).toBe(false);
+      }
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with the 5th perfect number", () => {
+      // O salto gigante: do 8128 direto pro 33.550.336
+      expect(isPerfectNumber(33550336)).toBe(true);
+      expect(isPerfectNumber(33550335)).toBe(false);
+      expect(isPerfectNumber(33550337)).toBe(false);
+
+      // Deserto absoluto: NENHUM perfeito entre 8129 e 33550335
+      // (amostragem em pontos espalhados do deserto)
+      for (const n of [10000, 123456, 1000000, 8000000, 20000000, 33000000]) {
+         expect(isPerfectNumber(n)).toBe(false);
+      }
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (Euclid's 2300-year-old theorem)", () => {
+      // Teorema de Euclides (Elementos, IX.36): se 2^p - 1 é primo (Mersenne),
+      // então 2^(p-1) × (2^p - 1) é perfeito. Dogfooding: isPrime + power!
+      for (const p of [2, 3, 5, 7, 13]) {
+         const mersenne = power(2, p) - 1;
+         expect(isPrime(mersenne)).toBe(true); // confirma que é Mersenne primo
+         const perfect = power(2, p - 1) * mersenne;
+         expect(isPerfectNumber(perfect)).toBe(true);
+      }
+      // Gera exatamente: 6, 28, 496, 8128, 33550336 ✨
+
+      // E o contrário: expoentes onde 2^p - 1 NÃO é primo geram NÃO-perfeitos
+      for (const p of [4, 6, 8, 9, 11]) {
+         const mersenne = power(2, p) - 1;
+         expect(isPrime(mersenne)).toBe(false);
+         expect(isPerfectNumber(power(2, p - 1) * mersenne)).toBe(false);
+      }
+
+      // Censo completo: até 10.000 existem EXATAMENTE 4 perfeitos
+      const found: number[] = [];
+      for (let n = 1; n <= 10000; n++) {
+         if (isPerfectNumber(n)) found.push(n);
+      }
+      expect(found).toEqual([6, 28, 496, 8128]);
+
+      // Todo perfeito par é triangular: 6 = 1+2+3, 28 = 1+...+7, 496 = 1+...+31
+      // n é triangular <=> 8n + 1 é quadrado perfeito (dogfooding!)
+      for (const perfect of [6, 28, 496, 8128, 33550336]) {
+         expect(isPerfectSquare(8 * perfect + 1)).toBe(true);
+      }
+   });
+});
+
+//--
+
+describe("Function: primeFactors", () => {
+   // ── BÁSICO ──
+   it("should factorize simple composite numbers", () => {
+      expect(primeFactors(12)).toEqual([2, 2, 3]);
+      expect(primeFactors(60)).toEqual([2, 2, 3, 5]);
+      expect(primeFactors(100)).toEqual([2, 2, 5, 5]);
+      expect(primeFactors(7)).toEqual([7]); // primo: fatoração é ele mesmo
+   });
+
+   // ── MÉDIO ──
+   it("should handle edge values, negatives, and floats", () => {
+      // n < 2: sem fatoração canônica
+      expect(primeFactors(0)).toEqual([]);
+      expect(primeFactors(1)).toEqual([]);
+      expect(primeFactors(-12)).toEqual([]);
+
+      // Floats truncam (padrão da família divisors/digits)
+      expect(primeFactors(12.9)).toEqual([2, 2, 3]);
+      expect(primeFactors(60.0001)).toEqual([2, 2, 3, 5]);
+
+      // Potências puras
+      expect(primeFactors(8)).toEqual([2, 2, 2]);
+      expect(primeFactors(81)).toEqual([3, 3, 3, 3]);
+      expect(primeFactors(1024)).toEqual([2, 2, 2, 2, 2, 2, 2, 2, 2, 2]);
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with isPrime and multiplyMultiple (dogfooding)", () => {
+      // Todo fator retornado DEVE ser primo — varredura
+      for (let n = 2; n <= 500; n++) {
+         for (const f of primeFactors(n)) {
+            expect(isPrime(f)).toBe(true);
+         }
+      }
+
+      // Primos têm fatoração unitária: [p]
+      for (const p of [2, 3, 5, 7, 11, 13, 97, 101]) {
+         expect(primeFactors(p)).toEqual([p]);
+      }
+
+      // Fatores vêm em ordem crescente
+      const factors = primeFactors(2310); // 2×3×5×7×11
+      expect(factors).toEqual([2, 3, 5, 7, 11]);
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values and semiprimes", () => {
+      expect(primeFactors(NaN)).toEqual([]);
+      expect(primeFactors(Infinity)).toEqual([]);
+      expect(primeFactors(-Infinity)).toEqual([]);
+
+      // Semiprimos RSA-style: produto de dois primos
+      expect(primeFactors(3233)).toEqual([53, 61]); // o módulo RSA dos nossos testes!
+      expect(primeFactors(15)).toEqual([3, 5]);
+      expect(primeFactors(9991)).toEqual([97, 103]);
+
+      // Primo grande sozinho (o caminho "remainder > 1")
+      expect(primeFactors(7919)).toEqual([7919]);
+      expect(primeFactors(999983)).toEqual([999983]);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with large factorizations", () => {
+      // Primorial: 2×3×5×7×11×13×17×19 = 9699690
+      expect(primeFactors(9699690)).toEqual([2, 3, 5, 7, 11, 13, 17, 19]);
+
+      // Altamente composto: 720720 = 2^4 × 3^2 × 5 × 7 × 11 × 13
+      expect(primeFactors(720720)).toEqual([2, 2, 2, 2, 3, 3, 5, 7, 11, 13]);
+
+      // Quadrado de primo grande: estrutura p² no limite do loop ímpar
+      expect(primeFactors(1000003 * 1000003)).toEqual([1000003, 1000003]);
+
+      // Potência de 10 gigante: 10^15 = 2^15 × 5^15 (30 fatores)
+      const trillion = primeFactors(1e15);
+      expect(trillion.length).toBe(30);
+      expect(trillion.slice(0, 15)).toEqual(Array(15).fill(2));
+      expect(trillion.slice(15)).toEqual(Array(15).fill(5));
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (Fundamental Theorem of Arithmetic)", () => {
+      // O TEOREMA FUNDAMENTAL: todo n >= 2 é o produto único dos seus primos.
+      // Reconstrução total via multiplyMultiple — varredura de 2 a 2000
+      for (let n = 2; n <= 2000; n++) {
+         const factors = primeFactors(n);
+         expect(multiplyMultiple(...factors)).toBe(n);
+      }
+
+      // Multiplicatividade: factors(a×b) = factors(a) ∪ factors(b) (ordenado)
+      for (const [a, b] of [
+         [12, 35],
+         [8, 27],
+         [100, 77],
+         [13, 169],
+      ]) {
+         const combined = [...primeFactors(a), ...primeFactors(b)].sort(
+            (x, y) => x - y,
+         );
+         expect(primeFactors(a * b)).toEqual(combined);
+      }
+
+      // Ponte com gcd: gcd(a,b) = 1 <=> nenhum fator primo em comum (dogfooding coprime!)
+      for (const [a, b] of [
+         [8, 15],
+         [14, 15],
+         [9, 28],
+         [12, 18],
+         [100, 75],
+      ]) {
+         const setA = new Set(primeFactors(a));
+         const shared = primeFactors(b).some((f) => setA.has(f));
+         expect(coprime(a, b)).toBe(!shared);
+      }
+
+      // Contagem de divisores via fatoração: d(n) = produto de (expoente + 1)
+      // — ponte com a divisors()! Ex: 60 = 2²×3×5 -> (2+1)(1+1)(1+1) = 12 divisores
+      for (const n of [60, 100, 720, 1024, 9991]) {
+         const counts = new Map<number, number>();
+         for (const f of primeFactors(n)) {
+            counts.set(f, (counts.get(f) ?? 0) + 1);
+         }
+         let dCount = 1;
+         for (const exp of counts.values()) {
+            dCount = dCount * (exp + 1);
+         }
+         expect(divisors(n).length).toBe(dCount);
+      }
+   });
+});
+
+//--
+
+describe("Function: multiplyMultiple", () => {
+   // ── BÁSICO ──
+   it("should multiply simple sequences of numbers", () => {
+      expect(multiplyMultiple(2, 3)).toBe(6);
+      expect(multiplyMultiple(2, 3, 4)).toBe(24);
+      expect(multiplyMultiple(1, 2, 3, 4, 5)).toBe(120);
+      expect(multiplyMultiple(10, 10, 10)).toBe(1000);
+   });
+
+   // ── MÉDIO ──
+   it("should handle identities, zeros, negatives, and fractions", () => {
+      // Produto vazio: identidade multiplicativa
+      expect(multiplyMultiple()).toBe(1);
+
+      // Um único fator: ele mesmo
+      expect(multiplyMultiple(7)).toBe(7);
+      expect(multiplyMultiple(-7)).toBe(-7);
+
+      // Zero anula tudo (early exit)
+      expect(multiplyMultiple(5, 0, 99)).toBe(0);
+      expect(multiplyMultiple(0)).toBe(0);
+
+      // Regra dos sinais: quantidade par de negativos -> positivo
+      expect(multiplyMultiple(-2, -3)).toBe(6);
+      expect(multiplyMultiple(-2, -3, -4)).toBe(-24);
+      expect(multiplyMultiple(-1, -1, -1, -1)).toBe(1);
+
+      // Frações
+      expect(multiplyMultiple(0.5, 4)).toBe(2);
+      expect(multiplyMultiple(0.1, 0.1)).toBeCloseTo(0.01, 12);
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with multiply, power, and factorial (dogfooding)", () => {
+      // Dois argumentos === multiply puro
+      for (const [a, b] of [
+         [3, 7],
+         [-2, 9],
+         [0.5, 8],
+         [12, 12],
+      ]) {
+         expect(multiplyMultiple(a, b)).toBe(multiply(a, b));
+      }
+
+      // Fator repetido === power: multiplyMultiple(k, k, k) = k³
+      expect(multiplyMultiple(2, 2, 2, 2)).toBe(power(2, 4));
+      expect(multiplyMultiple(3, 3, 3)).toBe(power(3, 3));
+      expect(multiplyMultiple(5, 5)).toBe(power(5, 2));
+
+      // Sequência 1..n === factorial(n)! A ponte perfeita
+      expect(multiplyMultiple(1, 2, 3, 4, 5)).toBe(factorial(5));
+      expect(multiplyMultiple(1, 2, 3, 4, 5, 6, 7)).toBe(factorial(7));
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values", () => {
+      // NaN propaga (sem zero presente)
+      expect(multiplyMultiple(2, NaN, 3)).toBeNaN();
+
+      // Infinity propaga
+      expect(multiplyMultiple(2, Infinity)).toBe(Infinity);
+      expect(multiplyMultiple(-2, Infinity)).toBe(-Infinity);
+
+      // Early exit: zero vence até NaN e Infinity (decisão documentada,
+      // consistente com lcmMultiple)
+      expect(multiplyMultiple(0, NaN)).toBe(0);
+      expect(multiplyMultiple(Infinity, 0)).toBe(0);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with large products", () => {
+      // 2^50 via 50 fatores: ainda exato (abaixo de 2^53)
+      expect(multiplyMultiple(...Array(50).fill(2))).toBe(power(2, 50));
+
+      // Primorial de 19 (reconstruindo o teste da primeFactors ao contrário)
+      expect(multiplyMultiple(2, 3, 5, 7, 11, 13, 17, 19)).toBe(9699690);
+
+      // Estouro consciente para Infinity (sem zero pra salvar)
+      expect(multiplyMultiple(1e200, 1e200)).toBe(Infinity);
+
+      // Muitos fatores fracionários: (1/2)^30
+      const halves = Array(30).fill(0.5);
+      expect(multiplyMultiple(...halves)).toBeCloseTo(power(2, -30), 15);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (product laws at scale)", () => {
+      // Lei 1: comutatividade — a ordem dos fatores não altera o produto
+      // (o ditado popular como invariante de teste!)
+      const base = [3, 7, 2, 9, 4];
+      const shuffles = [
+         [7, 3, 9, 2, 4],
+         [9, 4, 7, 3, 2],
+         [2, 9, 4, 7, 3],
+      ];
+      const expected = multiplyMultiple(...base);
+      for (const s of shuffles) {
+         expect(multiplyMultiple(...s)).toBe(expected);
+      }
+
+      // Lei 2: associatividade — agrupar não muda nada
+      expect(multiplyMultiple(2, 3, 4, 5)).toBe(
+         multiply(multiplyMultiple(2, 3), multiplyMultiple(4, 5)),
+      );
+
+      // Lei 3: identidade — encher de 1s não altera o produto
+      expect(multiplyMultiple(7, 1, 1, 1, 1, 1)).toBe(7);
+      expect(multiplyMultiple(1, 1, 1)).toBe(1);
+
+      // Lei 4: roundtrip com divide — varredura
+      for (let k = 1; k <= 50; k++) {
+         const product = multiplyMultiple(k, k + 1, k + 2);
+         expect(divide(product, multiply(k, k + 1))).toBeCloseTo(k + 2, 10);
+      }
+
+      // Lei 5: a GRANDE PONTE — primeFactors e multiplyMultiple são inversas!
+      // (re-validação cruzada, agora do lado da multiplyMultiple)
+      for (const n of [60, 100, 720, 1024, 3233, 9699690]) {
+         expect(multiplyMultiple(...primeFactors(n))).toBe(n);
+      }
+
+      // E o produto vazio fecha o ciclo: primeFactors(1) = [] -> produto = 1
+      expect(multiplyMultiple(...primeFactors(1))).toBe(1);
+   });
+});
+
+//--
+
+describe("Function: binomial", () => {
+   // ── BÁSICO ──
+   it("should calculate simple binomial coefficients", () => {
+      expect(binomial(5, 2)).toBe(10);
+      expect(binomial(6, 3)).toBe(20);
+      expect(binomial(10, 4)).toBe(210);
+      expect(binomial(52, 5)).toBe(2598960); // mãos de pôquer!
+   });
+
+   // ── MÉDIO ──
+   it("should handle edges, out-of-range k, negatives, and floats", () => {
+      // Bordas do triângulo: C(n, 0) = C(n, n) = 1
+      expect(binomial(7, 0)).toBe(1);
+      expect(binomial(7, 7)).toBe(1);
+      expect(binomial(0, 0)).toBe(1); // o topo do triângulo
+
+      // Segunda coluna: C(n, 1) = n
+      expect(binomial(42, 1)).toBe(42);
+
+      // k fora do intervalo: zero maneiras
+      expect(binomial(5, 6)).toBe(0);
+      expect(binomial(5, -1)).toBe(0);
+
+      // n negativo: domínio inválido
+      expect(binomial(-5, 2)).toBeNaN();
+
+      // Floats truncam
+      expect(binomial(5.9, 2.7)).toBe(10); // C(5, 2)
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with factorial and the symmetry law (dogfooding)", () => {
+      // Na zona segura do factorial, as duas fórmulas coincidem
+      for (const [n, k] of [
+         [5, 2],
+         [10, 3],
+         [12, 6],
+         [15, 7],
+      ]) {
+         const viaFactorial = divide(
+            factorial(n),
+            multiply(factorial(k), factorial(n - k)),
+         );
+         expect(binomial(n, k)).toBe(viaFactorial);
+      }
+
+      // Simetria: C(n, k) === C(n, n - k) — varredura
+      for (let n = 0; n <= 30; n++) {
+         for (let k = 0; k <= n; k++) {
+            expect(binomial(n, k)).toBe(binomial(n, n - k));
+         }
+      }
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values", () => {
+      expect(binomial(NaN, 2)).toBeNaN();
+      expect(binomial(5, NaN)).toBeNaN();
+      expect(binomial(Infinity, 2)).toBeNaN();
+      expect(binomial(5, -Infinity)).toBeNaN();
+
+      // C(n, 2) = número triangular: n(n-1)/2 — varredura
+      for (let n = 2; n <= 100; n++) {
+         expect(binomial(n, 2)).toBe(divide(multiply(n, n - 1), 2));
+      }
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality FAR beyond factorial's reach", () => {
+      // factorial(n)/() morre em n=18; o cancelamento progressivo segue firme:
+      expect(binomial(30, 15)).toBe(155117520);
+      expect(binomial(40, 20)).toBe(137846528820);
+      expect(binomial(50, 25)).toBe(126410606437752);
+      expect(binomial(60, 30)).toBe(118264581564861424); // ~1.18e17, EXATO
+
+      // Loteria real: Mega-Sena = C(60, 6)
+      expect(binomial(60, 6)).toBe(50063860);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (Pascal's triangle at scale)", () => {
+      // Lei 1: RECORRÊNCIA DE PASCAL — C(n,k) = C(n-1,k-1) + C(n-1,k)
+      // Construindo o triângulo INTEIRO até a linha 40 só com a recorrência
+      for (let n = 1; n <= 40; n++) {
+         for (let k = 1; k < n; k++) {
+            expect(binomial(n, k)).toBe(
+               sum(binomial(n - 1, k - 1), binomial(n - 1, k)),
+            );
+         }
+      }
+
+      // Lei 2: soma da linha n = 2^n (teorema binomial com x=y=1)
+      for (let n = 0; n <= 30; n++) {
+         let rowSum = 0;
+         for (let k = 0; k <= n; k++) {
+            rowSum = sum(rowSum, binomial(n, k));
+         }
+         expect(rowSum).toBe(power(2, n));
+      }
+
+      // Lei 3: soma alternada da linha = 0 (n >= 1)
+      for (let n = 1; n <= 25; n++) {
+         let altSum = 0;
+         for (let k = 0; k <= n; k++) {
+            altSum += (k % 2 === 0 ? 1 : -1) * binomial(n, k);
+         }
+         expect(altSum).toBe(0);
+      }
+
+      // Lei 4: identidade do hóquei (hockey stick) —
+      // soma da diagonal C(r,r)+C(r+1,r)+...+C(n,r) = C(n+1, r+1)
+      for (const [n, r] of [
+         [10, 3],
+         [15, 5],
+         [20, 2],
+      ]) {
+         let diag = 0;
+         for (let i = r; i <= n; i++) {
+            diag = sum(diag, binomial(i, r));
+         }
+         expect(diag).toBe(binomial(n + 1, r + 1));
+      }
+
+      // Lei 5: ponte com Fibonacci! Somas das diagonais "rasas" do triângulo
+      // de Pascal = números de Fibonacci: Σ C(n-k, k) = F(n+1)
+      for (let n = 0; n <= 30; n++) {
+         let shallow = 0;
+         for (let k = 0; k <= Math.floor(n / 2); k++) {
+            shallow = sum(shallow, binomial(n - k, k));
+         }
+         expect(shallow).toBe(fibonacci(n + 1));
+      }
+   });
+});
+
+//--
+
+describe("Function: modInverse", () => {
+   // ── BÁSICO ──
+   it("should find simple modular inverses", () => {
+      expect(modInverse(3, 7)).toBe(5); // 3×5 = 15 ≡ 1 (mod 7)
+      expect(modInverse(2, 5)).toBe(3); // 2×3 = 6 ≡ 1 (mod 5)
+      expect(modInverse(7, 11)).toBe(8); // 7×8 = 56 ≡ 1 (mod 11)
+      expect(modInverse(1, 9)).toBe(1); // 1 é sempre seu próprio inverso
+   });
+
+   // ── MÉDIO ──
+   it("should handle negatives, floats, and non-invertible cases", () => {
+      // Negativos normalizam: -4 ≡ 3 (mod 7)
+      expect(modInverse(-4, 7)).toBe(modInverse(3, 7));
+
+      // Floats truncam
+      expect(modInverse(3.9, 7.9)).toBe(modInverse(3, 7));
+
+      // Inverso NÃO existe quando gcd(a, m) > 1
+      expect(modInverse(4, 8)).toBeNaN(); // gcd = 4
+      expect(modInverse(6, 9)).toBeNaN(); // gcd = 3
+      expect(modInverse(0, 7)).toBeNaN(); // 0 nunca tem inverso
+
+      // Módulo inválido
+      expect(modInverse(3, 1)).toBeNaN();
+      expect(modInverse(3, 0)).toBeNaN();
+      expect(modInverse(3, -7)).toBeNaN();
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with mod, multiply, and coprime (dogfooding)", () => {
+      // A DEFINIÇÃO: mod(a × modInverse(a, m), m) === 1 — varredura
+      for (const [a, m] of [
+         [3, 7],
+         [5, 12],
+         [7, 26],
+         [11, 100],
+         [17, 3120],
+      ]) {
+         const inv = modInverse(a, m);
+         expect(mod(multiply(a, inv), m)).toBe(1);
+      }
+
+      // Existe inverso <=> coprime(a, m) — varredura completa mod 12
+      for (let a = 1; a < 12; a++) {
+         const exists = !Number.isNaN(modInverse(a, 12));
+         expect(exists).toBe(coprime(a, 12));
+      }
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values and primes", () => {
+      expect(modInverse(NaN, 7)).toBeNaN();
+      expect(modInverse(3, NaN)).toBeNaN();
+      expect(modInverse(Infinity, 7)).toBeNaN();
+      expect(modInverse(3, -Infinity)).toBeNaN();
+
+      // Módulo primo: TODO a em [1, p) tem inverso (corpo finito!)
+      for (let a = 1; a < 13; a++) {
+         const inv = modInverse(a, 13);
+         expect(inv).toBeGreaterThanOrEqual(1);
+         expect(inv).toBeLessThan(13);
+         expect(mod(multiply(a, inv), 13)).toBe(1);
+      }
+
+      // a ≡ 1 (mod m): inverso é 1
+      expect(modInverse(8, 7)).toBe(1);
+      expect(modInverse(101, 100)).toBe(1);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with large moduli", () => {
+      // Primo grande: inverso via Fermat bate com Euclides estendido
+      // a^(p-2) mod p === modInverse(a, p) — ponte com modPow!
+      const p = 1000003;
+      for (const a of [2, 7, 123456, 999999]) {
+         expect(modInverse(a, p)).toBe(modPow(a, p - 2, p));
+      }
+
+      // Módulo composto gigante
+      expect(coprime(12345, 67890124)).toBe(true);
+      const inv = modInverse(12345, 67890124);
+      expect(mod(multiply(12345, inv), 67890124)).toBe(1);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (RSA key generation!)", () => {
+      // p = 53, q = 61 (descobertos pela primeFactors!), n = 3233
+      // φ(n) = (p-1)(q-1) = 52 × 60 = 3120, e = 17
+      // d = modInverse(e, φ) — a chave privada NASCE aqui:
+      const phi = multiply(53 - 1, 61 - 1);
+      expect(phi).toBe(3120);
+      const d = modInverse(17, phi);
+      expect(d).toBe(2753);
+
+      // E o ciclo completo: encriptar e decriptar com a chave recém-criada
+      const message = 65;
+      const encrypted = modPow(message, 17, 3233);
+      expect(encrypted).toBe(2790);
+      expect(modPow(encrypted, d, 3233)).toBe(message);
+
+      // Lei 1: involução — o inverso do inverso é o próprio número
+      for (let a = 1; a < 26; a++) {
+         if (coprime(a, 26)) {
+            expect(modInverse(modInverse(a, 26), 26)).toBe(a);
+         }
+      }
+
+      // Lei 2: multiplicatividade — inv(a×b) ≡ inv(a)×inv(b) (mod m)
+      const m = 101; // primo
+      for (const [a, b] of [
+         [3, 7],
+         [12, 45],
+         [88, 99],
+      ]) {
+         const left = modInverse(mod(multiply(a, b), m), m);
+         const right = mod(multiply(modInverse(a, m), modInverse(b, m)), m);
+         expect(left).toBe(right);
+      }
+
+      // Lei 3: teorema de Wilson via pareamento — em módulo primo p,
+      // cada elemento de [2, p-2] pareia com inverso DIFERENTE de si,
+      // exceto 1 e p-1 (auto-inversos)
+      const prime = 23;
+      expect(modInverse(1, prime)).toBe(1);
+      expect(modInverse(prime - 1, prime)).toBe(prime - 1);
+      let selfInverse = 0;
+      for (let a = 1; a < prime; a++) {
+         if (modInverse(a, prime) === a) selfInverse++;
+      }
+      expect(selfInverse).toBe(2); // só 1 e 22
+
+      // Lei 4: divisão modular finalmente possível!
+      // "15 / 7" mod 26 = 15 × inv(7) — e multiplicar de volta recupera 15
+      const quotient = mod(multiply(15, modInverse(7, 26)), 26);
+      expect(mod(multiply(quotient, 7), 26)).toBe(15);
+   });
+});
+
+//--
+
+describe("Function: permutations", () => {
+   // ── BÁSICO ──
+   it("should calculate simple permutation counts", () => {
+      expect(permutations(5, 2)).toBe(20); // 5 × 4
+      expect(permutations(6, 3)).toBe(120); // 6 × 5 × 4
+      expect(permutations(10, 1)).toBe(10);
+      expect(permutations(4, 4)).toBe(24); // arranjo completo = 4!
+   });
+
+   // ── MÉDIO ──
+   it("should handle edges, out-of-range k, negatives, and floats", () => {
+      // k = 0: arranjo vazio, exatamente 1 maneira
+      expect(permutations(7, 0)).toBe(1);
+      expect(permutations(0, 0)).toBe(1);
+
+      // k fora do intervalo: zero maneiras
+      expect(permutations(5, 6)).toBe(0);
+      expect(permutations(5, -1)).toBe(0);
+
+      // n negativo: domínio inválido
+      expect(permutations(-5, 2)).toBeNaN();
+
+      // Floats truncam
+      expect(permutations(5.9, 2.7)).toBe(20); // P(5, 2)
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with factorial and binomial (dogfooding)", () => {
+      // P(n, n) === factorial(n) — arranjo completo
+      for (let n = 0; n <= 15; n++) {
+         expect(permutations(n, n)).toBe(factorial(n));
+      }
+
+      // A TRÍADE SAGRADA: P(n, k) === C(n, k) × k!
+      for (let n = 0; n <= 20; n++) {
+         for (let k = 0; k <= n; k++) {
+            expect(permutations(n, k)).toBe(
+               multiply(binomial(n, k), factorial(k)),
+            );
+         }
+      }
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values", () => {
+      expect(permutations(NaN, 2)).toBeNaN();
+      expect(permutations(5, NaN)).toBeNaN();
+      expect(permutations(Infinity, 2)).toBeNaN();
+      expect(permutations(5, -Infinity)).toBeNaN();
+
+      // P(n, 1) = n e P(n, 2) = n(n-1) — varreduras
+      for (let n = 1; n <= 50; n++) {
+         expect(permutations(n, 1)).toBe(n);
+         expect(permutations(n, 2)).toBe(multiply(n, n - 1));
+      }
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality beyond factorial's exact range", () => {
+      // factorial(19) já não é exato; P(50, 5) passa LONGE do fatorial:
+      expect(permutations(50, 5)).toBe(254251200);
+      expect(permutations(100, 4)).toBe(94109400);
+      expect(permutations(1000, 3)).toBe(997002000);
+
+      // Pódio da Fórmula 1: 20 pilotos, 3 posições
+      expect(permutations(20, 3)).toBe(6840);
+
+      // Senha de 4 dígitos sem repetição
+      expect(permutations(10, 4)).toBe(5040);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (arrangement laws at scale)", () => {
+      // Lei 1: recorrência multiplicativa — P(n, k) = P(n, k-1) × (n - k + 1)
+      for (let n = 1; n <= 30; n++) {
+         for (let k = 1; k <= n; k++) {
+            expect(permutations(n, k)).toBe(
+               multiply(permutations(n, k - 1), n - k + 1),
+            );
+         }
+      }
+
+      // Lei 2: recorrência em n — P(n, k) = P(n-1, k) × n / (n - k)
+      // reescrita sem divisão: P(n, k) × (n - k) === P(n-1, k) × n
+      // (n <= 18 mantém tudo na zona de inteiros exatos, abaixo de 2^53)
+      for (let n = 2; n <= 18; n++) {
+         for (let k = 0; k < n; k++) {
+            expect(multiply(permutations(n, k), n - k)).toBe(
+               multiply(permutations(n - 1, k), n),
+            );
+         }
+      }
+
+      // Lei 3: razão entre vizinhos — P(n, k) / C(n, k) === k! (varredura)
+      for (let n = 1; n <= 18; n++) {
+         for (let k = 0; k <= n; k++) {
+            expect(divide(permutations(n, k), binomial(n, k))).toBe(
+               factorial(k),
+            );
+         }
+      }
+
+      // Lei 4: P(n, k) é sempre divisível por P(m, k) quando os intervalos
+      // se aninham... versão simples: P(n, 2) é sempre PAR (n e n-1: um é par!)
+      for (let n = 2; n <= 100; n++) {
+         expect(isEven(permutations(n, 2))).toBe(true);
+      }
+
+      // Lei 5: contagem manual — gerar TODOS os arranjos de k=2 num conjunto
+      // pequeno e conferir que a contagem bate (prova por força bruta!)
+      const set = [1, 2, 3, 4, 5, 6, 7];
+      let count = 0;
+      for (const a of set) {
+         for (const b of set) {
+            if (a !== b) count++;
+         }
+      }
+      expect(permutations(7, 2)).toBe(count); // 42 arranjos de verdade
+   });
+});
+
+//--
+
+describe("Function: totient", () => {
+   // ── BÁSICO ──
+   it("should calculate simple totient values", () => {
+      expect(totient(9)).toBe(6); // 1,2,4,5,7,8
+      expect(totient(10)).toBe(4); // 1,3,7,9
+      expect(totient(12)).toBe(4); // 1,5,7,11
+      expect(totient(1)).toBe(1); // convenção
+   });
+
+   // ── MÉDIO ──
+   it("should handle primes, prime powers, edges, and floats", () => {
+      // Primos: φ(p) = p - 1 (todos abaixo são coprimos)
+      expect(totient(7)).toBe(6);
+      expect(totient(13)).toBe(12);
+      expect(totient(97)).toBe(96);
+
+      // Potências de primo: φ(p^k) = p^k - p^(k-1)
+      expect(totient(8)).toBe(4); // 2³ - 2²
+      expect(totient(27)).toBe(18); // 3³ - 3²
+      expect(totient(625)).toBe(500); // 5⁴ - 5³
+
+      // Domínio inválido
+      expect(totient(0)).toBeNaN();
+      expect(totient(-10)).toBeNaN();
+
+      // Floats truncam
+      expect(totient(9.9)).toBe(6);
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should match the brute-force definition via coprime (dogfooding)", () => {
+      // A DEFINIÇÃO LITERAL: contar coprimos em [1, n] — varredura 1 a 100
+      for (let n = 1; n <= 100; n++) {
+         let count = 0;
+         for (let k = 1; k <= n; k++) {
+            if (coprime(k, n)) count++;
+         }
+         expect(totient(n)).toBe(count);
+      }
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values and parity", () => {
+      expect(totient(NaN)).toBeNaN();
+      expect(totient(Infinity)).toBeNaN();
+      expect(totient(-Infinity)).toBeNaN();
+
+      // φ(n) é PAR para todo n > 2 (coprimos pareiam: k com n-k)
+      for (let n = 3; n <= 200; n++) {
+         expect(isEven(totient(n))).toBe(true);
+      }
+
+      // Multiplicatividade: φ(a×b) = φ(a)×φ(b) quando coprime(a, b)
+      for (const [a, b] of [
+         [9, 10],
+         [7, 8],
+         [25, 12],
+         [11, 13],
+      ]) {
+         expect(coprime(a, b)).toBe(true);
+         expect(totient(multiply(a, b))).toBe(multiply(totient(a), totient(b)));
+      }
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with large arguments", () => {
+      // Primorial 9699690 = 2×3×5×7×11×13×17×19
+      // φ = 1×2×4×6×10×12×16×18 = 1658880
+      expect(totient(9699690)).toBe(1658880);
+
+      // Potência de 2 gigante: φ(2^40) = 2^39
+      expect(totient(power(2, 40))).toBe(power(2, 39));
+
+      // Primo grande: φ(p) = p - 1
+      expect(totient(1000003)).toBe(1000002);
+
+      // Quadrado de primo grande: φ(p²) = p² - p
+      expect(totient(1000003 * 1000003)).toBe(1000003 * 1000003 - 1000003);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (Euler's theorem & RSA reunion)", () => {
+      // ★ O REENCONTRO: φ(3233) = 3120 — o número que ontem calculamos
+      // NA MÃO como (53-1)×(61-1), agora a lib descobre SOZINHA ★
+      expect(totient(3233)).toBe(3120);
+
+      // E a cadeia RSA inteira, agora 100% automática:
+      // totient -> modInverse -> modPow -> roundtrip
+      const phi = totient(3233);
+      const d = modInverse(17, phi);
+      expect(d).toBe(2753);
+      expect(modPow(modPow(65, 17, 3233), d, 3233)).toBe(65);
+
+      // TEOREMA DE EULER: a^φ(n) ≡ 1 (mod n) para todo a coprimo com n
+      // — a generalização de Fermat, validada em varredura via modPow
+      for (const n of [9, 10, 15, 21, 35, 100]) {
+         const phiN = totient(n);
+         for (let a = 2; a < n; a++) {
+            if (coprime(a, n)) {
+               expect(modPow(a, phiN, n)).toBe(1);
+            }
+         }
+      }
+
+      // TEOREMA DE GAUSS: Σ φ(d) sobre todos os divisores d de n === n
+      // — a identidade mais elegante da teoria, via divisors + sum!
+      for (const n of [12, 36, 60, 100, 360, 1000]) {
+         const phiSum = sum(...divisors(n).map((d) => totient(d)));
+         expect(phiSum).toBe(n);
+      }
+
+      // Caso especial de Fermat: para primo p, Euler vira o pequeno teorema
+      expect(totient(13)).toBe(12);
+      expect(modPow(7, 12, 13)).toBe(1);
+   });
+});
+
+//--
+
+describe("Function: median", () => {
+   // ── BÁSICO ──
+   it("should find the median of simple datasets", () => {
+      expect(median(1, 2, 3)).toBe(2);
+      expect(median(3, 1, 2)).toBe(2); // ordem irrelevante
+      expect(median(1, 2, 3, 4)).toBe(2.5); // par: média dos dois do meio
+      expect(median(7)).toBe(7); // único elemento
+   });
+
+   // ── MÉDIO ──
+   it("should handle negatives, duplicates, floats, and string-sort traps", () => {
+      // A ARMADILHA DO SORT PADRÃO: como strings, [10, 2, 1] -> [1, 10, 2]!
+      expect(median(10, 2, 1)).toBe(2);
+      expect(median(100, 20, 3)).toBe(20);
+      expect(median(1, 5, 10, 100)).toBe(7.5);
+
+      // Negativos
+      expect(median(-5, -1, -3)).toBe(-3);
+      expect(median(-10, 0, 10)).toBe(0);
+
+      // Duplicatas
+      expect(median(2, 2, 2, 2)).toBe(2);
+      expect(median(1, 2, 2, 3)).toBe(2);
+
+      // Floats
+      expect(median(1.5, 2.5, 3.5)).toBe(2.5);
+      expect(median(0.1, 0.2)).toBeCloseTo(0.15, 12);
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with mean, min, and max (dogfooding)", () => {
+      // Para 2 elementos, mediana === média
+      for (const [a, b] of [
+         [3, 7],
+         [-2, 9],
+         [0.5, 8.5],
+         [100, 200],
+      ]) {
+         expect(median(a, b)).toBe(mean(a, b));
+      }
+
+      // Mediana sempre entre min e max — varredura com datasets variados
+      const datasets = [
+         [4, 8, 15, 16, 23, 42],
+         [-50, 3, 99, 1, 7],
+         [3.14, 2.71, 1.41, 1.61],
+      ];
+      for (const data of datasets) {
+         const m = median(...data);
+         expect(m).toBeGreaterThanOrEqual(min(...data));
+         expect(m).toBeLessThanOrEqual(max(...data));
+      }
+
+      // Dataset simétrico: mediana === média (sem assimetria)
+      expect(median(1, 2, 3, 4, 5)).toBe(mean(1, 2, 3, 4, 5));
+      expect(median(10, 20, 30)).toBe(mean(10, 20, 30));
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values and immutability", () => {
+      // Vazio e NaN
+      expect(median()).toBeNaN();
+      expect(median(1, NaN, 3)).toBeNaN();
+
+      // Infinity é ordenável e honesto
+      expect(median(1, 2, Infinity)).toBe(2);
+      expect(median(-Infinity, 5, 10)).toBe(5);
+      expect(median(-Infinity, Infinity)).toBeNaN(); // (−∞+∞)/2 = NaN, correto!
+
+      // IMUTABILIDADE: o array original NÃO pode ser tocado
+      const original = [5, 1, 4, 2, 3];
+      const snapshot = [...original];
+      median(...original);
+      expect(original).toEqual(snapshot);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with outliers (the median's superpower)", () => {
+      // O SUPERPODER: outliers não movem a mediana
+      expect(median(1, 2, 3, 1000)).toBe(2.5);
+      expect(median(1, 2, 3, 1e15)).toBe(2.5);
+      expect(median(-1e15, 1, 2, 3, 1e15)).toBe(2);
+
+      // Compare com a média, que é arrastada:
+      expect(mean(1, 2, 3, 1000)).toBe(251.5); // distorcida!
+      expect(median(1, 2, 3, 1000)).toBe(2.5); // firme!
+
+      // Dataset grande: 1001 valores, mediana exata no meio
+      const big = Array.from({ length: 1001 }, (_, i) => i); // 0..1000
+      expect(median(...big)).toBe(500);
+
+      // Mesmo embaralhado (ordem reversa)
+      const reversed = [...big].reverse();
+      expect(median(...reversed)).toBe(500);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (median laws at scale)", () => {
+      // Lei 1: invariância por embaralhamento — qualquer permutação, mesma mediana
+      const data = [13, 7, 42, 1, 99, 8, 23];
+      const expected = median(...data);
+      const shuffles = [
+         [7, 13, 1, 42, 8, 99, 23],
+         [99, 42, 23, 13, 8, 7, 1],
+         [1, 99, 7, 23, 42, 13, 8],
+      ];
+      for (const s of shuffles) {
+         expect(median(...s)).toBe(expected);
+      }
+
+      // Lei 2: equivariância afim — median(a×x + b) === a×median(x) + b
+      for (const [a, b] of [
+         [2, 0],
+         [1, 10],
+         [-3, 5],
+         [0.5, -7],
+      ]) {
+         const transformed = data.map((x) => sum(multiply(a, x), b));
+         expect(median(...transformed)).toBeCloseTo(
+            sum(multiply(a, expected), b),
+            10,
+         );
+      }
+
+      // Lei 3: a mediana minimiza a soma das distâncias absolutas
+      // (a média minimiza quadrados; a mediana, módulos!)
+      const points = [1, 3, 7, 12, 30];
+      const m = median(...points);
+      const sumAbsDist = (c: number) =>
+         sum(...points.map((p) => absolute(p - c)));
+      const atMedian = sumAbsDist(m);
+      for (const candidate of [m - 2, m - 1, m + 1, m + 2, mean(...points)]) {
+         expect(atMedian).toBeLessThanOrEqual(sumAbsDist(candidate));
+      }
+
+      // Lei 4: partição — no máximo metade está estritamente abaixo,
+      // no máximo metade estritamente acima (varredura com datasets ímpares)
+      for (const ds of [
+         [5, 1, 9, 3, 7],
+         [10, 20, 30],
+         [2, 4, 6, 8, 10, 12, 14],
+      ]) {
+         const md = median(...ds);
+         const below = ds.filter((x) => x < md).length;
+         const above = ds.filter((x) => x > md).length;
+         expect(below).toBeLessThanOrEqual(ds.length / 2);
+         expect(above).toBeLessThanOrEqual(ds.length / 2);
+      }
+
+      // Lei 5: concatenar o dataset com ele mesmo não muda a mediana
+      expect(median(...data, ...data)).toBe(expected);
+   });
+});
+
+//--
+
+describe("Function: min", () => {
+   // ── BÁSICO ──
+   it("should find the smallest of simple numbers", () => {
+      expect(min(3, 1, 4)).toBe(1);
+      expect(min(10, 20)).toBe(10);
+      expect(min(7)).toBe(7);
+      expect(min(5, 5, 5)).toBe(5);
+   });
+
+   // ── MÉDIO ──
+   it("should handle negatives, floats, zeros, and the empty case", () => {
+      expect(min(-3, -1, -4)).toBe(-4);
+      expect(min(-10, 0, 10)).toBe(-10);
+      expect(min(0.1, 0.01, 0.001)).toBe(0.001);
+      expect(min(0, -0)).toBe(-0);
+
+      // Vazio: NaN (NÃO Infinity como Math.min!)
+      expect(min()).toBeNaN();
+      expect(Math.min()).toBe(Infinity); // a surpresa que evitamos
+   });
+
+   // ── BRUTO / BRUTALIDADE ──
+   it("should pass a brutal stress test with special values and scale", () => {
+      expect(min(1, NaN, 3)).toBeNaN();
+      expect(min(-Infinity, 0, 5)).toBe(-Infinity);
+      expect(min(Infinity, 42)).toBe(42);
+
+      // 10001 valores
+      const big = Array.from({ length: 10001 }, (_, i) => i - 5000);
+      expect(min(...big)).toBe(-5000);
+   });
+});
+
+//--
+
+describe("Function: max", () => {
+   // ── BÁSICO ──
+   it("should find the largest of simple numbers", () => {
+      expect(max(3, 1, 4)).toBe(4);
+      expect(max(10, 20)).toBe(20);
+      expect(max(7)).toBe(7);
+      expect(max(5, 5, 5)).toBe(5);
+   });
+
+   // ── MÉDIO ──
+   it("should handle negatives, floats, zeros, and the empty case", () => {
+      expect(max(-3, -1, -4)).toBe(-1);
+      expect(max(-10, 0, 10)).toBe(10);
+      expect(max(0.1, 0.01, 0.001)).toBe(0.1);
+      expect(max(0, -0)).toBe(0);
+
+      // Vazio: NaN (NÃO -Infinity como Math.max!)
+      expect(max()).toBeNaN();
+      expect(Math.max()).toBe(-Infinity); // a surpresa que evitamos
+   });
+
+   // ── BRUTO / BRUTALIDADE ──
+   it("should pass a brutal stress test with special values and scale", () => {
+      expect(max(1, NaN, 3)).toBeNaN();
+      expect(max(Infinity, 0, 5)).toBe(Infinity);
+      expect(max(-Infinity, 42)).toBe(42);
+
+      const big = Array.from({ length: 10001 }, (_, i) => i - 5000);
+      expect(max(...big)).toBe(5000);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA (das duas juntas) ──
+   it("should withstand the definitive nuclear explosion (order duality laws)", () => {
+      const datasets = [
+         [4, 8, 15, 16, 23, 42],
+         [-50, 3, 99, 1, 7],
+         [3.14, -2.71, 1.41],
+         [7],
+      ];
+
+      for (const data of datasets) {
+         const lo = min(...data);
+         const hi = max(...data);
+
+         // Lei 1: min <= max sempre, e ambos pertencem ao dataset
+         expect(lo).toBeLessThanOrEqual(hi);
+         expect(data).toContain(lo);
+         expect(data).toContain(hi);
+
+         // Lei 2: DUALIDADE — min(x) === -max(-x)
+         expect(lo).toBe(-max(...data.map((x) => -x)));
+         expect(hi).toBe(-min(...data.map((x) => -x)));
+
+         // Lei 3: sanduíche — todo elemento está em [min, max]
+         for (const x of data) {
+            expect(x).toBeGreaterThanOrEqual(lo);
+            expect(x).toBeLessThanOrEqual(hi);
+         }
+
+         // Lei 4: idempotência — min/max do próprio resultado
+         expect(min(lo, hi)).toBe(lo);
+         expect(max(lo, hi)).toBe(hi);
+
+         // Lei 5: ponte com a família — mean e median entre min e max
+         expect(mean(...data)).toBeGreaterThanOrEqual(lo);
+         expect(mean(...data)).toBeLessThanOrEqual(hi);
+         expect(median(...data)).toBeGreaterThanOrEqual(lo);
+         expect(median(...data)).toBeLessThanOrEqual(hi);
+
+         // Lei 6: clamp com [min, max] é identidade para membros do dataset
+         for (const x of data) {
+            expect(clamp(x, lo, hi)).toBe(x);
+         }
+      }
+
+      // Lei 7: invariância por concatenação duplicada
+      expect(min(1, 5, 3, 1, 5, 3)).toBe(1);
+      expect(max(1, 5, 3, 1, 5, 3)).toBe(5);
+   });
+});
+
+//--
+
+describe("Function: variance", () => {
+   // ── BÁSICO ──
+   it("should calculate the variance of simple datasets", () => {
+      expect(variance(2, 4, 4, 4, 5, 5, 7, 9)).toBe(4); // o clássico da Wikipédia
+      expect(variance(1, 2, 3, 4, 5)).toBe(2);
+      expect(variance(10, 10, 10)).toBe(0); // sem dispersão
+      expect(variance(7)).toBe(0); // único valor: zero espalhamento
+   });
+
+   // ── MÉDIO ──
+   it("should handle negatives, floats, and symmetric datasets", () => {
+      // Variância nunca é negativa, e ignora o "lado" dos desvios
+      expect(variance(-2, 2)).toBe(4);
+      expect(variance(-1, -2, -3, -4, -5)).toBe(2); // espelho de 1..5: MESMA variância
+
+      // Floats
+      expect(variance(0.5, 1.5)).toBe(0.25);
+      expect(variance(1.5, 2.5, 3.5)).toBeCloseTo(variance(1, 2, 3), 12);
+
+      // Vazio e NaN
+      expect(variance()).toBeNaN();
+      expect(variance(1, NaN, 3)).toBeNaN();
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with mean and sumOfSquares (dogfooding)", () => {
+      // Definição: média dos desvios ao quadrado
+      const data = [4, 8, 15, 16, 23, 42];
+      const avg = mean(...data);
+      const manual = divide(
+         sumOfSquares(...data.map((x) => x - avg)),
+         data.length,
+      );
+      expect(variance(...data)).toBe(manual);
+
+      // A média dos desvios é SEMPRE zero (por isso elevamos ao quadrado!)
+      expect(mean(...data.map((x) => x - avg))).toBeCloseTo(0, 10);
+
+      // Identidade E[X²] - E[X]²: válida na zona numérica segura
+      expect(variance(...data)).toBeCloseTo(
+         mean(...data.map((x) => x * x)) - power(avg, 2),
+         8,
+      );
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values", () => {
+      expect(variance(Infinity, 1)).toBeNaN(); // desvio infinito: ∞ - ∞ aparece
+      expect(variance(-Infinity, 5)).toBeNaN();
+
+      // Constantes deslocadas: variância zero em qualquer patamar
+      for (const c of [0, -50, 1e6, 0.001]) {
+         expect(variance(c, c, c, c)).toBe(0);
+      }
+
+      // Dois pontos: variância = (d/2)² onde d é a distância
+      for (const [a, b] of [
+         [0, 10],
+         [-5, 5],
+         [100, 104],
+      ]) {
+         const half = divide(b - a, 2);
+         expect(variance(a, b)).toBeCloseTo(power(half, 2), 10);
+      }
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality where one-pass formulas DIE", () => {
+      // ★ O CANCELAMENTO CATASTRÓFICO ★
+      // Valores ~1e8 com dispersão minúscula: E[X²]-E[X]² subtrairia
+      // ~1e16 de ~1e16 e devolveria lixo. O two-pass é imune:
+      expect(variance(1e8, 1e8 + 1, 1e8 + 2)).toBeCloseTo(2 / 3, 6);
+
+      // Pior ainda: 1e12 com desvios unitários
+      expect(variance(1e12, 1e12 + 2)).toBeCloseTo(1, 4);
+
+      // E a prova de que a one-pass quebraria (cálculo manual do desastre):
+      const data = [1e8, 1e8 + 1, 1e8 + 2];
+      const onePass = mean(...data.map((x) => x * x)) - power(mean(...data), 2);
+      // one-pass dá um valor degradado; two-pass dá 2/3 exato até 6 casas.
+      // Documentamos que elas DIVERGEM nessa escala:
+      expect(Math.abs(onePass - 2 / 3)).toBeGreaterThan(1e-7);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (variance laws at scale)", () => {
+      const data = [13, 7, 42, 1, 99, 8, 23];
+      const baseVar = variance(...data);
+
+      // Lei 1: invariância por TRANSLAÇÃO — deslocar tudo não muda a dispersão
+      for (const shift of [10, -50, 1e6, 0.5]) {
+         expect(variance(...data.map((x) => x + shift))).toBeCloseTo(
+            baseVar,
+            6,
+         );
+      }
+
+      // Lei 2: ESCALA QUADRÁTICA — multiplicar por k multiplica σ² por k²
+      for (const k of [2, -3, 0.5, 10]) {
+         expect(variance(...data.map((x) => multiply(x, k)))).toBeCloseTo(
+            multiply(baseVar, power(k, 2)),
+            6,
+         );
+      }
+
+      // Lei 3: não-negatividade — varredura com datasets aleatórios fixos
+      const randomish = [
+         [3, 1, 4, 1, 5, 9, 2, 6],
+         [-7, 0, 7, 14, -14],
+         [0.1, 0.2, 0.3],
+         [1000, 2000, 1500],
+      ];
+      for (const ds of randomish) {
+         expect(variance(...ds)).toBeGreaterThanOrEqual(0);
+      }
+
+      // Lei 4: duplicar o dataset preserva a variância populacional
+      expect(variance(...data, ...data)).toBeCloseTo(baseVar, 10);
+
+      // Lei 5: a média MINIMIZA a soma dos desvios quadrados
+      // (a propriedade variacional gêmea da que vimos na median!)
+      const points = [1, 3, 7, 12, 30];
+      const m = mean(...points);
+      const sumSq = (c: number) => sumOfSquares(...points.map((p) => p - c));
+      const atMean = sumSq(m);
+      for (const candidate of [m - 2, m - 1, m + 1, m + 2, median(...points)]) {
+         expect(atMean).toBeLessThanOrEqual(sumSq(candidate));
+      }
+
+      // Lei 6: ponte com hypot! σ²×n = hypot(desvios)²
+      const avg = mean(...data);
+      const devs = data.map((x) => x - avg);
+      expect(multiply(baseVar, data.length)).toBeCloseTo(
+         power(hypot(...devs), 2),
+         8,
+      );
+   });
+});
+
+//--
+
+describe("Function: standardDeviation", () => {
+   // ── BÁSICO ──
+   it("should calculate the standard deviation of simple datasets", () => {
+      expect(standardDeviation(2, 4, 4, 4, 5, 5, 7, 9)).toBe(2);
+      expect(standardDeviation(10, 10, 10)).toBe(0);
+      expect(standardDeviation(7)).toBe(0);
+      expect(standardDeviation(-2, 2)).toBe(2);
+   });
+
+   // ── MÉDIO ──
+   it("should handle negatives, floats, and edge cases", () => {
+      // Mesma unidade dos dados: dois pontos a distância d -> σ = d/2
+      expect(standardDeviation(0, 10)).toBe(5);
+      expect(standardDeviation(-5, 5)).toBe(5);
+      expect(standardDeviation(100, 104)).toBe(2);
+
+      // Espelho: mesma dispersão
+      expect(standardDeviation(1, 2, 3)).toBeCloseTo(
+         standardDeviation(-1, -2, -3),
+         12,
+      );
+
+      // Vazio e NaN
+      expect(standardDeviation()).toBeNaN();
+      expect(standardDeviation(1, NaN, 3)).toBeNaN();
+      expect(standardDeviation(Infinity, 1)).toBeNaN();
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with variance and sqrt (dogfooding)", () => {
+      // Definição: σ === sqrt(σ²) — varredura
+      const datasets = [
+         [4, 8, 15, 16, 23, 42],
+         [-7, 0, 7, 14, -14],
+         [3.14, 2.71, 1.41, 1.61],
+         [1e8, 1e8 + 1, 1e8 + 2], // herdando a imunidade ao cancelamento!
+      ];
+      for (const data of datasets) {
+         expect(standardDeviation(...data)).toBe(sqrt(variance(...data)));
+      }
+
+      // Roundtrip: σ² de volta via power
+      const data = [13, 7, 42, 1, 99];
+      expect(power(standardDeviation(...data), 2)).toBeCloseTo(
+         variance(...data),
+         8,
+      );
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with translation invariance", () => {
+      const data = [3, 1, 4, 1, 5, 9, 2, 6];
+      const baseSigma = standardDeviation(...data);
+
+      // Translação não muda σ (igual à variance)
+      for (const shift of [10, -50, 1e6]) {
+         expect(standardDeviation(...data.map((x) => x + shift))).toBeCloseTo(
+            baseSigma,
+            6,
+         );
+      }
+
+      // σ nunca é negativo nem NaN em dados válidos
+      expect(baseSigma).toBeGreaterThanOrEqual(0);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with LINEAR scaling (the key contrast)", () => {
+      const data = [13, 7, 42, 1, 99, 8, 23];
+      const baseSigma = standardDeviation(...data);
+
+      // ★ O CONTRASTE-CHAVE: σ escala LINEAR (|k|), variância escala k² ★
+      for (const k of [2, -3, 0.5, 10]) {
+         expect(
+            standardDeviation(...data.map((x) => multiply(x, k))),
+         ).toBeCloseTo(multiply(baseSigma, absolute(k)), 6);
+      }
+
+      // k negativo NÃO inverte σ (dispersão não tem sinal!)
+      expect(standardDeviation(...data.map((x) => -x))).toBeCloseTo(
+         baseSigma,
+         10,
+      );
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (z-scores & Chebyshev)", () => {
+      const data = [13, 7, 42, 1, 99, 8, 23, 56, 31, 18];
+      const mu = mean(...data);
+      const sigma = standardDeviation(...data);
+
+      // Lei 1: Z-SCORES — padronizar (x-μ)/σ produz dataset com μ=0 e σ=1
+      // (a transformação fundamental de TODA a estatística!)
+      const zScores = data.map((x) => divide(x - mu, sigma));
+      expect(mean(...zScores)).toBeCloseTo(0, 10);
+      expect(standardDeviation(...zScores)).toBeCloseTo(1, 10);
+
+      // Lei 2: DESIGUALDADE DE CHEBYSHEV — no máximo 1/k² dos pontos
+      // ficam a mais de k desvios da média (vale pra QUALQUER distribuição)
+      for (const k of [1.5, 2, 3]) {
+         const far = data.filter(
+            (x) => absolute(x - mu) > multiply(k, sigma),
+         ).length;
+         expect(far / data.length).toBeLessThanOrEqual(1 / power(k, 2) + 1e-12);
+      }
+
+      // Lei 3: σ <= metade da amplitude (range) — sempre
+      const range = max(...data) - min(...data);
+      expect(sigma).toBeLessThanOrEqual(divide(range, 2));
+
+      // Lei 4: desigualdade média-σ — σ >= |média dos desvios absolutos|...
+      // versão testável: MAD (desvio absoluto médio) <= σ (Cauchy-Schwarz!)
+      const mad = mean(...data.map((x) => absolute(x - mu)));
+      expect(mad).toBeLessThanOrEqual(sigma + 1e-12);
+
+      // Lei 5: ponte tripla com hypot — σ = hypot(desvios) / sqrt(n)
+      const devs = data.map((x) => x - mu);
+      expect(sigma).toBeCloseTo(divide(hypot(...devs), sqrt(data.length)), 10);
+
+      // Lei 6: concatenação dupla preserva σ (população)
+      expect(standardDeviation(...data, ...data)).toBeCloseTo(sigma, 10);
+   });
+});
+
+//--
+
+describe("Function: mode", () => {
+   // ── BÁSICO ──
+   it("should find the most frequent value in simple datasets", () => {
+      expect(mode(1, 2, 2, 3)).toEqual([2]);
+      expect(mode(5, 5, 5, 1, 2)).toEqual([5]);
+      expect(mode(7)).toEqual([7]);
+      expect(mode(3, 3, 3, 3)).toEqual([3]);
+   });
+
+   // ── MÉDIO ──
+   it("should handle multimodal datasets, ties, negatives, and floats", () => {
+      // Bimodal: DUAS modas, ordenadas
+      expect(mode(1, 1, 2, 2, 3)).toEqual([1, 2]);
+      expect(mode(9, 9, 4, 4)).toEqual([4, 9]); // ordenação crescente!
+
+      // Todos distintos: todos são moda (empate universal)
+      expect(mode(1, 2, 3)).toEqual([1, 2, 3]);
+
+      // Negativos e floats
+      expect(mode(-1, -1, 5)).toEqual([-1]);
+      expect(mode(0.5, 0.5, 1.5)).toEqual([0.5]);
+
+      // 2 e 2.0 são o mesmo número em JS
+      expect(mode(2, 2.0, 3)).toEqual([2]);
+
+      // Vazio e NaN
+      expect(mode()).toEqual([]);
+      expect(mode(1, NaN, 1)).toEqual([]);
+   });
+
+   // ── INTERMEDIÁRIO ──
+   it("should be consistent with the counting definition (dogfooding by brute force)", () => {
+      // Contagem manual independente: a frequência da moda é máxima
+      const data = [4, 7, 4, 9, 7, 4, 1, 9, 9, 4];
+      const result = mode(...data);
+      const countOf = (v: number) => data.filter((x) => x === v).length;
+
+      // A moda retornada tem a maior contagem do dataset
+      const topCount = countOf(result[0]);
+      for (const x of data) {
+         expect(countOf(x)).toBeLessThanOrEqual(topCount);
+      }
+      expect(result).toEqual([4]); // 4 aparece 4 vezes
+
+      // Toda moda retornada tem a MESMA contagem (definição de empate)
+      const multi = mode(8, 8, 3, 3, 5);
+      for (const m of multi) {
+         expect(countOf2(m)).toBe(countOf2(multi[0]));
+      }
+      function countOf2(v: number) {
+         return [8, 8, 3, 3, 5].filter((x) => x === v).length;
+      }
+   });
+
+   // ── BRUTO ──
+   it("should pass a brutal stress test with special values and immutability", () => {
+      // Infinity é contável como qualquer valor
+      expect(mode(Infinity, Infinity, 1)).toEqual([Infinity]);
+      expect(mode(-Infinity, -Infinity, 5, 5)).toEqual([-Infinity, 5]);
+
+      // 0 e -0 colapsam (SameValueZero do Map)
+      expect(mode(0, -0, 1)).toEqual([0]);
+
+      // Ordem de chegada é irrelevante
+      expect(mode(3, 1, 3, 2)).toEqual(mode(2, 3, 1, 3));
+
+      // IMUTABILIDADE: input intocado
+      const original = [5, 1, 5, 2];
+      const snapshot = [...original];
+      mode(...original);
+      expect(original).toEqual(snapshot);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive maximum brutality with large skewed datasets", () => {
+      // 10000 valores: 0..9998 distintos + um 42 extra -> moda única [42]
+      const big = Array.from({ length: 9999 }, (_, i) => i);
+      big.push(42);
+      expect(mode(...big)).toEqual([42]);
+
+      // Empate triplo no meio de milhares
+      const tri = Array.from({ length: 3000 }, (_, i) => i);
+      tri.push(7, 77, 777);
+      expect(mode(...tri)).toEqual([7, 77, 777]);
+
+      // Dataset constante gigante
+      expect(mode(...Array(5000).fill(13))).toEqual([13]);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (mode laws & the trio reunion)", () => {
+      // Lei 1: a moda sempre pertence ao dataset (mean e median podem não pertencer!)
+      const datasets = [[3, 7, 3, 9, 3], [1, 1, 2, 2], [42], [5, -5, 5, 0]];
+      for (const ds of datasets) {
+         for (const m of mode(...ds)) {
+            expect(ds).toContain(m);
+         }
+      }
+
+      // Lei 2: invariância por embaralhamento
+      const data = [4, 7, 4, 9, 7, 4];
+      const expected = mode(...data);
+      expect(mode(7, 4, 9, 4, 7, 4)).toEqual(expected);
+      expect(mode(9, 7, 7, 4, 4, 4)).toEqual(expected);
+
+      // Lei 3: equivariância afim — mode(a·x + b) === a·mode(x) + b (a > 0)
+      for (const [a, b] of [
+         [2, 0],
+         [1, 10],
+         [3, -5],
+      ]) {
+         const transformed = data.map((x) => sum(multiply(a, x), b));
+         expect(mode(...transformed)).toEqual(
+            expected.map((m) => sum(multiply(a, m), b)),
+         );
+      }
+
+      // Lei 4: duplicar o dataset preserva as modas
+      expect(mode(...data, ...data)).toEqual(expected);
+
+      // Lei 5: adicionar uma cópia da moda NÃO muda a moda única
+      expect(mode(...data, 4)).toEqual([4]);
+
+      // ★ Lei 6: A REUNIÃO DO TRIO — num dataset simétrico unimodal,
+      // mean === median === moda única (o retrato da normalidade!) ★
+      const symmetric = [1, 2, 2, 3, 3, 3, 4, 4, 5]; // pirâmide centrada no 3
+      expect(mode(...symmetric)).toEqual([3]);
+      expect(median(...symmetric)).toBe(3);
+      expect(mean(...symmetric)).toBe(3);
+
+      // E num dataset ASSIMÉTRICO, os três se separam na ordem clássica:
+      // moda < mediana < média (cauda à direita puxa a média)
+      const skewed = [1, 1, 1, 2, 3, 10];
+      const [theMode] = mode(...skewed);
+      expect(theMode).toBeLessThan(median(...skewed));
+      expect(median(...skewed)).toBeLessThan(mean(...skewed));
+   });
+});
+
+//--
+
+describe("Function: cumulativeSum", () => {
+   // ── BÁSICO ──
+   it("should return the running totals of simple positive integers", () => {
+      expect(cumulativeSum(1, 2, 3, 4)).toEqual([1, 3, 6, 10]);
+      expect(cumulativeSum(10, 20, 30)).toEqual([10, 30, 60]);
+      expect(cumulativeSum(5)).toEqual([5]);
+   });
+
+   it("should return an empty array for an empty call", () => {
+      // Vazio = [] — sem dados, sem totais (mesma semântica do numpy)
+      expect(cumulativeSum()).toEqual([]);
+   });
+
+   it("should handle zeros without changing the running total", () => {
+      expect(cumulativeSum(0, 0, 0)).toEqual([0, 0, 0]);
+      expect(cumulativeSum(1, 0, 2, 0)).toEqual([1, 1, 3, 3]);
+   });
+
+   // ── MÉDIO ──
+   it("should handle negative numbers and sign changes in the totals", () => {
+      expect(cumulativeSum(-1, -2, -3)).toEqual([-1, -3, -6]);
+      // Saldo que sobe e desce — caso clássico de extrato bancário
+      expect(cumulativeSum(10, -5, 3, -8)).toEqual([10, 5, 8, 0]);
+      expect(cumulativeSum(-10, 10, -10, 10)).toEqual([-10, 0, -10, 0]);
+   });
+
+   it("should accumulate floats with binary drift tolerance", () => {
+      // 0.1 + 0.2 ≠ 0.3 exato em IEEE 754 — toBeCloseTo obrigatório
+      const result = cumulativeSum(0.1, 0.2, 0.3);
+      expect(result[0]).toBeCloseTo(0.1);
+      expect(result[1]).toBeCloseTo(0.3);
+      expect(result[2]).toBeCloseTo(0.6);
+   });
+
+   it("should preserve the length of the input sequence", () => {
+      expect(cumulativeSum(1, 2, 3, 4, 5)).toHaveLength(5);
+      expect(cumulativeSum(7)).toHaveLength(1);
+      expect(cumulativeSum()).toHaveLength(0);
+   });
+
+   // ── INTERMEDIÁRIO ── (dogfooding com outras funções da lib)
+   it("should end exactly at the total given by sum()", () => {
+      // O último acumulado É a soma total — sum() como oráculo
+      const values = [3, 7, 11, 19, 23];
+      const result = cumulativeSum(...values);
+      expect(result.at(-1)).toBe(sum(...values));
+   });
+
+   it("should relate its last element to mean() times the count", () => {
+      // mean = total / n, logo último acumulado = mean × n
+      const values = [4, 8, 15, 16, 23, 42];
+      const result = cumulativeSum(...values);
+      expect(result.at(-1)).toBe(mean(...values) * values.length);
+   });
+
+   it("should produce non-decreasing totals for non-negative inputs", () => {
+      // Monotonicidade: somando só não-negativos, a série nunca desce
+      const result = cumulativeSum(2, 0, 5, 1, 0, 9);
+      for (let i = 1; i < result.length; i++) {
+         expect(result[i]).toBeGreaterThanOrEqual(result[i - 1]);
+      }
+   });
+
+   // ── BRUTO ──
+   it("should propagate NaN honestly from the first NaN onward", () => {
+      const result = cumulativeSum(1, 2, NaN, 4);
+      // Antes do NaN os totais permanecem válidos — informação preservada
+      expect(result[0]).toBe(1);
+      expect(result[1]).toBe(3);
+      // A partir do dado podre, tudo é honestamente NaN
+      expect(result[2]).toBeNaN();
+      expect(result[3]).toBeNaN();
+   });
+
+   it("should propagate Infinity and yield NaN on opposing infinities", () => {
+      const result = cumulativeSum(1, Infinity, 5);
+      expect(result[0]).toBe(1);
+      expect(result[1]).toBe(Infinity);
+      expect(result[2]).toBe(Infinity);
+      // Infinity + (-Infinity) é indeterminação → NaN honesto do IEEE 754
+      const clash = cumulativeSum(Infinity, -Infinity);
+      expect(clash[0]).toBe(Infinity);
+      expect(clash[1]).toBeNaN();
+   });
+
+   it("should not mutate the spread source array", () => {
+      // Imutabilidade: espalhar um array do usuário não pode alterá-lo
+      const source = [3, 1, 4, 1, 5];
+      const frozen = [...source];
+      cumulativeSum(...source);
+      expect(source).toEqual(frozen);
+   });
+
+   it("should stay exact inside the safe integer zone", () => {
+      // 3 × 10^15 cada, total 9 × 10^15 < 2^53 ≈ 9.007 × 10^15 — toBe vale
+      const big = 3_000_000_000_000_000;
+      expect(cumulativeSum(big, big, big)).toEqual([big, big * 2, big * 3]);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive a 10,000-element series with exact totals", () => {
+      // Série constante: acumulado em i deve ser exatamente 7 × (i+1)
+      const values = new Array(10_000).fill(7);
+      const result = cumulativeSum(...values);
+      expect(result).toHaveLength(10_000);
+      expect(result[0]).toBe(7);
+      expect(result[4_999]).toBe(7 * 5_000);
+      expect(result.at(-1)).toBe(70_000);
+   });
+
+   it("should cancel perfectly on large alternating values", () => {
+      // +X, -X repetidos: acumulado oscila entre X e 0 sem drift (inteiros)
+      const x = 1_000_000_000;
+      const result = cumulativeSum(x, -x, x, -x, x, -x);
+      expect(result).toEqual([x, 0, x, 0, x, 0]);
+   });
+
+   it("should recover every input via finite differences (inverse op)", () => {
+      // diff(cumsum(xs)) === xs — as duas operações são inversas
+      const values = [13, -7, 0, 42, -99, 3.5, 8];
+      const result = cumulativeSum(...values);
+      expect(result[0]).toBeCloseTo(values[0]);
+      for (let i = 1; i < values.length; i++) {
+         expect(result[i] - result[i - 1]).toBeCloseTo(values[i]);
+      }
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (Fibonacci partial sums identity, triangular numbers and the cumsum↔diff inversion)", () => {
+      // TEOREMA 1 — Identidade das somas parciais de Fibonacci:
+      // F(1) + F(2) + ... + F(n) = F(n+2) − 1
+      // O acumulado da série de Fibonacci é auditado pela própria
+      // fibonacci() da lib como oráculo, em varredura até n = 70
+      // (F(72) ainda está dentro da zona exata, < F(78) ≈ 2^53).
+      const fibs: number[] = [];
+      for (let n = 1; n <= 70; n++) {
+         fibs.push(fibonacci(n));
+      }
+      const fibTotals = cumulativeSum(...fibs);
+      for (let n = 1; n <= 70; n++) {
+         expect(fibTotals[n - 1]).toBe(fibonacci(n + 2) - 1);
+      }
+
+      // TEOREMA 2 — Números triangulares via binomial():
+      // 1 + 2 + ... + k = k(k+1)/2 = C(k+1, 2)
+      // Cada posição do cumsum de 1..200 é um número triangular,
+      // auditado pelo binomial() da lib (combinatória ↔ aritmética).
+      const naturals: number[] = [];
+      for (let k = 1; k <= 200; k++) {
+         naturals.push(k);
+      }
+      const triangulars = cumulativeSum(...naturals);
+      for (let k = 1; k <= 200; k++) {
+         expect(triangulars[k - 1]).toBe(binomial(k + 1, 2));
+      }
+
+      // TEOREMA 3 — Inversão cumsum↔diff em varredura pseudo-aleatória:
+      // para 100 séries de inteiros (gerador determinístico, sem flake),
+      // as diferenças finitas recuperam a entrada e o último acumulado
+      // coincide com o oráculo sum().
+      let seed = 42;
+      const nextInt = () => {
+         // LCG simples e determinístico (Numerical Recipes)
+         seed = (seed * 1_664_525 + 1_013_904_223) % 4_294_967_296;
+         return (seed % 2_001) - 1_000; // inteiros em [-1000, 1000]
+      };
+      for (let run = 0; run < 100; run++) {
+         const series: number[] = [];
+         const length = 5 + (run % 46); // tamanhos variados: 5 a 50
+         for (let i = 0; i < length; i++) {
+            series.push(nextInt());
+         }
+         const totals = cumulativeSum(...series);
+
+         // Último acumulado === soma total (oráculo: sum da lib)
+         expect(totals.at(-1)).toBe(sum(...series));
+
+         // Diferenças recuperam a série original (inteiros → toBe exato)
+         expect(totals[0]).toBe(series[0]);
+         for (let i = 1; i < length; i++) {
+            expect(totals[i] - totals[i - 1]).toBe(series[i]);
+         }
+      }
+   });
+});
+
+//--
+
+describe("Function: deadzone", () => {
+   // ── BÁSICO ──
+   it("should collapse values inside the dead zone to zero", () => {
+      expect(deadzone(0.05, 0.1)).toBe(0);
+      expect(deadzone(-0.05, 0.1)).toBe(0);
+      expect(deadzone(0, 0.25)).toBe(0);
+   });
+
+   it("should rescale values outside the dead zone continuously", () => {
+      // (0.55 − 0.1) / (1 − 0.1) = 0.45 / 0.9 = 0.5
+      expect(deadzone(0.55, 0.1)).toBeCloseTo(0.5);
+      // (0.6 − 0.2) / 0.8 = 0.5
+      expect(deadzone(0.6, 0.2)).toBeCloseTo(0.5);
+   });
+
+   it("should preserve full deflection at the ends of the axis", () => {
+      // (1 − t)/(1 − t) é o MESMO valor float dividido por ele mesmo → 1 exato
+      expect(deadzone(1, 0.1)).toBe(1);
+      expect(deadzone(-1, 0.1)).toBe(-1);
+      expect(deadzone(1, 0.5)).toBe(1);
+   });
+
+   it("should act as identity within [-1, 1] when threshold is zero", () => {
+      // t = 0: (|v| − 0)/(1 − 0) = |v| — eixo intocado
+      expect(deadzone(0.7, 0)).toBeCloseTo(0.7);
+      expect(deadzone(-0.3, 0)).toBeCloseTo(-0.3);
+      expect(deadzone(0, 0)).toBe(0);
+   });
+
+   // ── MÉDIO ──
+   it("should return exactly zero at the threshold boundary", () => {
+      // |v| === t pertence à zona morta (<=) — borda fechada
+      expect(deadzone(0.1, 0.1)).toBe(0);
+      expect(deadzone(-0.1, 0.1)).toBe(0);
+   });
+
+   it("should be symmetric in magnitude for opposite inputs", () => {
+      // Simetria ímpar: o stick pra esquerda espelha o stick pra direita
+      expect(absolute(deadzone(-0.73, 0.15))).toBeCloseTo(
+         absolute(deadzone(0.73, 0.15)),
+      );
+      expect(deadzone(-0.55, 0.1)).toBeCloseTo(-0.5);
+   });
+
+   it("should handle typical gamepad drift scenarios", () => {
+      // Drift real de analógico: ruído de ±0.08 com deadzone de 0.12
+      expect(deadzone(0.08, 0.12)).toBe(0);
+      expect(deadzone(-0.03, 0.12)).toBe(0);
+      // Empurrão de verdade passa e é reescalado
+      expect(deadzone(0.56, 0.12)).toBeCloseTo(0.5);
+   });
+
+   // ── INTERMEDIÁRIO ── (dogfooding com outras funções da lib)
+   it("should match mapRange() as the rescaling oracle outside the zone", () => {
+      // Fora da zona, deadzone(v, t) ≡ mapRange(v, t, 1, 0, 1):
+      // a reescala contínua É um remapeamento linear de [t,1] → [0,1]
+      const t = 0.2;
+      for (const v of [0.25, 0.4, 0.5, 0.75, 0.9, 1]) {
+         expect(deadzone(v, t)).toBeCloseTo(mapRange(v, t, 1, 0, 1));
+      }
+   });
+
+   it("should agree with sign() for every output outside the zone", () => {
+      // O sinal do output reproduz o sinal do input — sign() como oráculo
+      expect(sign(deadzone(0.8, 0.1))).toBe(sign(0.8));
+      expect(sign(deadzone(-0.8, 0.1))).toBe(sign(-0.8));
+      expect(sign(deadzone(-0.4, 0.25))).toBe(-1);
+   });
+
+   it("should never exceed the magnitude given by absolute()", () => {
+      // |deadzone(v, t)| <= |v| pra |v| <= 1: a reescala só encolhe
+      for (const v of [-1, -0.7, -0.3, 0.3, 0.7, 1]) {
+         expect(absolute(deadzone(v, 0.2))).toBeLessThanOrEqual(absolute(v));
+      }
+   });
+
+   // ── BRUTO ──
+   it("should return NaN for non-finite inputs", () => {
+      expect(deadzone(NaN, 0.1)).toBeNaN();
+      expect(deadzone(Infinity, 0.1)).toBeNaN();
+      expect(deadzone(-Infinity, 0.1)).toBeNaN();
+      expect(deadzone(0.5, NaN)).toBeNaN();
+      expect(deadzone(0.5, Infinity)).toBeNaN();
+   });
+
+   it("should return NaN for invalid thresholds instead of lying", () => {
+      // t >= 1 colapsaria o eixo inteiro (divisão por zero) → NaN honesto
+      expect(deadzone(0.5, 1)).toBeNaN();
+      expect(deadzone(0.5, 1.5)).toBeNaN();
+      // t negativo não tem semântica de raio → NaN
+      expect(deadzone(0.5, -0.1)).toBeNaN();
+   });
+
+   it("should clamp magnitudes beyond the nominal range to full deflection", () => {
+      // Hardware reportando 1.0000001 (ou 2!) não pode vazar do range
+      expect(deadzone(2, 0.1)).toBe(1);
+      expect(deadzone(-5, 0.2)).toBe(-1);
+      expect(deadzone(1.0000001, 0.1)).toBe(1);
+   });
+
+   it("should treat negative zero as plain zero inside the zone", () => {
+      // -0 tem magnitude 0 → dentro da zona → 0 simples, sem -0 vazando
+      expect(deadzone(-0, 0.1)).toBe(0);
+      expect(Object.is(deadzone(-0, 0.1), -0)).toBe(false);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should remain strictly inside [-1, 1] across a dense axis sweep", () => {
+      // 2.001 pontos de -1 a 1, três thresholds — output jamais vaza
+      for (const t of [0.05, 0.3, 0.8]) {
+         for (let i = -1000; i <= 1000; i++) {
+            const v = i / 1000;
+            const out = deadzone(v, t);
+            expect(out).toBeGreaterThanOrEqual(-1);
+            expect(out).toBeLessThanOrEqual(1);
+         }
+      }
+   });
+
+   it("should be monotonically non-decreasing along the whole axis", () => {
+      // Stick mais empurrado JAMAIS produz output menor — exigência de UX
+      const t = 0.25;
+      let previous = deadzone(-1, t);
+      for (let i = -999; i <= 1000; i++) {
+         const current = deadzone(i / 1000, t);
+         expect(current).toBeGreaterThanOrEqual(previous);
+         previous = current;
+      }
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (edge continuity limit, mapRange equivalence sweep and odd symmetry across 99 thresholds)", () => {
+      // TEOREMA 1 — Continuidade na borda da zona morta:
+      // lim(v → t⁺) deadzone(v, t) = 0. É ESSA propriedade que separa
+      // a reescala contínua do deadzone ingênuo (que salta de 0 pra ~t).
+      // Aproximação por 6 ordens de grandeza decrescentes de ε.
+      for (const t of [0.1, 0.25, 0.5, 0.75, 0.9]) {
+         for (let k = 3; k <= 8; k++) {
+            const epsilon = 10 ** -k;
+            const out = deadzone(t + epsilon, t);
+            // O output deve encolher junto com ε (sem degrau): pra um
+            // remap linear, deadzone(t + ε, t) = ε/(1 − t) EXATO —
+            // auditamos contra o valor teórico em vez de um teto frouxo
+            expect(out).toBeGreaterThan(0);
+            expect(out).toBeCloseTo(epsilon / (1 - t), 12);
+         }
+      }
+
+      // TEOREMA 2 — Equivalência total com mapRange em varredura:
+      // 99 thresholds × 200 pontos fora da zona. A reescala contínua
+      // é EXATAMENTE o remapeamento linear [t, 1] → [0, 1].
+      for (let ti = 1; ti <= 99; ti++) {
+         const t = ti / 100;
+         for (let vi = 1; vi <= 200; vi++) {
+            // v varre (t, 1] uniformemente
+            const v = t + (vi / 200) * (1 - t);
+            expect(deadzone(v, t)).toBeCloseTo(mapRange(v, t, 1, 0, 1), 12);
+         }
+      }
+
+      // TEOREMA 3 — Simetria ímpar f(−v) = −f(v) fora da zona,
+      // auditada por sign() e absolute() em varredura:
+      for (let ti = 1; ti <= 99; ti += 7) {
+         const t = ti / 100;
+         for (let vi = 1; vi <= 100; vi++) {
+            const v = t + (vi / 100) * (1 - t);
+            const positive = deadzone(v, t);
+            const negative = deadzone(-v, t);
+            expect(negative).toBeCloseTo(-positive, 12);
+            expect(sign(negative)).toBe(-sign(positive));
+            expect(absolute(negative)).toBeCloseTo(absolute(positive), 12);
+         }
+      }
+   });
+});
+
+//--
+
+describe("Function: signedPow", () => {
+   // ── BÁSICO ──
+   it("should solve the classic NaN of fractional powers on negatives", () => {
+      // (-4) ** 0.5 nativo dá NaN — a razão de existir desta função
+      expect((-4) ** 0.5).toBeNaN();
+      expect(signedPow(-4, 0.5)).toBeCloseTo(-2);
+      expect(signedPow(4, 0.5)).toBeCloseTo(2);
+   });
+
+   it("should compute integer powers with the sign restored", () => {
+      expect(signedPow(2, 10)).toBe(1024);
+      expect(signedPow(-2, 10)).toBe(-1024);
+      expect(signedPow(3, 3)).toBe(27);
+      expect(signedPow(-3, 3)).toBe(-27);
+   });
+
+   it("should preserve the sign even for even exponents (the feature!)", () => {
+      // Diferente do nativo: (-3)**2 = 9, mas signedPow(-3, 2) = -9.
+      // É isso que mantém o stick indo pra esquerda após o easing.
+      expect(signedPow(-3, 2)).toBe(-9);
+      expect(signedPow(3, 2)).toBe(9);
+      expect(signedPow(-5, 4)).toBe(-625);
+   });
+
+   it("should handle cube roots on negatives via fractional exponent", () => {
+      expect(signedPow(-8, 1 / 3)).toBeCloseTo(-2);
+      expect(signedPow(-27, 1 / 3)).toBeCloseTo(-3);
+   });
+
+   // ── MÉDIO ──
+   it("should support negative exponents with sign preserved", () => {
+      expect(signedPow(2, -2)).toBeCloseTo(0.25);
+      expect(signedPow(-2, -2)).toBeCloseTo(-0.25);
+      expect(signedPow(-4, -1)).toBeCloseTo(-0.25);
+   });
+
+   it("should return the sign of the base for exponent zero", () => {
+      // |x|^0 = 1, logo signedPow(x, 0) = sign(x) — consequência honesta
+      expect(signedPow(7, 0)).toBe(1);
+      expect(signedPow(-7, 0)).toBe(-1);
+      expect(signedPow(0, 0)).toBe(0);
+   });
+
+   it("should keep zero at zero for positive exponents", () => {
+      expect(signedPow(0, 2) === 0).toBe(true);
+      expect(signedPow(0, 0.5) === 0).toBe(true);
+      expect(signedPow(-0, 2) === 0).toBe(true);
+   });
+
+   it("should soften extremes symmetrically with exponents below one", () => {
+      // Easing de suavização: |x| < 1 sobe, |x| > 1 desce — nos dois lados
+      expect(signedPow(0.25, 0.5)).toBeCloseTo(0.5);
+      expect(signedPow(-0.25, 0.5)).toBeCloseTo(-0.5);
+   });
+
+   // ── INTERMEDIÁRIO ── (dogfooding com outras funções da lib)
+   it("should match power() exactly on the positive half-axis", () => {
+      // Pra base > 0 não há sinal a restaurar: signedPow ≡ power
+      for (const x of [0.5, 1, 2, 3.7, 10]) {
+         for (const k of [0.5, 1, 2, 3]) {
+            expect(signedPow(x, k)).toBe(power(x, k));
+         }
+      }
+   });
+
+   it("should have its magnitude given by power() of absolute()", () => {
+      // |signedPow(x, k)| === power(|x|, k) — decomposição da definição
+      for (const x of [-7, -2.5, -1, 1, 2.5, 7]) {
+         expect(absolute(signedPow(x, 2))).toBeCloseTo(power(absolute(x), 2));
+      }
+   });
+
+   it("should agree with sign() of the base for every nonzero result", () => {
+      expect(sign(signedPow(-9, 0.5))).toBe(-1);
+      expect(sign(signedPow(9, 0.5))).toBe(1);
+      expect(sign(signedPow(-0.5, 3))).toBe(-1);
+   });
+
+   // ── BRUTO ──
+   it("should return NaN for non-finite inputs", () => {
+      expect(signedPow(NaN, 2)).toBeNaN();
+      expect(signedPow(2, NaN)).toBeNaN();
+      expect(signedPow(Infinity, 2)).toBeNaN();
+      expect(signedPow(-Infinity, 2)).toBeNaN();
+      expect(signedPow(2, Infinity)).toBeNaN();
+      expect(signedPow(2, -Infinity)).toBeNaN();
+   });
+
+   it("should return an honest NaN for zero base with negative exponent", () => {
+      // 0^(-k) = Infinity e sign(0) × Infinity = 0 × ∞ → indeterminação
+      expect(signedPow(0, -1)).toBeNaN();
+      expect(signedPow(0, -0.5)).toBeNaN();
+      expect(signedPow(-0, -2)).toBeNaN();
+   });
+
+   it("should stay exact for large integer powers inside the safe zone", () => {
+      // 2^50 = 1125899906842624 < 2^53 — toBe vale
+      expect(signedPow(2, 50)).toBe(2 ** 50);
+      expect(signedPow(-2, 50)).toBe(-(2 ** 50));
+   });
+
+   it("should handle tiny magnitudes without losing the sign", () => {
+      expect(signedPow(-1e-8, 2)).toBeCloseTo(-1e-16, 20);
+      expect(sign(signedPow(-1e-8, 2))).toBe(-1);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should keep easing outputs inside [-1, 1] across a dense sweep", () => {
+      // Caso de uso real: |x| <= 1 com exp >= 1 jamais vaza do range
+      for (const k of [1, 1.5, 2, 3, 5]) {
+         for (let i = -1000; i <= 1000; i++) {
+            const x = i / 1000;
+            const out = signedPow(x, k);
+            expect(out).toBeGreaterThanOrEqual(-1);
+            expect(out).toBeLessThanOrEqual(1);
+         }
+      }
+   });
+
+   it("should be monotonically non-decreasing across the whole axis", () => {
+      // Easing simétrico não pode inverter a direção do controle
+      for (const k of [0.5, 2, 3]) {
+         let previous = signedPow(-2, k);
+         for (let i = -1999; i <= 2000; i++) {
+            const current = signedPow(i / 1000, k);
+            expect(current).toBeGreaterThanOrEqual(previous);
+            previous = current;
+         }
+      }
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (power oracle sweep, odd symmetry across thousands of points and the round-trip inversion)", () => {
+      // TEOREMA 1 — Oráculo power() no semieixo positivo em varredura:
+      // 200 bases × 7 expoentes. Pra x > 0, signedPow degenera em power
+      // — qualquer desvio aqui denuncia corrupção na decomposição.
+      for (let xi = 1; xi <= 200; xi++) {
+         const x = xi / 10; // 0.1 a 20
+         for (const k of [-2, -0.5, 0.5, 1, 1.5, 2, 3]) {
+            expect(signedPow(x, k)).toBe(power(x, k));
+         }
+      }
+
+      // TEOREMA 2 — Simetria ímpar f(−x) = −f(x) POR CONSTRUÇÃO:
+      // 2.000 pontos × 5 expoentes (incluindo os pares! é o que separa
+      // signedPow da potência clássica), auditada por sign e absolute.
+      for (const k of [0.5, 1, 2, 3, 4]) {
+         for (let i = 1; i <= 2000; i++) {
+            const x = i / 100; // 0.01 a 20
+            const positive = signedPow(x, k);
+            const negative = signedPow(-x, k);
+            expect(negative).toBeCloseTo(-positive, 10);
+            expect(sign(negative)).toBe(-sign(positive));
+            expect(absolute(negative)).toBeCloseTo(absolute(positive), 10);
+         }
+      }
+
+      // TEOREMA 3 — Inversão round-trip: signedPow(signedPow(x, k), 1/k)
+      // recupera x no eixo INTEIRO, inclusive negativos — a prova de que
+      // a curva de easing tem inversa bem definida (bijeção), coisa que
+      // a potência nativa não consegue oferecer pra x < 0.
+      for (const k of [0.5, 1.5, 2, 3, 5]) {
+         for (let i = -500; i <= 500; i++) {
+            const x = i / 25; // -20 a 20, passo 0.04
+            const roundTrip = signedPow(signedPow(x, k), 1 / k);
+            expect(roundTrip).toBeCloseTo(x, 9);
+         }
+      }
+   });
+});
+
+//--
+
+describe("Function: roundToSignificant", () => {
+   // ── BÁSICO ──
+   it("should round large integers to the requested significant figures", () => {
+      expect(roundToSignificant(123456, 2)).toBe(120000);
+      expect(roundToSignificant(123456, 3)).toBe(123000);
+      expect(roundToSignificant(987654, 2)).toBe(990000);
+   });
+
+   it("should round tiny decimals keeping only the leading digits", () => {
+      // O mesmo sigFigs serve qualquer magnitude — toFixed jamais faria isso
+      expect(roundToSignificant(0.00012345, 3)).toBeCloseTo(0.000123, 9);
+      expect(roundToSignificant(0.00012345, 2)).toBeCloseTo(0.00012, 9);
+      expect(roundToSignificant(0.0777, 1)).toBeCloseTo(0.08, 9);
+   });
+
+   it("should round ordinary numbers near unity", () => {
+      expect(roundToSignificant(9.876, 2)).toBeCloseTo(9.9);
+      expect(roundToSignificant(3.14159, 3)).toBeCloseTo(3.14);
+      expect(roundToSignificant(777, 1)).toBe(800);
+   });
+
+   it("should return the number unchanged when sigFigs covers all digits", () => {
+      expect(roundToSignificant(123, 3)).toBe(123);
+      expect(roundToSignificant(5, 1)).toBe(5);
+      expect(roundToSignificant(42, 2)).toBe(42);
+   });
+
+   // ── MÉDIO ──
+   it("should mirror negatives symmetrically", () => {
+      expect(roundToSignificant(-123456, 2)).toBe(-120000);
+      expect(roundToSignificant(-9.876, 2)).toBeCloseTo(-9.9);
+      expect(roundToSignificant(-0.00012345, 3)).toBeCloseTo(-0.000123, 9);
+   });
+
+   it("should keep zero at zero regardless of sigFigs", () => {
+      // Zero não tem algarismo significativo pra contar
+      expect(roundToSignificant(0, 1)).toBe(0);
+      expect(roundToSignificant(0, 7)).toBe(0);
+      expect(roundToSignificant(-0, 3) === 0).toBe(true);
+   });
+
+   it("should bump to the next magnitude at the rounding boundary", () => {
+      // 99.5 com 2 algarismos vira 100 (= 1.0e2) — autocorreção natural
+      expect(roundToSignificant(99.5, 2)).toBe(100);
+      expect(roundToSignificant(999, 1)).toBe(1000);
+      expect(roundToSignificant(0.0995, 2)).toBeCloseTo(0.1, 9);
+   });
+
+   it("should round ties half away from zero on both sides", () => {
+      // Simetria científica: -12.5 espelha +12.5 (sem o viés do nativo)
+      expect(roundToSignificant(12.5, 2)).toBe(13);
+      expect(roundToSignificant(-12.5, 2)).toBe(-13);
+      expect(roundToSignificant(1250, 2)).toBe(1300);
+      expect(roundToSignificant(-1250, 2)).toBe(-1300);
+   });
+
+   // ── INTERMEDIÁRIO ── (dogfooding com outras funções da lib)
+   it("should agree with round() when sigFigs matches the integer digits", () => {
+      // Com 3 algarismos pra um número de 3 dígitos, vira round comum
+      for (const x of [123.4, 567.5, 899.9, 250.5]) {
+         expect(roundToSignificant(x, 3)).toBe(round(x));
+      }
+   });
+
+   it("should preserve the sign() of every nonzero input", () => {
+      // O dígito líder arredondado nunca zera → sinal sempre sobrevive
+      for (const x of [-98765, -0.04, -1.5, 2.5, 0.007, 31415]) {
+         expect(sign(roundToSignificant(x, 2))).toBe(sign(x));
+      }
+   });
+
+   it("should keep the magnitude given by log10() stable or bump it by one", () => {
+      // floor(log10) do resultado é o mesmo do input — ou +1 na borda 99.5→100
+      for (const x of [4321, 8.76, 0.0456, 99.5]) {
+         const before = floor(log10(absolute(x)));
+         const after = floor(log10(absolute(roundToSignificant(x, 2))));
+         expect(after === before || after === before + 1).toBe(true);
+      }
+   });
+
+   // ── BRUTO ──
+   it("should return NaN for non-finite inputs", () => {
+      expect(roundToSignificant(NaN, 2)).toBeNaN();
+      expect(roundToSignificant(Infinity, 2)).toBeNaN();
+      expect(roundToSignificant(-Infinity, 2)).toBeNaN();
+      expect(roundToSignificant(123, NaN)).toBeNaN();
+      expect(roundToSignificant(123, Infinity)).toBeNaN();
+   });
+
+   it("should return NaN for invalid significant figure counts", () => {
+      // "2.5 algarismos significativos" não existe — NaN honesto
+      expect(roundToSignificant(123, 0)).toBeNaN();
+      expect(roundToSignificant(123, -1)).toBeNaN();
+      expect(roundToSignificant(123, 2.5)).toBeNaN();
+   });
+
+   it("should stay exact at the top of the safe integer zone", () => {
+      // 9.007e15 < 2^53 — arredondar pra 2 algarismos dá 9.0e15 exato
+      expect(roundToSignificant(9_007_199_254_740_000, 2)).toBe(9e15);
+      expect(roundToSignificant(-9_007_199_254_740_000, 1)).toBe(-9e15);
+   });
+
+   it("should handle extreme magnitudes far from unity", () => {
+      expect(roundToSignificant(1.2345e-10, 2)).toBeCloseTo(1.2e-10, 14);
+      expect(roundToSignificant(6.789e12, 2)).toBe(6.8e12);
+   });
+
+   it("should tolerate sigFigs far beyond the available digits", () => {
+      // Pedir 10 algarismos de "123" devolve 123 (com drift de scale 1e-7)
+      expect(roundToSignificant(123, 10)).toBeCloseTo(123, 9);
+      expect(roundToSignificant(0.5, 8)).toBeCloseTo(0.5, 9);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should be a perfect identity for all 900 three-digit integers", () => {
+      // scale = 10^0 = 1 → divisão e volta exatas, toBe sem medo
+      for (let n = 100; n <= 999; n++) {
+         expect(roundToSignificant(n, 3)).toBe(n);
+         expect(roundToSignificant(-n, 3)).toBe(-n);
+      }
+   });
+
+   it("should stay within one scale step of the input across a sweep", () => {
+      // |resultado − input| <= metade do degrau da escala (round de verdade)
+      for (let i = 1; i <= 2000; i++) {
+         const x = i * 7.77;
+         const out = roundToSignificant(x, 2);
+         const magnitude = floor(log10(absolute(x)));
+         const step = power(10, magnitude - 1);
+         expect(absolute(out - x)).toBeLessThanOrEqual(step / 2 + step * 1e-9);
+      }
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (scale invariance across 14 orders of magnitude, idempotence and the digit-count invariant)", () => {
+      // TEOREMA 1 — Invariância de escala: arredondar não enxerga a
+      // vírgula. f(x · 10^k, s) = f(x, s) · 10^k pra k de -7 a +7.
+      // Auditado por RAZÃO (≈ 1) pra esquivar do drift absoluto de float.
+      for (const x of [1.2341, 9.8763, 6.6261, 2.71828]) {
+         for (let s = 1; s <= 4; s++) {
+            const base = roundToSignificant(x, s);
+            for (let k = -7; k <= 7; k++) {
+               const scaled = roundToSignificant(x * power(10, k), s);
+               expect(scaled / (base * power(10, k))).toBeCloseTo(1, 10);
+            }
+         }
+      }
+
+      // TEOREMA 2 — Idempotência: arredondar o já-arredondado não muda
+      // nada. f(f(n, s), s) === f(n, s) EXATO em varredura inteira
+      // (outputs inteiros → comparação bit a bit sem medo).
+      for (let n = 1; n <= 5000; n += 7) {
+         for (let s = 1; s <= 3; s++) {
+            const once = roundToSignificant(n * 13, s);
+            const twice = roundToSignificant(once, s);
+            expect(twice).toBe(once);
+         }
+      }
+
+      // TEOREMA 3 — Invariante da contagem de dígitos, auditado pela
+      // própria lib: a mantissa do resultado, out / 10^(m − s + 1),
+      // deve ser um INTEIRO entre 10^(s−1) e 10^s — ou seja, o
+      // resultado tem no máximo s algarismos significativos de verdade.
+      let seed = 2026;
+      const nextFloat = () => {
+         seed = (seed * 1_664_525 + 1_013_904_223) % 4_294_967_296;
+         return 1 + (seed % 8_999) / 1_000; // mantissas em [1, 9.999]
+      };
+      for (let run = 0; run < 300; run++) {
+         const exponent = (run % 13) - 6; // magnitudes de -6 a +6
+         const x = nextFloat() * power(10, exponent);
+         for (let s = 1; s <= 4; s++) {
+            const out = roundToSignificant(x, s);
+            const m = floor(log10(absolute(out)));
+            const mantissa = out / power(10, m - s + 1);
+            // Mantissa é inteira (tolerância só pro drift da divisão)
+            expect(mantissa).toBeCloseTo(round(mantissa), 6);
+            // E vive na janela [10^(s−1), 10^s] dos s algarismos
+            expect(round(mantissa)).toBeGreaterThanOrEqual(power(10, s - 1));
+            expect(round(mantissa)).toBeLessThanOrEqual(power(10, s));
+         }
+      }
+   });
+});
+
+//--
+
+describe("Function: normalizeToSum", () => {
+   // ── BÁSICO ──
+   it("should turn weights into a probability distribution by default", () => {
+      const result = normalizeToSum([2, 3, 5]);
+      expect(result[0]).toBeCloseTo(0.2);
+      expect(result[1]).toBeCloseTo(0.3);
+      expect(result[2]).toBeCloseTo(0.5);
+   });
+
+   it("should rescale to an explicit target like percentages", () => {
+      // ratio = 100/4 = 25 exato → toBe sem medo
+      expect(normalizeToSum([1, 1, 2], 100)).toEqual([25, 25, 50]);
+   });
+
+   it("should map a single element straight to the target", () => {
+      expect(normalizeToSum([7])).toEqual([1]);
+      expect(normalizeToSum([3], 42)).toEqual([42]);
+   });
+
+   it("should return an empty array for an empty list", () => {
+      // Nada pra normalizar — [] honesto, padrão da lib
+      expect(normalizeToSum([])).toEqual([]);
+      expect(normalizeToSum([], 100)).toEqual([]);
+   });
+
+   // ── MÉDIO ──
+   it("should handle negative values while preserving proportions", () => {
+      // ratio = 1/2 exato: [-1, 3] vira [-0.5, 1.5] e soma 1
+      expect(normalizeToSum([-1, 3])).toEqual([-0.5, 1.5]);
+   });
+
+   it("should keep zeros at zero in the rescaled list", () => {
+      const result = normalizeToSum([0, 5, 5]);
+      expect(result[0]).toBe(0);
+      expect(result[1]).toBeCloseTo(0.5);
+      expect(result[2]).toBeCloseTo(0.5);
+   });
+
+   it("should collapse everything to zero for a zero target", () => {
+      expect(normalizeToSum([1, 2, 3], 0)).toEqual([0, 0, 0]);
+   });
+
+   it("should leave an already-normalized distribution untouched", () => {
+      const result = normalizeToSum([0.25, 0.75]);
+      expect(result[0]).toBeCloseTo(0.25, 12);
+      expect(result[1]).toBeCloseTo(0.75, 12);
+   });
+
+   it("should rescale to a negative target by flipping the scale", () => {
+      // target negativo é válido: proporções mantidas, total = -10
+      const result = normalizeToSum([2, 3], -10);
+      expect(result[0]).toBeCloseTo(-4);
+      expect(result[1]).toBeCloseTo(-6);
+   });
+
+   // ── INTERMEDIÁRIO ── (dogfooding com outras funções da lib)
+   it("should sum to the target according to sum()", () => {
+      // O contrato inteiro da função, auditado pelo agregador da lib
+      expect(sum(...normalizeToSum([3, 7, 11]))).toBeCloseTo(1, 12);
+      expect(sum(...normalizeToSum([5, 5, 5], 99))).toBeCloseTo(99, 9);
+      expect(sum(...normalizeToSum([-2, 5, 4], 10))).toBeCloseTo(10, 9);
+   });
+
+   it("should produce mean 1 when normalized to the element count", () => {
+      // Normalizar pra somar n ⟹ média = n/n = 1 — ponte com mean()
+      const values = [4, 8, 15, 16, 23, 42];
+      const normalized = normalizeToSum(values, values.length);
+      expect(mean(...normalized)).toBeCloseTo(1, 12);
+   });
+
+   it("should preserve the sign() of every entry for a positive ratio", () => {
+      // total > 0 e target > 0 ⟹ ratio > 0 ⟹ nenhum sinal vira
+      const values = [-3, 7, -1, 11];
+      const normalized = normalizeToSum(values, 5);
+      for (let i = 0; i < values.length; i++) {
+         expect(sign(normalized[i])).toBe(sign(values[i]));
+      }
+   });
+
+   // ── BRUTO ──
+   it("should return all-NaN when the values sum to zero", () => {
+      // Não existe fator que mude o total de 0 — direção indefinida
+      const result = normalizeToSum([-2, 2]);
+      expect(result).toHaveLength(2);
+      expect(result[0]).toBeNaN();
+      expect(result[1]).toBeNaN();
+      for (const v of normalizeToSum([0, 0, 0])) {
+         expect(v).toBeNaN();
+      }
+   });
+
+   it("should return all-NaN when any entry is non-finite", () => {
+      // Um Infinity zeraria os demais silenciosamente — mentira vetada
+      for (const poison of [NaN, Infinity, -Infinity]) {
+         const result = normalizeToSum([1, poison, 3]);
+         expect(result).toHaveLength(3);
+         for (const v of result) {
+            expect(v).toBeNaN();
+         }
+      }
+   });
+
+   it("should return all-NaN for a non-finite target", () => {
+      for (const badTarget of [NaN, Infinity, -Infinity]) {
+         for (const v of normalizeToSum([1, 2, 3], badTarget)) {
+            expect(v).toBeNaN();
+         }
+      }
+   });
+
+   it("should never mutate the input array", () => {
+      const input = [9, 1, 5];
+      const frozen = [...input];
+      normalizeToSum(input, 100);
+      expect(input).toEqual(frozen);
+   });
+
+   it("should normalize tiny magnitudes without underflow surprises", () => {
+      const result = normalizeToSum([1e-12, 3e-12]);
+      expect(result[0]).toBeCloseTo(0.25, 12);
+      expect(result[1]).toBeCloseTo(0.75, 12);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should survive a 10,000-element normalization summing to target", () => {
+      const values: number[] = [];
+      for (let i = 1; i <= 10_000; i++) {
+         values.push((i % 97) + 1); // pesos 1..97 ciclando
+      }
+      const normalized = normalizeToSum(values, 1000);
+      expect(normalized).toHaveLength(10_000);
+      expect(sum(...normalized)).toBeCloseTo(1000, 6);
+   });
+
+   it("should hold proportions across wildly mixed magnitudes", () => {
+      // 1e-6 convivendo com 1e6: razão entre saídas = razão entre entradas
+      const values = [1e-6, 1, 1e6];
+      const normalized = normalizeToSum(values, 7);
+      expect(normalized[2] / normalized[0]).toBeCloseTo(1e12, 0);
+      expect(normalized[1] / normalized[0]).toBeCloseTo(1e6, 4);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (mean bridge across 200 random lists, pairwise proportion invariance and the cumulativeSum composition)", () => {
+      // Gerador determinístico (LCG) — varredura pseudo-aleatória sem flake
+      let seed = 777;
+      const nextInt = () => {
+         seed = (seed * 1_664_525 + 1_013_904_223) % 4_294_967_296;
+         return (seed % 200) + 1; // pesos em [1, 200]
+      };
+
+      for (let run = 0; run < 200; run++) {
+         const length = 3 + (run % 48); // tamanhos 3 a 50
+         const values: number[] = [];
+         for (let i = 0; i < length; i++) {
+            values.push(nextInt());
+         }
+
+         // TEOREMA 1 — Ponte com mean(): normalizar pra somar n
+         // força média exatamente 1, pra QUALQUER lista de pesos.
+         const toCount = normalizeToSum(values, length);
+         expect(mean(...toCount)).toBeCloseTo(1, 10);
+
+         // TEOREMA 2 — Invariância das proporções: o fator único
+         // não mexe em razão. out[i]/out[j] === values[i]/values[j]
+         // pra TODO par — auditado em varredura de pares adjacentes
+         // e do primeiro contra todos.
+         const normalized = normalizeToSum(values, 42);
+         for (let i = 1; i < length; i++) {
+            expect(normalized[i] / normalized[i - 1]).toBeCloseTo(
+               values[i] / values[i - 1],
+               10,
+            );
+            expect(normalized[i] / normalized[0]).toBeCloseTo(
+               values[i] / values[0],
+               10,
+            );
+         }
+
+         // TEOREMA 3 — Composição com cumulativeSum(): o acumulado
+         // de uma distribuição normalizada é monótono (pesos > 0) e
+         // termina EXATAMENTE no alvo — três funções da Fase 4
+         // se auditando mutuamente.
+         const trajectory = cumulativeSum(...normalized);
+         expect(trajectory.at(-1)).toBeCloseTo(42, 9);
+         for (let i = 1; i < trajectory.length; i++) {
+            expect(trajectory[i]).toBeGreaterThan(trajectory[i - 1]);
+         }
+
+         // BÔNUS — Idempotência: normalizar o já-normalizado é no-op
+         const twice = normalizeToSum(normalized, 42);
+         for (let i = 0; i < length; i++) {
+            expect(twice[i]).toBeCloseTo(normalized[i], 10);
+         }
+      }
+   });
+});
+
+//--
+
+describe("Function: geometricLerp", () => {
+   // ── BÁSICO ──
+   it("should return the geometric mean at the midpoint", () => {
+      // O meio de 1 e 100 é 10 (√(1·100)), não 50.5
+      expect(geometricLerp(1, 100, 0.5)).toBeCloseTo(10);
+      expect(geometricLerp(4, 9, 0.5)).toBeCloseTo(6); // √36
+      expect(geometricLerp(2, 8, 0.5)).toBeCloseTo(4); // √16
+   });
+
+   it("should hit both endpoints exactly", () => {
+      // Contrato sagrado de lerp: t=0 → a, t=1 → b, sem drift
+      expect(geometricLerp(1, 100, 0)).toBe(1);
+      expect(geometricLerp(1, 100, 1)).toBe(100);
+      expect(geometricLerp(3, 7, 0)).toBe(3);
+      expect(geometricLerp(3, 7, 1)).toBe(7);
+   });
+
+   it("should interpolate octaves for audio frequencies", () => {
+      // 220→880 Hz: o meio é 440 (A4), uma oitava de cada lado
+      expect(geometricLerp(220, 880, 0.5)).toBeCloseTo(440);
+      // Um quarto do caminho = meia oitava abaixo de 440
+      expect(geometricLerp(220, 880, 0.25)).toBeCloseTo(311.127, 2);
+   });
+
+   it("should return a for equal endpoints regardless of t", () => {
+      expect(geometricLerp(5, 5, 0)).toBeCloseTo(5);
+      expect(geometricLerp(5, 5, 0.5)).toBeCloseTo(5);
+      expect(geometricLerp(5, 5, 1)).toBeCloseTo(5);
+   });
+
+   // ── MÉDIO ──
+   it("should extrapolate beyond the unit interval geometrically", () => {
+      // t=2 de 1→10 segue a progressão: 1, 10, 100
+      expect(geometricLerp(1, 10, 2)).toBeCloseTo(100);
+      expect(geometricLerp(1, 10, 3)).toBeCloseTo(1000);
+      // t negativo vai pro outro lado: 1, 10 → t=-1 dá 0.1
+      expect(geometricLerp(1, 10, -1)).toBeCloseTo(0.1);
+   });
+
+   it("should descend when b is smaller than a", () => {
+      expect(geometricLerp(100, 1, 0.5)).toBeCloseTo(10);
+      expect(geometricLerp(880, 220, 0.5)).toBeCloseTo(440);
+   });
+
+   it("should handle fractional values below one", () => {
+      expect(geometricLerp(0.01, 1, 0.5)).toBeCloseTo(0.1);
+      expect(geometricLerp(0.25, 4, 0.5)).toBeCloseTo(1); // √1
+   });
+
+   it("should split a zoom range into multiplicative steps", () => {
+      // Zoom 1×→16× em quartos: cada passo multiplica por 2
+      expect(geometricLerp(1, 16, 0.25)).toBeCloseTo(2);
+      expect(geometricLerp(1, 16, 0.5)).toBeCloseTo(4);
+      expect(geometricLerp(1, 16, 0.75)).toBeCloseTo(8);
+   });
+
+   // ── INTERMEDIÁRIO ── (dogfooding com outras funções da lib)
+   it("should equal the two-power form using power()", () => {
+      // A definição em si, auditada pelo power() da lib
+      for (const t of [0, 0.2, 0.5, 0.8, 1]) {
+         expect(geometricLerp(3, 12, t)).toBeCloseTo(
+            power(3, 1 - t) * power(12, t),
+            10,
+         );
+      }
+   });
+
+   it("should match power() for the canonical base-from-1 case", () => {
+      // geometricLerp(1, b, t) ≡ b^t — interpolar a partir de 1 é potência
+      for (const t of [0, 0.3, 0.5, 0.7, 1, 1.5]) {
+         expect(geometricLerp(1, 8, t)).toBeCloseTo(power(8, t), 10);
+      }
+   });
+
+   it("should square the midpoint back to the product of endpoints", () => {
+      // (√(a·b))² = a·b — o meio geométrico ao quadrado via power()
+      const mid = geometricLerp(7, 28, 0.5);
+      expect(power(mid, 2)).toBeCloseTo(7 * 28, 8);
+   });
+
+   // ── BRUTO ──
+   it("should return NaN for non-finite inputs", () => {
+      expect(geometricLerp(NaN, 10, 0.5)).toBeNaN();
+      expect(geometricLerp(1, NaN, 0.5)).toBeNaN();
+      expect(geometricLerp(1, 10, NaN)).toBeNaN();
+      expect(geometricLerp(Infinity, 10, 0.5)).toBeNaN();
+      expect(geometricLerp(1, Infinity, 0.5)).toBeNaN();
+      expect(geometricLerp(1, 10, Infinity)).toBeNaN();
+   });
+
+   it("should return NaN for non-positive endpoints", () => {
+      // Zero é buraco negro (razão infinita); negativo não tem log real
+      expect(geometricLerp(0, 10, 0.5)).toBeNaN();
+      expect(geometricLerp(10, 0, 0.5)).toBeNaN();
+      expect(geometricLerp(-1, 10, 0.5)).toBeNaN();
+      expect(geometricLerp(1, -10, 0.5)).toBeNaN();
+      expect(geometricLerp(-2, -8, 0.5)).toBeNaN();
+   });
+
+   it("should keep endpoints exact even with awkward float values", () => {
+      // A forma de dois powers blinda o endpoint: t=1 → a^0 × b = b cravado
+      expect(geometricLerp(0.1, 0.7, 1)).toBe(0.7);
+      expect(geometricLerp(0.1, 0.7, 0)).toBe(0.1);
+      expect(geometricLerp(3.14159, 2.71828, 1)).toBe(2.71828);
+   });
+
+   it("should stay positive across the whole parameter range", () => {
+      // a, b > 0 ⟹ saída > 0 sempre (não há cruzamento de zero)
+      for (let i = -50; i <= 150; i++) {
+         expect(geometricLerp(2, 50, i / 100)).toBeGreaterThan(0);
+      }
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should be monotonic along t for an ascending range", () => {
+      // b > a ⟹ função estritamente crescente em t
+      let previous = geometricLerp(1.5, 90, -0.5);
+      for (let i = -49; i <= 150; i++) {
+         const current = geometricLerp(1.5, 90, i / 100);
+         expect(current).toBeGreaterThan(previous);
+         previous = current;
+      }
+   });
+
+   it("should reconstruct a geometric progression over many steps", () => {
+      // 1→1024 em 10 passos: cada um multiplica por 2 (2^10 = 1024)
+      for (let k = 0; k <= 10; k++) {
+         expect(geometricLerp(1, 1024, k / 10)).toBeCloseTo(power(2, k), 6);
+      }
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (equal-ratio defining property, scale invariance and the 12-tone equal temperament of the piano)", () => {
+      // TEOREMA 1 — Propriedade definidora: passos iguais em t
+      // multiplicam a saída por uma RAZÃO constante (a marca registrada
+      // da interpolação geométrica vs a aritmética). Varremos 200 pares
+      // com passo fixo d e exigimos razão constante ao longo de todo t.
+      let seed = 1234;
+      const nextPair = () => {
+         seed = (seed * 1_664_525 + 1_013_904_223) % 4_294_967_296;
+         const a = 1 + (seed % 500);
+         seed = (seed * 1_664_525 + 1_013_904_223) % 4_294_967_296;
+         const b = 1 + (seed % 500);
+         return [a, b] as const;
+      };
+      for (let run = 0; run < 200; run++) {
+         const [a, b] = nextPair();
+         if (a === b) continue; // razão 1 é trivial, pula
+         const d = 0.1;
+         // A razão entre passos consecutivos = (b/a)^d, constante
+         const expectedRatio = power(b / a, d);
+         for (let i = 0; i < 8; i++) {
+            const t = i / 10;
+            const here = geometricLerp(a, b, t);
+            const there = geometricLerp(a, b, t + d);
+            expect(there / here).toBeCloseTo(expectedRatio, 8);
+         }
+      }
+
+      // TEOREMA 2 — Invariância de escala: multiplicar ambos os
+      // extremos por k multiplica a saída por k.
+      // geometricLerp(k·a, k·b, t) = k · geometricLerp(a, b, t),
+      // porque (ka)^(1−t)(kb)^t = k^(1−t+t) · a^(1−t)b^t = k · (...).
+      for (let run = 0; run < 100; run++) {
+         const [a, b] = nextPair();
+         const k = 1 + (run % 50);
+         for (const t of [0, 0.25, 0.5, 0.75, 1]) {
+            const base = geometricLerp(a, b, t);
+            const scaled = geometricLerp(a * k, b * k, t);
+            expect(scaled).toBeCloseTo(base * k, 6);
+         }
+      }
+
+      // TEOREMA 3 — Temperamento igual de 12 tons: dividir uma oitava
+      // (f → 2f) em 12 passos geométricos reproduz EXATAMENTE os
+      // semitons do piano, cada um a 2^(1/12) do anterior. A4 = 440 Hz,
+      // varrido contra power(2, n/12) como oráculo (Bach aprovaria 🎹).
+      const a4 = 440;
+      const octaveUp = 880;
+      const semitone = power(2, 1 / 12);
+      for (let n = 0; n <= 12; n++) {
+         const note = geometricLerp(a4, octaveUp, n / 12);
+         // Cada semitom é 440 × 2^(n/12)
+         expect(note).toBeCloseTo(a4 * power(semitone, n), 6);
+         // E a razão entre semitons vizinhos é sempre a mesma
+         if (n > 0) {
+            const previous = geometricLerp(a4, octaveUp, (n - 1) / 12);
+            expect(note / previous).toBeCloseTo(semitone, 8);
+         }
+      }
+      // Fecho: 12 semitons completam exatamente a oitava (endpoint exato)
+      expect(geometricLerp(a4, octaveUp, 1)).toBe(880);
+   });
+});
+
+//--
+
+describe("Function: proportionalSplit", () => {
+   // ── BÁSICO ──
+   it("should split a total into equal whole parts that sum exactly", () => {
+      // O caso clássico: R$1,00 em 3 → [34,33,33], soma 100 (não 99.99!)
+      expect(proportionalSplit(100, 1, 1, 1)).toEqual([34, 33, 33]);
+      expect(proportionalSplit(10, 1, 2, 2)).toEqual([2, 4, 4]);
+      expect(proportionalSplit(9, 1, 1, 1)).toEqual([3, 3, 3]);
+   });
+
+   it("should hand the odd unit to the largest remainder", () => {
+      // 7 dividido 50/50: ambos pedem 3.5; o ímpar vai pro 1º (empate→índice)
+      expect(proportionalSplit(7, 50, 50)).toEqual([4, 3]);
+      // 5 em três iguais: restos 0.66 cada, dois primeiros levam
+      expect(proportionalSplit(5, 1, 1, 1)).toEqual([2, 2, 1]);
+   });
+
+   it("should return clean parts when weights divide the total evenly", () => {
+      expect(proportionalSplit(100, 1, 4)).toEqual([20, 80]);
+      expect(proportionalSplit(60, 1, 1, 1, 1, 1, 1)).toEqual([
+         10, 10, 10, 10, 10, 10,
+      ]);
+   });
+
+   it("should map a single weight to the whole total", () => {
+      expect(proportionalSplit(42, 7)).toEqual([42]);
+      expect(proportionalSplit(1000, 1)).toEqual([1000]);
+   });
+
+   // ── MÉDIO ──
+   it("should split by proportional weights of different sizes", () => {
+      // 100 em 1:2:7 → 10:20:70
+      expect(proportionalSplit(100, 1, 2, 7)).toEqual([10, 20, 70]);
+      // 200 em 3:1 → 150:50
+      expect(proportionalSplit(200, 3, 1)).toEqual([150, 50]);
+   });
+
+   it("should only care about weight ratios, not their scale", () => {
+      // Pesos 1,1,1 e 50,50,50 são a MESMA proporção → mesmo resultado
+      expect(proportionalSplit(100, 1, 1, 1)).toEqual(
+         proportionalSplit(100, 50, 50, 50),
+      );
+      expect(proportionalSplit(100, 1, 3)).toEqual(
+         proportionalSplit(100, 25, 75),
+      );
+   });
+
+   it("should handle zero weights by giving them nothing", () => {
+      // Peso 0 não participa do rateio, mas conta no comprimento
+      expect(proportionalSplit(100, 1, 0, 1)).toEqual([50, 0, 50]);
+      expect(proportionalSplit(10, 0, 0, 5)).toEqual([0, 0, 10]);
+   });
+
+   it("should split a total of zero into all zeros", () => {
+      expect(proportionalSplit(0, 1, 2, 3)).toEqual([0, 0, 0]);
+   });
+
+   it("should split negative totals symmetrically (debt sharing)", () => {
+      // Dívida também rateia: -100 em três iguais
+      const parts = proportionalSplit(-100, 1, 1, 1);
+      expect(sum(...parts)).toBe(-100);
+      expect(parts).toEqual([-33, -33, -34]);
+   });
+
+   // ── INTERMEDIÁRIO ── (dogfooding com outras funções da lib)
+   it("should sum to exactly the total according to sum()", () => {
+      // O invariante sagrado, auditado pelo agregador da lib
+      expect(sum(...proportionalSplit(100, 1, 1, 1))).toBe(100);
+      expect(sum(...proportionalSplit(777, 3, 5, 11, 2))).toBe(777);
+      expect(sum(...proportionalSplit(1, 1, 1, 1, 1, 1, 1))).toBe(1);
+   });
+
+   it("should never deviate from the floor() share by more than one", () => {
+      // Cada parte é seu floor OU floor+1 — propriedade do maior resto
+      const total = 1000;
+      const weights = [3, 7, 13, 2, 9];
+      const weightSum = sum(...weights);
+      const parts = proportionalSplit(total, ...weights);
+      for (let i = 0; i < weights.length; i++) {
+         const exact = (total * weights[i]) / weightSum;
+         const base = floor(exact);
+         expect(parts[i] === base || parts[i] === base + 1).toBe(true);
+      }
+   });
+
+   it("should approximate the continuous normalizeToSum allocation", () => {
+      // proportionalSplit é a versão inteira de normalizeToSum:
+      // cada parte fica a menos de 1 unidade da alocação contínua
+      const total = 100;
+      const weights = [2, 3, 5, 7, 11];
+      const integer = proportionalSplit(total, ...weights);
+      const continuous = normalizeToSum(weights, total);
+      for (let i = 0; i < weights.length; i++) {
+         expect(absolute(integer[i] - continuous[i])).toBeLessThan(1);
+      }
+   });
+
+   // ── BRUTO ──
+   it("should return NaN-filled array for non-integer totals", () => {
+      // Dinheiro se rateia em centavos (inteiros), nunca em floats
+      const result = proportionalSplit(100.5, 1, 1);
+      expect(result).toHaveLength(2);
+      expect(result[0]).toBeNaN();
+      expect(result[1]).toBeNaN();
+   });
+
+   it("should return NaN-filled array for non-finite totals", () => {
+      for (const bad of [NaN, Infinity, -Infinity]) {
+         const result = proportionalSplit(bad, 1, 2, 3);
+         expect(result).toHaveLength(3);
+         for (const v of result) expect(v).toBeNaN();
+      }
+   });
+
+   it("should return NaN-filled array for negative or non-finite weights", () => {
+      // Proporção negativa não tem sentido de rateio
+      for (const v of proportionalSplit(100, 1, -1)) expect(v).toBeNaN();
+      for (const v of proportionalSplit(100, 1, NaN)) expect(v).toBeNaN();
+      for (const v of proportionalSplit(100, 1, Infinity)) {
+         expect(v).toBeNaN();
+      }
+   });
+
+   it("should return NaN-filled array when all weights are zero", () => {
+      // Soma de pesos zero → divisão por zero → direção indefinida
+      const result = proportionalSplit(100, 0, 0, 0);
+      expect(result).toHaveLength(3);
+      for (const v of result) expect(v).toBeNaN();
+   });
+
+   it("should return an empty array for no weights", () => {
+      expect(proportionalSplit(100)).toEqual([]);
+      expect(proportionalSplit(0)).toEqual([]);
+   });
+
+   it("should not mutate anything and stay deterministic", () => {
+      // Mesmo input → mesmo output, sempre (auditoria contábil exige)
+      const first = proportionalSplit(100, 3, 3, 3, 1);
+      const second = proportionalSplit(100, 3, 3, 3, 1);
+      expect(first).toEqual(second);
+   });
+
+   // ── BRUTALIDADE MÁXIMA ──
+   it("should reconcile to the total across a huge allocation", () => {
+      // 1.000 partes de pesos variados, somando exatamente 1 milhão
+      const weights: number[] = [];
+      for (let i = 1; i <= 1000; i++) weights.push((i % 13) + 1);
+      const parts = proportionalSplit(1_000_000, ...weights);
+      expect(parts).toHaveLength(1000);
+      expect(sum(...parts)).toBe(1_000_000);
+   });
+
+   it("should give every leftover unit to a distinct part", () => {
+      // O resto R distribui no máximo +1 por parte — nunca +2 no mesmo
+      const total = 100;
+      const weights = [1, 1, 1, 1, 1, 1, 1]; // 7 partes, 100/7 = 14.28...
+      const parts = proportionalSplit(total, ...weights);
+      expect(sum(...parts)).toBe(100);
+      // floor(100/7)=14; resto 100-98=2 unidades em 2 partes distintas
+      const fourteens = parts.filter((p) => p === 14).length;
+      const fifteens = parts.filter((p) => p === 15).length;
+      expect(fourteens).toBe(5);
+      expect(fifteens).toBe(2);
+   });
+
+   // ── 💣 BOMBA NUCLEAR — EXPLOSÃO MÁXIMA DEFINITIVA ──
+   it("should withstand the definitive nuclear explosion (the sacred sum invariant, proportional monotonicity, the floor-bounded apportionment and determinism across 500 random splits)", () => {
+      // Gerador determinístico (LCG) — 500 cenários sem flake
+      let seed = 31_337;
+      const nextInt = (mod: number) => {
+         seed = (seed * 1_664_525 + 1_013_904_223) % 4_294_967_296;
+         return seed % mod;
+      };
+
+      for (let run = 0; run < 500; run++) {
+         const length = 2 + nextInt(30); // 2 a 31 partes
+         const total = nextInt(1_000_000) + 1; // 1 a 1.000.000
+         const weights: number[] = [];
+         for (let i = 0; i < length; i++) {
+            weights.push(nextInt(100) + 1); // pesos 1 a 100
+         }
+
+         const parts = proportionalSplit(total, ...weights);
+         const weightSum = sum(...weights);
+
+         // TEOREMA 1 — INVARIANTE SAGRADO: as partes somam EXATAMENTE
+         // o total. Este é o teorema que define a função inteira —
+         // nenhum centavo perdido, nenhum inventado, jamais.
+         expect(sum(...parts)).toBe(total);
+
+         // TEOREMA 2 — Limite do maior resto: cada parte é seu floor
+         // ou floor+1 da alocação exata. Nunca mais, nunca menos.
+         for (let i = 0; i < length; i++) {
+            const exact = (total * weights[i]) / weightSum;
+            const base = floor(exact);
+            expect(parts[i] === base || parts[i] === base + 1).toBe(true);
+            // E nenhuma parte é negativa (total e pesos positivos)
+            expect(parts[i]).toBeGreaterThanOrEqual(0);
+         }
+
+         // TEOREMA 3 — Monotonicidade proporcional: peso maior nunca
+         // recebe parte MENOR. Ordenamos pelos pesos e conferimos que
+         // as partes respeitam a ordem (com tolerância de 1 unidade,
+         // o jogo do arredondamento do maior resto).
+         const paired = weights
+            .map((w, i) => ({ w, part: parts[i] }))
+            .sort((p, q) => p.w - q.w);
+         for (let i = 1; i < paired.length; i++) {
+            // parte do peso maior >= parte do menor − 1 (folga do resto)
+            expect(paired[i].part).toBeGreaterThanOrEqual(
+               paired[i - 1].part - 1,
+            );
+         }
+
+         // TEOREMA 4 — Determinismo total: rodar de novo dá IDÊNTICO.
+         // Auditoria contábil não tolera resultado que muda sozinho.
+         const again = proportionalSplit(total, ...weights);
+         expect(again).toEqual(parts);
+      }
+
+      // COROAÇÃO — O problema do centavo, exato: dividir 1 centavo
+      // entre 3 sócios. Soma tem que ser 1, e a unidade indivisível
+      // vai pra um só (determinístico: o primeiro).
+      const penny = proportionalSplit(1, 1, 1, 1);
+      expect(sum(...penny)).toBe(1);
+      expect(penny).toEqual([1, 0, 0]);
+
+      // E a maior parte recebe pelo menos a média (sanidade via max)
+      const big = proportionalSplit(1000, 1, 2, 3, 4);
+      expect(max(...big)).toBeGreaterThanOrEqual(1000 / 4);
    });
 });
 
