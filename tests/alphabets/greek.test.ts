@@ -1,6 +1,6 @@
 /**
  * @fileoverview Unit tests for the Greek alphabet module.
- * @version 0.7.0
+ * @version 0.8.0
  * @license MIT
  * @author Jackson Douglas de Souza
  * @see {@link https://www.linkedin.com/in/jacksondouglasdsouza/|LinkedIn}

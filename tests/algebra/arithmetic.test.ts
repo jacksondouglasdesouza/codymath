@@ -4,7 +4,7 @@ import { constants } from "../../src/constants/constants";
 
 /**
  * @fileoverview Unit tests for the core arithmetic module.
- * @version 0.7.0
+ * @version 0.8.0
  * @license MIT
  * @author Jackson Douglas de Souza
  * @date initial 2025-09-17 | Last updated test: 2026-06-13

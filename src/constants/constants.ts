@@ -2,7 +2,7 @@
 
 /**
  * @fileoverview Foundational mathematical constants for the CodyMath library.
- * @version 0.7.0
+ * @version 0.8.0
  * @license MIT
  * @author Jackson Douglas de Souza
  * @see {@link https://www.linkedin.com/in/jacksondouglasdsouza/|LinkedIn}
@@ -40,10 +40,112 @@ export const constants = {
    e: 2.718281828459045,
 
    /**
-    * The Euler-Mascheroni constant (γ), often referred to as Euler's constant.
-    * @value 0.5772156649015327
+    * The golden ratio (φ), the positive root of x^2 = x + 1.
+    * Equals (1 + √5) / 2 and appears throughout geometry, art, and nature.
+    * @value 1.618033988749895
     */
-   eulerMascheroni: 0.5772156649015327,
+   phi: 1.618033988749895,
+
+   /**
+    * Tau (τ), the ratio of a circle's circumference to its radius (2π).
+    * Represents one full turn in radians.
+    * @value 6.283185307179586
+    */
+   tau: 6.283185307179586,
+
+   /**
+    * The square root of 2 (√2), known as Pythagoras' constant.
+    * The diagonal of a unit square, and the first number proven irrational.
+    * @value 1.4142135623730951
+    */
+   sqrt2: 1.4142135623730951,
+
+   /**
+    * The square root of 3 (√3), known as Theodorus' constant.
+    * The space diagonal of a unit cube; also (√3)/2 is an equilateral triangle's height.
+    * @value 1.7320508075688772
+    */
+   sqrt3: 1.7320508075688772,
+
+   /**
+    * The square root of 5 (√5).
+    * The core of the golden ratio: φ = (1 + √5) / 2.
+    * @value 2.23606797749979
+    */
+   sqrt5: 2.23606797749979,
+
+   /**
+    * The reciprocal square root of 2 (1/√2 = √½), equal to √2 / 2.
+    * The value of sin(45°) = cos(45°); common in geometry and signal RMS.
+    * @value 0.7071067811865476
+    */
+   sqrt1_2: 0.7071067811865476,
+
+   /**
+    * The natural logarithm of 2 (ln 2).
+    * Key to half-life and decay, information theory, and logarithm base changes.
+    * @value 0.6931471805599453
+    */
+   ln2: 0.6931471805599453,
+
+   /**
+    * The natural logarithm of 10 (ln 10).
+    * Bridges natural and base-10 logs: log₁₀(x) = ln(x) / ln 10.
+    * @value 2.302585092994046
+    */
+   ln10: 2.302585092994046,
+
+   /**
+    * The base-2 logarithm of e (log₂ e), the reciprocal of ln 2.
+    * Converts natural logs to base 2: log₂(x) = ln(x) · log₂ e.
+    * @value 1.4426950408889634
+    */
+   log2e: 1.4426950408889634,
+
+   /**
+    * The base-10 logarithm of e (log₁₀ e), the reciprocal of ln 10.
+    * Converts natural logs to base 10: log₁₀(x) = ln(x) · log₁₀ e.
+    * @value 0.4342944819032518
+    */
+   log10e: 0.4342944819032518,
+
+   /**
+    * Catalan's constant (G), defined by the series Σ (−1)ⁿ / (2n+1)².
+    * Appears in combinatorics, definite integrals, and lattice sums.
+    * Whether it is irrational is still an open problem.
+    * @value 0.915965594177219
+    */
+   catalan: 0.915965594177219,
+
+   /**
+    * Apéry's constant (ζ(3)), the Riemann zeta function at 3: Σ 1/n³.
+    * Proven irrational by Roger Apéry in 1979. Shows up in quantum
+    * electrodynamics and in the statistics of random spanning trees.
+    * @value 1.2020569031595942
+    */
+   apery: 1.2020569031595942,
+
+   /**
+    * The golden angle (in radians), π·(3 − √5) ≈ 137.5°.
+    * The angle that divides a turn by the golden ratio; nature uses it to
+    * pack leaves and seeds (phyllotaxis) without overlap.
+    * @value 2.399963229728653
+    */
+   goldenAngle: 2.399963229728653,
+
+   /**
+    * The plastic number (ρ), the real root of x³ = x + 1.
+    * The "three-dimensional" analogue of the golden ratio (which solves x² = x + 1).
+    * Drives the Padovan and Perrin sequences; used in design and architecture.
+    * @value 1.324717957244746
+    */
+   plasticNumber: 1.324717957244746,
+
+   /**
+    * The Euler-Mascheroni constant (γ), often referred to as Euler's constant.
+    * @value 0.5772156649015329
+    */
+   eulerMascheroni: 0.5772156649015329,
 
    /**
     * The constant e to the power of gamma (e^γ).
@@ -66,9 +168,9 @@ export const constants = {
 
    /**
     * The value of the Gamma function Γ(1/3).
-    * @value 2.678938534707748
+    * @value 2.6789385347077475
     */
-   gammaOneThird: 2.678938534707748,
+   gammaOneThird: 2.6789385347077475,
 
    /**
     * The value of the Gamma function Γ(1/4).

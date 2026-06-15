@@ -41,6 +41,7 @@ The following table shows which versions of the library are currently receiving 
 | `0.5.x` | :white_check_mark: |
 | `0.6.x` | :white_check_mark: |
 | `0.7.x` | :white_check_mark: |
+| `0.8.x` | :white_check_mark: |
 
 ---
 

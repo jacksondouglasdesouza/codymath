@@ -5,7 +5,7 @@
   <a href="https://www.npmjs.com/package/codymath" target="_blank">
     <img src="./assets/Npm-logo.svg" alt="NPM Package" width="100">
   </a>
-  | <strong> Current Status: Early Development (v0.7.0)</strong>
+  | <strong> Current Status: Early Development (v0.8.0)</strong>
 </div>
 CodyMath is on a mission to become the most complete open-source mathematics library for JavaScript and TypeScript. By implementing thousands of rigorously tested formulas from authoritative sources, we provide a universal toolbox for developers, students, and researchers worldwide.
 
@@ -38,625 +38,6 @@ npm install codymath
 ```javascript
 <script src="https://cdn.jsdelivr.net/npm/codymath@latest/dist/codymath.umd.js"></script>
 ```
-
-### HTML Usage Example
-
-```javascript
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>CodyMath CDN Test</title>
-  <script src="https://cdn.jsdelivr.net/npm/codymath@latest/dist/codymath.umd.js"></script>
-</head>
-<body>
-  <h1>CodyMath Test</h1>
-  <div id="output"></div>
-
-  <script>
-    // 2. You can now use the global 'CodyMath' object
-    const { greekAlphabet } = CodyMath;
-    const omega = greekAlphabet.omega;
-
-    // Example of how to display it on the page
-    document.getElementById('output').innerText = `The Greek letter is ${omega.name} (${omega.upper}, ${omega.lower})`;
-  </script>
-</body>
-</html>
-```
-
----
-
-## Current Features
-
-### Module: `alphabets/greek`
-
-- **Alphabets:** Provides the full 24 letters of the Greek alphabet for use in formulas and notation. Below is a complete list of the available letters.
-  | Letter | Lowercase | Uppercase | Library Key |
-  | :--- | :---: | :---: | :--- |
-  | Alpha | α | Α | `alpha` |
-  | Beta | β | Β | `beta` |
-  | Gamma | γ | Γ | `gamma` |
-  | Delta | δ | Δ | `delta` |
-  | Epsilon | ε | Ε | `epsilon` |
-  | Zeta | ζ | Ζ | `zeta` |
-  | Eta | η | Η | `eta` |
-  | Theta | θ | Θ | `theta` |
-  | Iota | ι | Ι | `iota` |
-  | Kappa | κ | Κ | `kappa` |
-  | Lambda | λ | Λ | `lambda` |
-  | Mu | μ | Μ | `mu` |
-  | Nu | ν | Ν | `nu` |
-  | Xi | ξ | Ξ | `xi` |
-  | Omicron | ο | Ο | `omicron` |
-  | Pi | π | Π | `pi` |
-  | Rho | ρ | Ρ | `rho` |
-  | Sigma | σ | Σ | `sigma` |
-  | Tau | τ | Τ | `tau` |
-  | Upsilon | υ | Υ | `upsilon` |
-  | Phi | φ | Φ | `phi` |
-  | Chi | χ | Χ | `chi` |
-  | Psi | ψ | Ψ | `psi` |
-  | Omega | ω | Ω | `omega` |
-
-```javascript
-//#### Usage Example
-// Import the module
-import { greekAlphabet } from "codymath";
-
-// Access the properties of a specific letter.
-// IMPORTANT: You MUST specify a property (.lower or .upper) to get the character.
-// Calling the letter name directly (e.g., greekAlphabet.pi) will return an object, not the symbol.
-console.log("The symbol for Pi is:", greekAlphabet.pi.upper);
-// Output: The symbol for Pi is: Π
-//OR
-// Access the properties of a specific letter
-console.log("The symbol for Pi is:", greekAlphabet.pi.lower);
-// Output: The symbol for Pi is: π
-
-// Use different properties in a sentence
-const sigma = greekAlphabet.sigma;
-console.log(
-   `The letter ${sigma.name} is often used for summations (${sigma.upper}) and standard deviation (${sigma.lower}).`,
-);
-// Output: The letter Sigma is often used for summations (Σ) and standard deviation (σ).
-```
-
-<details>
-<summary><strong>🧪Click here to see the test result via CDN 🌐</strong></summary>
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <meta charset="UTF-8" />
-      <title>CodyMath CDN Test</title>
-      <script src="https://cdn.jsdelivr.net/npm/codymath@latest/dist/codymath.umd.js"></script>
-      <link rel="stylesheet" href="./index.css" />
-   </head>
-   <body>
-      <main>
-         <h1>CodyMath CDN Test</h1>
-         <div id="output1"></div>
-         <div id="output2"></div>
-         <div id="output3"></div>
-         <div id="output4"></div>
-         <div id="output5"></div>
-         <div id="output6"></div>
-         <div id="output7"></div>
-         <div id="output8"></div>
-         <div id="output9"></div>
-         <div id="output10"></div>
-         <div id="output11"></div>
-         <div id="output12"></div>
-         <div id="output13"></div>
-         <div id="output14"></div>
-         <div id="output15"></div>
-         <div id="output16"></div>
-         <div id="output17"></div>
-         <div id="output18"></div>
-         <div id="output19"></div>
-         <div id="output20"></div>
-         <div id="output21"></div>
-         <div id="output22"></div>
-         <div id="output23"></div>
-         <div id="output24"></div>
-         <div id="output25"></div>
-      </main>
-      <script src="./index.js"></script>
-   </body>
-</html>
-```
-
----
-
-```js
-// 2. You can now use the global 'CodyMath' object
-const { greekAlphabet } = CodyMath;
-
-const alpha = greekAlphabet.alpha;
-const beta = greekAlphabet.beta;
-const gamma = greekAlphabet.gamma;
-const delta = greekAlphabet.delta;
-const epsilon = greekAlphabet.epsilon;
-const zeta = greekAlphabet.zeta;
-const eta = greekAlphabet.eta;
-const theta = greekAlphabet.theta;
-const iota = greekAlphabet.iota;
-const kappa = greekAlphabet.kappa;
-const lambda = greekAlphabet.lambda;
-const mu = greekAlphabet.mu;
-const nu = greekAlphabet.nu;
-const xi = greekAlphabet.xi;
-const omicron = greekAlphabet.omicron;
-const pi = greekAlphabet.pi;
-const rho = greekAlphabet.rho;
-const sigma = greekAlphabet.sigma;
-const tau = greekAlphabet.tau;
-const upsilon = greekAlphabet.upsilon;
-const phi = greekAlphabet.phi;
-const chi = greekAlphabet.chi;
-const psi = greekAlphabet.psi;
-const omega = greekAlphabet.omega;
-
-// Example of how to display it on the page
-document.getElementById("output1").innerText =
-   `The Greek letter is ${alpha.name} (${alpha.upper}, ${alpha.lower})`;
-document.getElementById("output2").innerText =
-   `The Greek letter is ${beta.name} (${beta.upper}, ${beta.lower})`;
-document.getElementById("output3").innerText =
-   `The Greek letter is ${gamma.name} (${gamma.upper}, ${gamma.lower})`;
-document.getElementById("output4").innerText =
-   `The Greek letter is ${delta.name} (${delta.upper}, ${delta.lower})`;
-document.getElementById("output5").innerText =
-   `The Greek letter is ${epsilon.name} (${epsilon.upper}, ${epsilon.lower})`;
-document.getElementById("output6").innerText =
-   `The Greek letter is ${zeta.name} (${zeta.upper}, ${zeta.lower})`;
-document.getElementById("output7").innerText =
-   `The Greek letter is ${eta.name} (${eta.upper}, ${eta.lower})`;
-document.getElementById("output8").innerText =
-   `The Greek letter is ${theta.name} (${theta.upper}, ${theta.lower})`;
-document.getElementById("output9").innerText =
-   `The Greek letter is ${iota.name} (${iota.upper}, ${iota.lower})`;
-document.getElementById("output10").innerText =
-   `The Greek letter is ${kappa.name} (${kappa.upper}, ${kappa.lower})`;
-document.getElementById("output11").innerText =
-   `The Greek letter is ${lambda.name} (${lambda.upper}, ${lambda.lower})`;
-document.getElementById("output12").innerText =
-   `The Greek letter is ${mu.name} (${mu.upper}, ${mu.lower})`;
-document.getElementById("output13").innerText =
-   `The Greek letter is ${nu.name} (${nu.upper}, ${nu.lower})`;
-document.getElementById("output14").innerText =
-   `The Greek letter is ${xi.name} (${xi.upper}, ${xi.lower})`;
-document.getElementById("output15").innerText =
-   `The Greek letter is ${omicron.name} (${omicron.upper}, ${omicron.lower})`;
-document.getElementById("output16").innerText =
-   `The Greek letter is ${pi.name} (${pi.upper}, ${pi.lower})`;
-document.getElementById("output17").innerText =
-   `The Greek letter is ${rho.name} (${rho.upper}, ${rho.lower})`;
-document.getElementById("output18").innerText =
-   `The Greek letter is ${sigma.name} (${sigma.upper}, ${sigma.lower})`;
-document.getElementById("output19").innerText =
-   `The Greek letter is ${tau.name} (${tau.upper}, ${tau.lower})`;
-document.getElementById("output20").innerText =
-   `The Greek letter is ${upsilon.name} (${upsilon.upper}, ${upsilon.lower})`;
-document.getElementById("output21").innerText =
-   `The Greek letter is ${phi.name} (${phi.upper}, ${phi.lower})`;
-document.getElementById("output22").innerText =
-   `The Greek letter is ${chi.name} (${chi.upper}, ${chi.lower})`;
-document.getElementById("output23").innerText =
-   `The Greek letter is ${psi.name} (${psi.upper}, ${psi.lower})`;
-document.getElementById("output24").innerText =
-   `The Greek letter is ${omega.name} (${omega.upper}, ${omega.lower})`;
-```
-
----
-
-![cdnTest][cdnTest]
-
-[cdnTest]: ./assets/img/testsImgs/greek/cdnTestCodyMathLib.svg
-
-</details>
-
-<details>
-<summary><strong>🧪Click here to see the test result locally via NPM package 📦</strong></summary>
-
-```html
-<!DOCTYPE html>
-<html lang="en">
-   <head>
-      <meta charset="UTF-8" />
-      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-      <title>CodyMath Local NPM Package Test</title>
-      <script src="https://cdn.tailwindcss.com"></script>
-      <link
-         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
-         rel="stylesheet"
-      />
-      <style>
-         body {
-            font-family: "Inter", sans-serif;
-         }
-         .logo-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 1rem;
-         }
-      </style>
-   </head>
-   <body
-      class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4"
-   >
-      <div
-         class="w-full max-w-2xl bg-gray-800 rounded-lg shadow-xl p-8 border border-gray-700"
-      >
-         <div class="logo-container mb-6">
-            <img
-               src="./../img/logoCodyMath.svg"
-               alt="CodyMath Logo"
-               width="300px"
-            />
-         </div>
-         <h1 class="text-2xl font-bold text-center mb-2">
-            Local NPM Package Test
-         </h1>
-         <p class="text-center text-gray-400 mb-6">
-            Testing `codymath` imported from `node_modules`.
-         </p>
-
-         <div class="bg-gray-900 rounded-md p-4 border border-gray-600">
-            <h2 class="font-semibold text-lg mb-2 text-green-400">
-               Test Results:
-            </h2>
-            <pre
-               class="text-sm text-gray-300 whitespace-pre-wrap"
-            ><code id="output">Loading and testing library...</code></pre>
-         </div>
-
-         <div class="mt-6 bg-gray-900 rounded-md p-4 border border-gray-600">
-            <h2 class="font-semibold text-lg mb-4 text-green-400">
-               Greek Alphabet:
-            </h2>
-            <div
-               id="greek-alphabet-display"
-               class="flex flex-wrap gap-x-4 gap-y-2 text-lg text-center"
-            ></div>
-         </div>
-      </div>
-
-      <script type="module" src="main.js"></script>
-   </body>
-</html>
-```
-
----
-
-```js
-import { greekAlphabet } from "codymath";
-
-const outputElement = document.getElementById("output");
-let results = [];
-
-try {
-   if (greekAlphabet && typeof greekAlphabet === "object") {
-      results.push("✅ SUCCESS: Module `greekAlphabet` loaded.");
-   } else {
-      throw new Error("Module `greekAlphabet` is not an object.");
-   }
-
-   const letterCount = Object.keys(greekAlphabet).length;
-   if (letterCount === 24) {
-      results.push(`✅ SUCCESS: All 24 letters found.`);
-   } else {
-      throw new Error(`FAILURE: Expected 24 letters, found ${letterCount}.`);
-   }
-
-   const pi = greekAlphabet.pi;
-   if (pi && pi.name === "Pi" && pi.lower === "π") {
-      results.push("✅ SUCCESS: Object `pi` is correct.");
-   } else {
-      results.push("❌ FAILURE: Object `pi` is incorrect!");
-   }
-
-   const omega = greekAlphabet.omega;
-   results.push("");
-   results.push("--- Usage Example ---");
-   results.push(`Using Omega: ${omega.name} -> ${omega.upper} ${omega.lower}`);
-
-   outputElement.textContent = results.join("\n");
-   outputElement.style.color = "#6EE7B7";
-
-   const alphabetContainer = document.getElementById("greek-alphabet-display");
-   if (alphabetContainer) {
-      const alphabetHTML = Object.values(greekAlphabet)
-         .map((letter) => {
-            return `<span class="w-20 flex items-center justify-center p-2 bg-gray-700 rounded-md" title="${letter.name}">${letter.upper} ${letter.lower}</span>`;
-         })
-         .join("");
-
-      alphabetContainer.innerHTML = alphabetHTML;
-   }
-} catch (error) {
-   results.push(`❌ CRITICAL ERROR: Could not run the tests.`);
-   results.push(error.message);
-   outputElement.textContent = results.join("\n");
-   outputElement.style.color = "#F87171";
-}
-```
-
----
-
-![cdnTest][packageTest]
-
-[packageTest]: ./assets/img/testsImgs/greek/localNpmTestCodyMathLib.svg
-
-</details>
-
----
-
-### Module: `constants/constants`
-
-- **Mathematical Constants:** A collection of high-precision fundamental constants. Below is a list of the currently available values.
-
-   | Constant Name      |        Symbol         | Description                                                      | Library Key       |
-   | :----------------- | :-------------------: | :--------------------------------------------------------------- | :---------------- |
-   | Pi                 |         $\pi$         | The ratio of a circle's circumference to its diameter.           | `pi`              |
-   | Euler's Number     |          $e$          | The base of the natural logarithm.                               | `e`               |
-   | Euler-Mascheroni   |       $\gamma$        | The limiting difference between the harmonic series and `ln(n)`. | `eulerMascheroni` |
-   | e to the Gamma     |      $e^\gamma$       | One of the Mertens' constants from number theory.                | `eToTheGamma`     |
-   | Square Root of e   |      $\sqrt{e}$       | The square root of Euler's number.                               | `sqrtE`           |
-   | Square Root of Pi  |     $\sqrt{\pi}$      | The square root of Pi, also equal to Γ(1/2).                     | `sqrtPi`          |
-   | Radians to Degrees |      `rad → deg`      | The conversion factor from radians to degrees (180/π).           | `radToDeg`        |
-   | Degrees to Radians |      `deg → rad`      | The conversion factor from degrees to radians (π/180).           | `degToRad`        |
-   | Gamma of 1/3       | $\Gamma(\frac{1}{3})$ | The value of the Gamma function at 1/3.                          | `gammaOneThird`   |
-   | Gamma of 1/4       | $\Gamma(\frac{1}{4})$ | The value of the Gamma function at 1/4.                          | `gammaOneFourth`  |
-
-```javascript
-// #### Usage Example (constants)
-// Import the constants object
-import { constants } from "codymath";
-
-// 1. Pi (π)
-console.log(`π = ${constants.pi}`);
-// Output: π = 3.141592653589793
-
-// 2. Euler's Number (e)
-console.log(`e = ${constants.e}`);
-// Output: e = 2.718281828459045
-
-// 3. Euler–Mascheroni Constant (γ)
-console.log(`γ = ${constants.eulerMascheroni}`);
-// Output: γ = 0.5772156649015329
-
-// 4. e to the Gamma (e^γ)
-console.log(`e^γ = ${constants.eToTheGamma}`);
-// Output: e^γ = 1.7810724179901979
-
-// 5. Square Root of e (√e)
-console.log(`√e = ${constants.sqrtE}`);
-// Output: √e = 1.6487212707001282
-
-// 6. Square Root of Pi (√π)
-console.log(`√π = ${constants.sqrtPi}`);
-// Output: √π = 1.7724538509055159
-
-// 7. Radians → Degrees
-const radians = 1;
-console.log(`${radians} rad = ${constants.radToDeg * radians}°`);
-// Output: 1 rad = 57.29577951308232°
-
-// 8. Degrees → Radians
-const degrees = 180;
-const rad = constants.degToRad * degrees;
-console.log(`${degrees}° = ${rad} rad`);
-// Output: 180° = 3.141592653589793 rad
-
-console.log(`Equal to π? ${rad === constants.pi}`);
-// Output: Equal to π? true
-
-// 9. Gamma(1/3)
-console.log(`Γ(1/3) = ${constants.gammaOneThird}`);
-// Output: Γ(1/3) = 2.678938534707747
-
-// 10. Gamma(1/4)
-console.log(`Γ(1/4) = ${constants.gammaOneFourth}`);
-// Output: Γ(1/4) = 3.6256099082219083
-```
-
-<details>
-<summary><strong>🧪Click here to see the test result </strong></summary>
-
-```js
-function initializeTests() {
-   const { constants } = CodyMath;
-   const { greekAlphabet } = CodyMath;
-   const resultsContainer = document.getElementById("test-results-container");
-   const usageCodeBlock = document.getElementById("usage-code-block");
-
-   const referenceValues = {
-      pi: constants.pi,
-      e: constants.e,
-      eulerMascheroni: constants.eulerMascheroni,
-      eToTheGamma: constants.eToTheGamma,
-      sqrtE: constants.sqrtE,
-      sqrtPi: constants.sqrtPi,
-      radToDeg: constants.radToDeg,
-      degToRad: constants.degToRad,
-      gammaOneThird: constants.gammaOneThird,
-      gammaOneFourth: constants.gammaOneFourth,
-   };
-
-   const constantsToTest = [
-      { symbol: "π", key: "pi" },
-      { symbol: "e", key: "e" },
-      { symbol: "γ", key: "eulerMascheroni" },
-      { symbol: "e^γ", key: "eToTheGamma" },
-      { symbol: "√e", key: "sqrtE" },
-      { symbol: "√π", key: "sqrtPi" },
-      { symbol: "rad → deg", key: "radToDeg" },
-      { symbol: "deg → rad", key: "degToRad" },
-      { symbol: "Γ(1/3)", key: "gammaOneThird" },
-      { symbol: "Γ(1/4)", key: "gammaOneFourth" },
-   ];
-
-   function runTests() {
-      if (!resultsContainer) return;
-      resultsContainer.innerHTML = "";
-
-      constantsToTest.forEach((item, index) => {
-         const libValue = constants[item.key];
-         const refValue = referenceValues[item.key];
-         const isApproved = libValue === refValue;
-
-         const row = document.createElement("div");
-         row.className = "test-result-row";
-         row.style.animationDelay = `${index * 100}ms`;
-
-         const symbolEl = document.createElement("span");
-         symbolEl.className = "symbol";
-         symbolEl.textContent = item.symbol;
-
-         const progressContainer = document.createElement("div");
-         progressContainer.className = "progress-bar-container";
-
-         const progressBar = document.createElement("div");
-         progressBar.className = `progress-bar ${
-            isApproved ? "approved" : "rejected"
-         }`;
-
-         const statusIcon = document.createElement("span");
-         statusIcon.className = `status-icon ${
-            isApproved ? "approved" : "rejected"
-         }`;
-         statusIcon.textContent = isApproved ? "✔" : "❌";
-
-         progressContainer.appendChild(progressBar);
-         row.appendChild(symbolEl);
-         row.appendChild(progressContainer);
-         row.appendChild(statusIcon);
-         resultsContainer.appendChild(row);
-
-         setTimeout(
-            () => {
-               progressBar.style.width = "100%";
-            },
-            100 + index * 100,
-         );
-      });
-   }
-
-   function populateUsageExamples() {
-      if (!usageCodeBlock) return;
-
-      function runExample(codeSnippet, fn) {
-         let result;
-         try {
-            result = fn();
-         } catch (err) {
-            result = `Error: ${err.message}`;
-         }
-         return `${codeSnippet}\n// Expected Output ➜ ${result}\n`;
-      }
-
-      const codeExamples = [
-         runExample(
-            `1. Pi (${greekAlphabet.pi.lower})\nconsole.log(\`\${greekAlphabet.pi.lower} = \${constants.pi}\`);`,
-            () =>
-               ` π = 3.141592653589793 // \n\n RESULT = ⟦ ${greekAlphabet.pi.lower} = ${constants.pi} ⟧`,
-         ),
-         runExample(
-            `2. Euler's Number (e)\nconsole.log(\`e = \${constants.e}\`);`,
-            () =>
-               ` e = 2.718281828459045 // \n\n RESULT = ⟦ e = ${constants.e} ⟧`,
-         ),
-         runExample(
-            `3. Euler–Mascheroni Constant (γ)\nconsole.log(\`γ = \${constants.eulerMascheroni}\`);`,
-            () =>
-               ` γ = ${constants.eulerMascheroni} // \n\n RESULT = ⟦ γ = ${constants.eulerMascheroni} ⟧`,
-         ),
-         runExample(
-            `4. e to the Gamma (e^γ)\nconsole.log(\`e^γ = \${constants.eToTheGamma}\`);`,
-            () =>
-               ` e^γ = ${constants.eToTheGamma} // \n\n RESULT = ⟦ e^γ = ${constants.eToTheGamma} ⟧`,
-         ),
-         runExample(
-            `5. Square Root of e (√e)\nconsole.log(\`√e = \${constants.sqrtE}\`);`,
-            () =>
-               ` √e = ${constants.sqrtE} // \n\n RESULT = ⟦ √e = ${constants.sqrtE} ⟧`,
-         ),
-         runExample(
-            `6. Square Root of Pi (√π)\nconsole.log(\`√π = \${constants.sqrtPi}\`);`,
-            () =>
-               ` √π = ${constants.sqrtPi} // \n\n RESULT = ⟦ √π = ${constants.sqrtPi} ⟧`,
-         ),
-         runExample(
-            `7. Radians → Degrees\nconst radians = 1;\nconsole.log(\`\${radians} rad = \${constants.radToDeg * radians}°\`);`,
-            () => {
-               const radians = 1;
-               const result = `${radians} rad = ${constants.radToDeg * radians}°`;
-               return ` ${result} // \n\n RESULT = ⟦ ${result} ⟧`;
-            },
-         ),
-         runExample(
-            `8. Degrees → Radians\nconst degrees = 180;\nconst rad = constants.degToRad * degrees;\nconsole.log(\`\${degrees}° = \${rad} rad\`);\nconsole.log(\`Equal to π? \${rad === constants.pi}\`);`,
-            () => {
-               const degrees = 180;
-               const rad = constants.degToRad * degrees;
-               const result = `${degrees}° = ${rad} rad\nEqual to π? ${rad === constants.pi}`;
-               return ` ${result} // \n\n RESULT = ⟦ ${result} ⟧`;
-            },
-         ),
-         runExample(
-            `9. Gamma(1/3)\nconsole.log(\`Γ(1/3) = \${constants.gammaOneThird}\`);`,
-            () =>
-               ` Γ(1/3) = ${constants.gammaOneThird} // \n\n RESULT = ⟦ Γ(1/3) = ${constants.gammaOneThird} ⟧`,
-         ),
-         runExample(
-            `10. Gamma(1/4)\nconsole.log(\`Γ(1/4) = \${constants.gammaOneFourth}\`);`,
-            () =>
-               ` Γ(1/4) = ${constants.gammaOneFourth} // \n\n RESULT = ⟦ Γ(1/4) = ${constants.gammaOneFourth} ⟧`,
-         ),
-      ];
-
-      usageCodeBlock.textContent = codeExamples.join("\n");
-   }
-
-   runTests();
-   populateUsageExamples();
-}
-
-const libraryCheckInterval = setInterval(() => {
-   if (typeof CodyMath !== "undefined") {
-      clearInterval(libraryCheckInterval);
-      initializeTests();
-   }
-}, 100);
-```
-
-![constTest][ctTest]
-
-[ctTest]: ./assets/img/testsImgs/constants/constantsTest01.png
-
-![constTest01][ct01Test]
-
-[ct01Test]: ./assets/img/testsImgs/constants/constantsTest02.png
-
-![constTest02][ct02Test]
-
-[ct02Test]: ./assets/img/testsImgs/constants/constantsTest03.png
-
-![constTest03][ct03Test]
-
-[ct03Test]: ./assets/img/testsImgs/constants/constantsTest04.png
-
-![constTest04][ct04Test]
-
-[ct04Test]: ./assets/img/testsImgs/constants/constantsTest05.png
-
-</details>
-
----
 
 ### Module: `algebra/arithmetic`
 
@@ -733,7 +114,11 @@ This module provides a comprehensive set of pure functions spanning fundamental 
 | **Geometric Lerp**          | `geometricLerp(a, b, t)`                        | Multiplicative interpolation; the midpoint is $\sqrt{a \cdot b}$.     | `geometricLerp`      |
 | **Proportional Split**      | `proportionalSplit(total, ...weights)`          | Splits an integer total into whole parts that sum exactly to it.      | `proportionalSplit`  |
 
+<details>
+<summary><strong>🧪 Click here - Function tests executed in console.log</strong></summary>
+
 ```javascript
+// Function tests executed in console.log
 // #Usage Example
 // #### 1. Fundamental Arithmetic
 
@@ -1593,8 +978,10 @@ console.log(
 // Output: proportionalSplit(7, 50, 50): 4,3
 ```
 
+</details>
+
 <details>
-<summary><strong>🧪Click here to see the test result via CDN 🌐</strong></summary>
+<summary><strong>🧪 Click here to see the test results via CDN and direct installation 🌐</strong></summary>
 
 ```javascript
 <!DOCTYPE html>
@@ -1887,7 +1274,7 @@ render(8);
 </html>
 
 
--
+//--
 
 const { arithmetic } = CodyMath;
 
@@ -2063,7 +1450,1888 @@ document.getElementById('output37').innerText = `fromPercent(percentOf(25, 200),
 
 [testAlgebra03]: ./assets/img/testsImgs/algebra/cdn.png/
 
+```javascript
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CodyMath CDN Test</title>
+  <script src="https://cdn.jsdelivr.net/npm/codymath@latest/dist/codymath.umd.js"></script>
+</head>
+<body>
+  <h1>CodyMath Test</h1>
+  <div id="output1"></div>
+  <div id="output2"></div>
+  <div id="output3"></div>
+  <div id="output4"></div>
+  <div id="output5"></div>
+  <div id="output6"></div>
+  <div id="output7"></div>
+  <div id="output8"></div>
+  <div id="output9"></div>
+  <div id="output10"></div>
+  <div id="output11"></div>
+  <div id="output12"></div>
+  <div id="output13"></div>
+  <div id="output14"></div>
+  <div id="output15"></div>
+  <div id="output16"></div>
+  <div id="output17"></div>
+  <div id="output18"></div>
+  <div id="output19"></div>
+  <div id="output20"></div>
+  <div id="output21"></div>
+  <div id="output22"></div>
+  <div id="output23"></div>
+  <div id="output24"></div>
+  <div id="output25"></div>
+  <div id="output26"></div>
+  <div id="output27"></div>
+  <div id="output28"></div>
+  <div id="output29"></div>
+  <div id="output30"></div>
+  <div id="output31"></div>
+  <div id="output32"></div>
+  <div id="output33"></div>
+  <div id="output34"></div>
+  <div id="output35"></div>
+  <div id="output36"></div>
+  <div id="output37"></div>
+  <div id="output38"></div>
+  <div id="output39"></div>
+  <div id="output40"></div>
+  <div id="output41"></div>
+  <div id="output42"></div>
+  <div id="output43"></div>
+  <div id="output44"></div>
+  <div id="output45"></div>
+  <div id="output46"></div>
+  <div id="output47"></div>
+  <div id="output48"></div>
+  <div id="output49"></div>
+  <div id="output50"></div>
+  <div id="output51"></div>
+  <div id="output52"></div>
+  <div id="output53"></div>
+  <div id="output54"></div>
+  <div id="output55"></div>
+  <div id="output56"></div>
+  <div id="output57"></div>
+  <div id="output58"></div>
+  <div id="output59"></div>
+  <div id="output60"></div>
+  <div id="output61"></div>
+  <div id="output62"></div>
+  <div id="output63"></div>
+  <div id="output64"></div>
+  <div id="output65"></div>
+  <div id="output66"></div>
+  <div id="output67"></div>
+  <div id="output68"></div>
+  <div id="output69"></div>
+  <div id="output70"></div>
+  <div id="output71"></div>
+  <div id="output72"></div>
+  <div id="output73"></div>
+  <div id="output74"></div>
+  <div id="output75"></div>
+
+</body>
+</html>
+
+//--
+
+
+const { arithmetic } = CodyMath;
+
+// #### 10. Statistics
+
+// --- median(...numbers) ---
+// Basic: Median of an odd-sized dataset
+ document.getElementById('output1').innerText = `median(1, 3, 5, 7, 9): ${arithmetic.median(1, 3, 5, 7, 9)}`;
+// Output: median(1, 3, 5, 7, 9): 5
+// Intermediate: Even size averages the two central values
+
+ document.getElementById('output2').innerText = `median(10, 2, 8, 4): ${arithmetic.median(10, 2, 8, 4)}`;
+// Output: median(10, 2, 8, 4): 6
+// Advanced: An empty dataset has no median
+
+document.getElementById('output3').innerText = `median(): ${arithmetic.median()}`;
+// Output: median(): NaN
+
+// --- min(...numbers) ---
+// Basic: Smallest of several values
+document.getElementById('output4').innerText = `min(3, 1, 4, 1, 5): ${arithmetic.min(3, 1, 4, 1, 5)}`;
+// Output: min(3, 1, 4, 1, 5): 1
+// Intermediate: Works with negatives
+
+document.getElementById('output5').innerText = `min(-10, -5, -20): ${arithmetic.min(-10, -5, -20)}`;
+// Output: min(-10, -5, -20): -20
+// Advanced: Empty input is NaN, never Infinity
+
+document.getElementById('output6').innerText = `min(): ${arithmetic.min()}`;
+// Output: min(): NaN
+
+// --- max(...numbers) ---
+// Basic: Largest of several values
+document.getElementById('output7').innerText = `max(3, 1, 4, 1, 5): ${arithmetic.max(3, 1, 4, 1, 5)}`;
+// Output: max(3, 1, 4, 1, 5): 5
+// Intermediate: Works with negatives
+
+document.getElementById('output8').innerText = `max(-10, -5, -20): ${arithmetic.max(-10, -5, -20)}`;
+// Output: max(-10, -5, -20): -5
+// Advanced: Empty input is NaN, never -Infinity
+
+document.getElementById('output9').innerText = `max(): ${arithmetic.max()}`;
+// Output: max(): NaN
+
+// --- variance(...numbers) ---
+// Basic: Population variance of a dataset
+document.getElementById('output10').innerText = `variance(2, 4, 4, 4, 5, 5, 7, 9): ${arithmetic.variance(2, 4, 4, 4, 5, 5, 7, 9)}`;
+// Output: variance(2, 4, 4, 4, 5, 5, 7, 9): 4
+// Intermediate: Identical values have zero spread
+
+document.getElementById('output11').innerText = `variance(5, 5, 5, 5): ${arithmetic.variance(5, 5, 5, 5)}`;
+// Output: variance(5, 5, 5, 5): 0
+// Advanced: An empty dataset is undefined
+
+document.getElementById('output12').innerText = `variance(): ${arithmetic.variance()}`;
+// Output: variance(): NaN
+
+// --- standardDeviation(...numbers) ---
+// Basic: Population standard deviation (sqrt of variance)
+document.getElementById('output13').innerText = `standardDeviation(2, 4, 4, 4, 5, 5, 7, 9): ${arithmetic.standardDeviation(2, 4, 4, 4, 5, 5, 7, 9)}`;
+// Output: standardDeviation(2, 4, 4, 4, 5, 5, 7, 9): 2
+// Intermediate: No spread, no deviation
+
+
+document.getElementById('output14').innerText = `standardDeviation(10, 10, 10): ${arithmetic.standardDeviation(10, 10, 10)}`;
+// Output: standardDeviation(10, 10, 10): 0
+// Advanced: An empty dataset is undefined
+
+document.getElementById('output15').innerText = `standardDeviation(): ${arithmetic.standardDeviation()}`;
+// Output: standardDeviation(): NaN
+
+// --- mode(...numbers) ---
+// Basic: The single most frequent value
+document.getElementById('output16').innerText = `mode(1, 2, 2, 3, 4): ${arithmetic.mode(1, 2, 2, 3, 4)}`;
+// Output: mode(1, 2, 2, 3, 4): 2
+
+// Intermediate: Multimodal data returns every top value
+document.getElementById('output16').innerText = `mode(1, 1, 2, 2, 3): ${arithmetic.mode(1, 1, 2, 2, 3)}`;
+// Output: mode(1, 1, 2, 2, 3): 1,2
+// Advanced: No data, no mode
+
+document.getElementById('output17').innerText = `mode(): ${arithmetic.mode()}`;
+// Output: mode():
+
+// #### 11. Number Theory (Extended)
+
+// --- sumOfDigits(n) ---
+// Basic: Sum of the decimal digits
+document.getElementById('output18').innerText = `sumOfDigits(12345): ${arithmetic.sumOfDigits(12345)}`;
+// Output: sumOfDigits(12345): 15
+// Intermediate: The sign is ignored
+
+document.getElementById('output19').innerText = `sumOfDigits(-9876): ${arithmetic.sumOfDigits(-9876)}`;
+// Output: sumOfDigits(-9876): 30
+// Advanced: Floats are truncated before summing
+
+document.getElementById('output20').innerText = `sumOfDigits(99.9): ${arithmetic.sumOfDigits(99.9)}`;
+// Output: sumOfDigits(99.9): 18
+
+// --- isPerfectSquare(n) ---
+// Basic: 144 is 12 squared
+document.getElementById('output21').innerText = `isPerfectSquare(144): ${arithmetic.isPerfectSquare(144)}`;
+// Output: isPerfectSquare(144): true
+// Intermediate: 150 is not a perfect square
+
+document.getElementById('output22').innerText = `isPerfectSquare(150): ${arithmetic.isPerfectSquare(150)}`;
+// Output: isPerfectSquare(150): false
+// Advanced: Non-integers are never perfect squares (no truncation)
+
+document.getElementById('output23').innerText = `isPerfectSquare(15.21): ${arithmetic.isPerfectSquare(15.21)}`;
+// Output: isPerfectSquare(15.21): false
+
+// --- isPerfectNumber(n) ---
+// Basic: 6 = 1 + 2 + 3, the smallest perfect number
+document.getElementById('output24').innerText = `isPerfectNumber(6): ${arithmetic.isPerfectNumber(6)}`;
+// Output: isPerfectNumber(6): true
+// Intermediate: 28 = 1 + 2 + 4 + 7 + 14
+
+document.getElementById('output25').innerText = `isPerfectNumber(28): ${arithmetic.isPerfectNumber(28)}`;
+// Output: isPerfectNumber(28): true
+// Advanced: 12 is abundant, not perfect
+
+document.getElementById('output26').innerText = `isPerfectNumber(12): ${arithmetic.isPerfectNumber(12)}`;
+// Output: isPerfectNumber(12): false
+
+// --- primeFactors(n) ---
+// Basic: Factorization with multiplicity
+document.getElementById('output27').innerText = `primeFactors(60): ${arithmetic.primeFactors(60)}`;
+// Output: primeFactors(60): 2,2,3,5
+// Intermediate: A prime factors into itself
+
+document.getElementById('output28').innerText = `primeFactors(97): ${arithmetic.primeFactors(97)}`;
+// Output: primeFactors(97): 97
+// Advanced: 1 has no prime factors
+
+document.getElementById('output29').innerText = `primeFactors(1): ${arithmetic.primeFactors(1)}`;
+// Output: primeFactors(1):
+
+// --- modInverse(a, m) ---
+// Basic: 3 x 4 = 12 = 1 (mod 11)
+document.getElementById('output30').innerText = `modInverse(3, 11): ${arithmetic.modInverse(3, 11)}`;
+// Output: modInverse(3, 11): 4
+// Intermediate: Inverse of 10 modulo 17
+
+document.getElementById('output31').innerText = `modInverse(10, 17): ${arithmetic.modInverse(10, 17)}`;
+// Output: modInverse(10, 17): 12
+// Advanced: No inverse exists when a and m share a factor
+
+document.getElementById('output32').innerText = `modInverse(2, 4): ${arithmetic.modInverse(2, 4)}`;
+// Output: modInverse(2, 4): NaN
+
+// --- totient(n) ---
+// Basic: Six integers below 9 are coprime to it
+document.getElementById('output33').innerText = `totient(9): ${arithmetic.totient(9)}`;
+// Output: totient(9): 6
+// Intermediate: For a prime p, the totient is p - 1
+
+document.getElementById('output34').innerText = `totient(7): ${arithmetic.totient(7)}`;
+// Output: totient(7): 6
+// Advanced: totient(1) is 1 by convention
+
+document.getElementById('output35').innerText = `totient(1): ${arithmetic.totient(1)}`;
+// Output: totient(1): 1
+
+// #### 12. Combinatorics
+
+// --- binomial(n, k) ---
+// Basic: Choose 2 from 5
+document.getElementById('output36').innerText = `binomial(5, 2): ${arithmetic.binomial(5, 2)}`;
+// Output: binomial(5, 2): 10
+// Intermediate: There is exactly one way to choose nothing
+
+document.getElementById('output37').innerText = `binomial(10, 0): ${arithmetic.binomial(10, 0)}`;
+// Output: binomial(10, 0): 1
+// Advanced: Distinct 5-card poker hands from 52
+
+document.getElementById('output38').innerText = `binomial(52, 5): ${arithmetic.binomial(52, 5)}`;
+// Output: binomial(52, 5): 2598960
+
+// --- permutations(n, k) ---
+// Basic: Ordered arrangements of 2 from 5
+document.getElementById('output39').innerText = `permutations(5, 2): ${arithmetic.permutations(5, 2)}`;
+// Output: permutations(5, 2): 20
+// Intermediate: Arrangements of 3 from 10
+
+document.getElementById('output40').innerText = `permutations(10, 3): ${arithmetic.permutations(10, 3)}`;
+// Output: permutations(10, 3): 720
+// Advanced: P(6, 6) equals 6 factorial
+
+document.getElementById('output41').innerText = `permutations(6, 6): ${arithmetic.permutations(6, 6)}`;
+// Output: permutations(6, 6): 720
+
+// --- multiplyMultiple(...numbers) ---
+// Basic: Product of several numbers
+document.getElementById('output42').innerText = `multiplyMultiple(2, 3, 4): ${arithmetic.multiplyMultiple(2, 3, 4)}`;
+// Output: multiplyMultiple(2, 3, 4): 24
+// Intermediate: A negative factor flips the sign
+
+document.getElementById('output43').innerText =  `multiplyMultiple(5, -2, 10): ${arithmetic.multiplyMultiple(5, -2, 10)}`;
+// Output: multiplyMultiple(5, -2, 10): -100
+// Advanced: The empty product is the identity, 1
+
+document.getElementById('output44').innerText = `multiplyMultiple(): ${arithmetic.multiplyMultiple()}`;
+// Output: multiplyMultiple(): 1
+
+// #### 13. Geometry, Interpolation & Signal Shaping
+
+// --- hypot(...values) ---
+// Basic: The classic 3-4-5 right triangle
+document.getElementById('output45').innerText = `hypot(3, 4): ${arithmetic.hypot(3, 4)}`;
+// Output: hypot(3, 4): 5
+// Intermediate: Works in any dimension
+
+document.getElementById('output46').innerText = `hypot(1, 2, 2): ${arithmetic.hypot(1, 2, 2)}`;
+// Output: hypot(1, 2, 2): 3
+// Advanced: The 5-12-13 triple
+
+document.getElementById('output47').innerText = `hypot(5, 12): ${arithmetic.hypot(5, 12)}`;
+// Output: hypot(5, 12): 13
+
+// --- clampedLerp(a, b, t) ---
+// Basic: Halfway between 0 and 100
+document.getElementById('output48').innerText = `clampedLerp(0, 100, 0.5): ${arithmetic.clampedLerp(0, 100, 0.5)}`;
+// Output: clampedLerp(0, 100, 0.5): 50
+// Intermediate: t above 1 is clamped (no extrapolation)
+
+document.getElementById('output49').innerText = `clampedLerp(0, 100, 1.5): ${arithmetic.clampedLerp(0, 100, 1.5)}`;
+// Output: clampedLerp(0, 100, 1.5): 100
+// Advanced: t below 0 is clamped to the start
+
+document.getElementById('output50').innerText = `clampedLerp(0, 100, -0.5): ${arithmetic.clampedLerp(0, 100, -0.5)}`;
+// Output: clampedLerp(0, 100, -0.5): 0
+
+// --- mapRange(value, inMin, inMax, outMin, outMax) ---
+// Basic: Remap 5 from [0,10] onto [0,100]
+document.getElementById('output51').innerText = `mapRange(5, 0, 10, 0, 100): ${arithmetic.mapRange(5, 0, 10, 0, 100)}`;
+// Output: mapRange(5, 0, 10, 0, 100): 50
+// Intermediate: Remap a percentage onto [-1, 1]
+
+document.getElementById('output52').innerText = `mapRange(25, 0, 100, -1, 1): ${arithmetic.mapRange(25, 0, 100, -1, 1)}`;
+// Output: mapRange(25, 0, 100, -1, 1): -0.5
+// Advanced: Map a normalized axis onto degrees
+
+document.getElementById('output53').innerText = `mapRange(0, -1, 1, 0, 360): ${arithmetic.mapRange(0, -1, 1, 0, 360)}`;
+// Output: mapRange(0, -1, 1, 0, 360): 180
+
+// --- geometricLerp(a, b, t) ---
+// Basic: The midpoint is the geometric mean
+document.getElementById('output54').innerText = `geometricLerp(1, 100, 0.5): ${arithmetic.geometricLerp(1, 100, 0.5)}`;
+// Output: geometricLerp(1, 100, 0.5): 10
+// Intermediate: Each quarter-step multiplies the scale by 2
+
+document.getElementById('output55').innerText = `geometricLerp(1, 16, 0.25): ${arithmetic.geometricLerp(1, 16, 0.25)}`;
+// Output: geometricLerp(1, 16, 0.25): 2
+// Advanced: Endpoints must be positive
+
+document.getElementById('output56').innerText = `geometricLerp(-1, 10, 0.5): ${arithmetic.geometricLerp(-1, 10, 0.5)}`;
+// Output: geometricLerp(-1, 10, 0.5): NaN
+
+// --- signedPow(base, exp) ---
+// Basic: Solves the (-4) ** 0.5 = NaN trap
+document.getElementById('output57').innerText = `signedPow(-4, 0.5): ${arithmetic.signedPow(-4, 0.5)}`;
+// Output: signedPow(-4, 0.5): -2
+// Intermediate: The sign survives even an even exponent
+
+document.getElementById('output58').innerText = `signedPow(-3, 2): ${arithmetic.signedPow(-3, 2)}`;
+// Output: signedPow(-3, 2): -9
+// Advanced: Softening a small positive value
+
+document.getElementById('output59').innerText = `signedPow(0.25, 0.5): ${arithmetic.signedPow(0.25, 0.5)}`;
+// Output: signedPow(0.25, 0.5): 0.5
+
+// --- deadzone(value, threshold) ---
+// Basic: Input inside the dead zone collapses to 0
+document.getElementById('output60').innerText = `deadzone(0.05, 0.1): ${arithmetic.deadzone(0.05, 0.1)}`;
+// Output: deadzone(0.05, 0.1): 0
+// Intermediate: Output is continuously rescaled past the edge
+
+document.getElementById('output61').innerText = `deadzone(0.75, 0.5): ${arithmetic.deadzone(0.75, 0.5)}`;
+// Output: deadzone(0.75, 0.5): 0.5
+// Advanced: Full deflection is preserved at the extreme
+
+document.getElementById('output62').innerText = `deadzone(-1, 0.2): ${arithmetic.deadzone(-1, 0.2)}`;
+// Output: deadzone(-1, 0.2): -1
+
+// #### 14. Sequences, Allocation & Formatting
+
+// --- cumulativeSum(...numbers) ---
+// Basic: Running totals of a sequence
+document.getElementById('output63').innerText = `cumulativeSum(1, 2, 3, 4): ${arithmetic.cumulativeSum(1, 2, 3, 4)}`;
+// Output: cumulativeSum(1, 2, 3, 4): 1,3,6,10
+// Intermediate: A bank-statement-style balance
+
+document.getElementById('output64').innerText = `cumulativeSum(10, -5, 3): ${arithmetic.cumulativeSum(10, -5, 3)}`;
+// Output: cumulativeSum(10, -5, 3): 10,5,8
+// Advanced: An empty sequence yields an empty array
+
+document.getElementById('output65').innerText = `cumulativeSum(): ${arithmetic.cumulativeSum()}`;
+// Output: cumulativeSum():
+
+// --- normalizeToSum(values, target) ---
+// Basic: Turn weights into a distribution summing to 1
+document.getElementById('output66').innerText = `normalizeToSum([1, 3]): ${arithmetic.normalizeToSum([1, 3])}`;
+// Output: normalizeToSum([1, 3]): 0.25,0.75
+// Intermediate: Rescale to percentages (target 100)
+
+document.getElementById('output67').innerText =  `normalizeToSum([1, 1, 2], 100): ${arithmetic.normalizeToSum([1, 1, 2], 100)}`;
+// Output: normalizeToSum([1, 1, 2], 100): 25,25,50
+// Advanced: A zero-sum list cannot be normalized
+
+document.getElementById('output68').innerText = `normalizeToSum([2, -2]): ${arithmetic.normalizeToSum([2, -2])}`;
+// Output: normalizeToSum([2, -2]): NaN,NaN
+
+// --- roundToSignificant(n, sigFigs) ---
+// Basic: Two significant figures of a large integer
+document.getElementById('output69').innerText = `roundToSignificant(123456, 2): ${arithmetic.roundToSignificant(123456, 2)}`;
+
+// Output: roundToSignificant(123456, 2): 120000
+// Intermediate: Significant figures adapt to tiny magnitudes
+
+document.getElementById('output70').innerText = `roundToSignificant(0.00098, 1): ${arithmetic.roundToSignificant(0.00098, 1)}`;
+// Output: roundToSignificant(0.00098, 1): 0.001
+// Advanced: Rounds figures, not decimal places
+
+document.getElementById('output71').innerText =  `roundToSignificant(9.876, 2): ${arithmetic.roundToSignificant(9.876, 2)}`;
+// Output: roundToSignificant(9.876, 2): 9.9
+
+// --- proportionalSplit(total, ...weights) ---
+// Basic: Split 100 three ways with no cent lost
+document.getElementById('output72').innerText =  `proportionalSplit(100, 1, 1, 1): ${arithmetic.proportionalSplit(100, 1, 1, 1)}`;
+// Output: proportionalSplit(100, 1, 1, 1): 34,33,33
+// Intermediate: Split by proportional weights
+
+document.getElementById('output73').innerText =  `proportionalSplit(10, 1, 2, 2): ${arithmetic.proportionalSplit(10, 1, 2, 2)}`;
+// Output: proportionalSplit(10, 1, 2, 2): 2,4,4
+// Advanced: The odd unit goes to the largest remainder
+
+document.getElementById('output74').innerText =   `proportionalSplit(7, 50, 50): ${arithmetic.proportionalSplit(7, 50, 50)}`;
+// Output: proportionalSplit(7, 50, 50): 4,3
+
+
+```
+
+![CodyMath Logo][testAlgebra04]
+
+[testAlgebra04]: ./assets/img/testsImgs/algebra/test001.jpeg
+
+![CodyMath Logo][testAlgebra05]
+
+[testAlgebra05]: ./assets/img/testsImgs/algebra/test002.jpeg
+
+![CodyMath Logo][testAlgebra06]
+
+[testAlgebra06]: ./assets/img/testsImgs/algebra/test003.jpeg
+
+![CodyMath Logo][testAlgebra07]
+
+[testAlgebra07]: ./assets/img/testsImgs/algebra/test004.jpeg
+
+```javascript
+
+import { arithmetic } from "codymath";
+import {
+   cumulativeSum,
+   deadzone,
+   signedPow,
+   roundToSignificant,
+   normalizeToSum,
+   geometricLerp,
+   proportionalSplit,
+   sumOfDigits,
+   isPerfectSquare,
+   hypot,
+   clampedLerp,
+   mapRange,
+   isPerfectNumber,
+   primeFactors,
+   multiplyMultiple,
+   binomial,
+   modInverse,
+   permutations,
+   totient,
+   median,
+   min,
+   max,
+   variance,
+   standardDeviation,
+   mode,
+} from "codymath";
+
+// Map of the named imports so we can call them dynamically by name.
+const named: Record<string, (...a: any[]) => unknown> = {
+   cumulativeSum,
+   deadzone,
+   signedPow,
+   roundToSignificant,
+   normalizeToSum,
+   geometricLerp,
+   proportionalSplit,
+   sumOfDigits,
+   isPerfectSquare,
+   hypot,
+   clampedLerp,
+   mapRange,
+   isPerfectNumber,
+   primeFactors,
+   multiplyMultiple,
+   binomial,
+   modInverse,
+   permutations,
+   totient,
+   median,
+   min,
+   max,
+   variance,
+   standardDeviation,
+   mode,
+};
+
+
+const ns = arithmetic as unknown as Record<string, (...a: any[]) => unknown>;
+
+type Case = {
+   section: string;
+   label: string;
+   name: string;
+   args: any[];
+   expected: string;
+};
+
+const cases: Case[] = [
+   {
+      section: "Statistics",
+      label: "median(1, 3, 5, 7, 9)",
+      name: "median",
+      args: [1, 3, 5, 7, 9],
+      expected: "5",
+   },
+   {
+      section: "Statistics",
+      label: "median(10, 2, 8, 4)",
+      name: "median",
+      args: [10, 2, 8, 4],
+      expected: "6",
+   },
+   {
+      section: "Statistics",
+      label: "median()",
+      name: "median",
+      args: [],
+      expected: "NaN",
+   },
+   {
+      section: "Statistics",
+      label: "min(3, 1, 4, 1, 5)",
+      name: "min",
+      args: [3, 1, 4, 1, 5],
+      expected: "1",
+   },
+   {
+      section: "Statistics",
+      label: "min(-10, -5, -20)",
+      name: "min",
+      args: [-10, -5, -20],
+      expected: "-20",
+   },
+   {
+      section: "Statistics",
+      label: "min()",
+      name: "min",
+      args: [],
+      expected: "NaN",
+   },
+   {
+      section: "Statistics",
+      label: "max(3, 1, 4, 1, 5)",
+      name: "max",
+      args: [3, 1, 4, 1, 5],
+      expected: "5",
+   },
+   {
+      section: "Statistics",
+      label: "max(-10, -5, -20)",
+      name: "max",
+      args: [-10, -5, -20],
+      expected: "-5",
+   },
+   {
+      section: "Statistics",
+      label: "max()",
+      name: "max",
+      args: [],
+      expected: "NaN",
+   },
+   {
+      section: "Statistics",
+      label: "variance(2, 4, 4, 4, 5, 5, 7, 9)",
+      name: "variance",
+      args: [2, 4, 4, 4, 5, 5, 7, 9],
+      expected: "4",
+   },
+   {
+      section: "Statistics",
+      label: "variance(5, 5, 5, 5)",
+      name: "variance",
+      args: [5, 5, 5, 5],
+      expected: "0",
+   },
+   {
+      section: "Statistics",
+      label: "variance()",
+      name: "variance",
+      args: [],
+      expected: "NaN",
+   },
+   {
+      section: "Statistics",
+      label: "standardDeviation(2, 4, 4, 4, 5, 5, 7, 9)",
+      name: "standardDeviation",
+      args: [2, 4, 4, 4, 5, 5, 7, 9],
+      expected: "2",
+   },
+   {
+      section: "Statistics",
+      label: "standardDeviation(10, 10, 10)",
+      name: "standardDeviation",
+      args: [10, 10, 10],
+      expected: "0",
+   },
+   {
+      section: "Statistics",
+      label: "standardDeviation()",
+      name: "standardDeviation",
+      args: [],
+      expected: "NaN",
+   },
+   {
+      section: "Statistics",
+      label: "mode(1, 2, 2, 3, 4)",
+      name: "mode",
+      args: [1, 2, 2, 3, 4],
+      expected: "2",
+   },
+   {
+      section: "Statistics",
+      label: "mode(1, 1, 2, 2, 3)",
+      name: "mode",
+      args: [1, 1, 2, 2, 3],
+      expected: "1,2",
+   },
+   {
+      section: "Statistics",
+      label: "mode()",
+      name: "mode",
+      args: [],
+      expected: "",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "sumOfDigits(12345)",
+      name: "sumOfDigits",
+      args: [12345],
+      expected: "15",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "sumOfDigits(-9876)",
+      name: "sumOfDigits",
+      args: [-9876],
+      expected: "30",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "sumOfDigits(99.9)",
+      name: "sumOfDigits",
+      args: [99.9],
+      expected: "18",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "isPerfectSquare(144)",
+      name: "isPerfectSquare",
+      args: [144],
+      expected: "true",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "isPerfectSquare(150)",
+      name: "isPerfectSquare",
+      args: [150],
+      expected: "false",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "isPerfectSquare(15.21)",
+      name: "isPerfectSquare",
+      args: [15.21],
+      expected: "false",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "isPerfectNumber(6)",
+      name: "isPerfectNumber",
+      args: [6],
+      expected: "true",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "isPerfectNumber(28)",
+      name: "isPerfectNumber",
+      args: [28],
+      expected: "true",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "isPerfectNumber(12)",
+      name: "isPerfectNumber",
+      args: [12],
+      expected: "false",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "primeFactors(60)",
+      name: "primeFactors",
+      args: [60],
+      expected: "2,2,3,5",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "primeFactors(97)",
+      name: "primeFactors",
+      args: [97],
+      expected: "97",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "primeFactors(1)",
+      name: "primeFactors",
+      args: [1],
+      expected: "",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "modInverse(3, 11)",
+      name: "modInverse",
+      args: [3, 11],
+      expected: "4",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "modInverse(10, 17)",
+      name: "modInverse",
+      args: [10, 17],
+      expected: "12",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "modInverse(2, 4)",
+      name: "modInverse",
+      args: [2, 4],
+      expected: "NaN",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "totient(9)",
+      name: "totient",
+      args: [9],
+      expected: "6",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "totient(7)",
+      name: "totient",
+      args: [7],
+      expected: "6",
+   },
+   {
+      section: "Number Theory (Extended)",
+      label: "totient(1)",
+      name: "totient",
+      args: [1],
+      expected: "1",
+   },
+   {
+      section: "Combinatorics",
+      label: "binomial(5, 2)",
+      name: "binomial",
+      args: [5, 2],
+      expected: "10",
+   },
+   {
+      section: "Combinatorics",
+      label: "binomial(10, 0)",
+      name: "binomial",
+      args: [10, 0],
+      expected: "1",
+   },
+   {
+      section: "Combinatorics",
+      label: "binomial(52, 5)",
+      name: "binomial",
+      args: [52, 5],
+      expected: "2598960",
+   },
+   {
+      section: "Combinatorics",
+      label: "permutations(5, 2)",
+      name: "permutations",
+      args: [5, 2],
+      expected: "20",
+   },
+   {
+      section: "Combinatorics",
+      label: "permutations(10, 3)",
+      name: "permutations",
+      args: [10, 3],
+      expected: "720",
+   },
+   {
+      section: "Combinatorics",
+      label: "permutations(6, 6)",
+      name: "permutations",
+      args: [6, 6],
+      expected: "720",
+   },
+   {
+      section: "Combinatorics",
+      label: "multiplyMultiple(2, 3, 4)",
+      name: "multiplyMultiple",
+      args: [2, 3, 4],
+      expected: "24",
+   },
+   {
+      section: "Combinatorics",
+      label: "multiplyMultiple(5, -2, 10)",
+      name: "multiplyMultiple",
+      args: [5, -2, 10],
+      expected: "-100",
+   },
+   {
+      section: "Combinatorics",
+      label: "multiplyMultiple()",
+      name: "multiplyMultiple",
+      args: [],
+      expected: "1",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "hypot(3, 4)",
+      name: "hypot",
+      args: [3, 4],
+      expected: "5",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "hypot(1, 2, 2)",
+      name: "hypot",
+      args: [1, 2, 2],
+      expected: "3",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "hypot(5, 12)",
+      name: "hypot",
+      args: [5, 12],
+      expected: "13",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "clampedLerp(0, 100, 0.5)",
+      name: "clampedLerp",
+      args: [0, 100, 0.5],
+      expected: "50",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "clampedLerp(0, 100, 1.5)",
+      name: "clampedLerp",
+      args: [0, 100, 1.5],
+      expected: "100",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "clampedLerp(0, 100, -0.5)",
+      name: "clampedLerp",
+      args: [0, 100, -0.5],
+      expected: "0",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "mapRange(5, 0, 10, 0, 100)",
+      name: "mapRange",
+      args: [5, 0, 10, 0, 100],
+      expected: "50",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "mapRange(25, 0, 100, -1, 1)",
+      name: "mapRange",
+      args: [25, 0, 100, -1, 1],
+      expected: "-0.5",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "mapRange(0, -1, 1, 0, 360)",
+      name: "mapRange",
+      args: [0, -1, 1, 0, 360],
+      expected: "180",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "geometricLerp(1, 100, 0.5)",
+      name: "geometricLerp",
+      args: [1, 100, 0.5],
+      expected: "10",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "geometricLerp(1, 16, 0.25)",
+      name: "geometricLerp",
+      args: [1, 16, 0.25],
+      expected: "2",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "geometricLerp(-1, 10, 0.5)",
+      name: "geometricLerp",
+      args: [-1, 10, 0.5],
+      expected: "NaN",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "signedPow(-4, 0.5)",
+      name: "signedPow",
+      args: [-4, 0.5],
+      expected: "-2",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "signedPow(-3, 2)",
+      name: "signedPow",
+      args: [-3, 2],
+      expected: "-9",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "signedPow(0.25, 0.5)",
+      name: "signedPow",
+      args: [0.25, 0.5],
+      expected: "0.5",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "deadzone(0.05, 0.1)",
+      name: "deadzone",
+      args: [0.05, 0.1],
+      expected: "0",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "deadzone(0.75, 0.5)",
+      name: "deadzone",
+      args: [0.75, 0.5],
+      expected: "0.5",
+   },
+   {
+      section: "Geometry, Interpolation & Signal Shaping",
+      label: "deadzone(-1, 0.2)",
+      name: "deadzone",
+      args: [-1, 0.2],
+      expected: "-1",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "cumulativeSum(1, 2, 3, 4)",
+      name: "cumulativeSum",
+      args: [1, 2, 3, 4],
+      expected: "1,3,6,10",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "cumulativeSum(10, -5, 3)",
+      name: "cumulativeSum",
+      args: [10, -5, 3],
+      expected: "10,5,8",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "cumulativeSum()",
+      name: "cumulativeSum",
+      args: [],
+      expected: "",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "normalizeToSum([1, 3])",
+      name: "normalizeToSum",
+      args: [[1, 3]],
+      expected: "0.25,0.75",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "normalizeToSum([1, 1, 2], 100)",
+      name: "normalizeToSum",
+      args: [[1, 1, 2], 100],
+      expected: "25,25,50",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "normalizeToSum([2, -2])",
+      name: "normalizeToSum",
+      args: [[2, -2]],
+      expected: "NaN,NaN",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "roundToSignificant(123456, 2)",
+      name: "roundToSignificant",
+      args: [123456, 2],
+      expected: "120000",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "roundToSignificant(0.00098, 1)",
+      name: "roundToSignificant",
+      args: [0.00098, 1],
+      expected: "0.001",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "roundToSignificant(9.876, 2)",
+      name: "roundToSignificant",
+      args: [9.876, 2],
+      expected: "9.9",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "proportionalSplit(100, 1, 1, 1)",
+      name: "proportionalSplit",
+      args: [100, 1, 1, 1],
+      expected: "34,33,33",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "proportionalSplit(10, 1, 2, 2)",
+      name: "proportionalSplit",
+      args: [10, 1, 2, 2],
+      expected: "2,4,4",
+   },
+   {
+      section: "Sequences, Allocation & Formatting",
+      label: "proportionalSplit(7, 50, 50)",
+      name: "proportionalSplit",
+      args: [7, 50, 50],
+      expected: "4,3",
+   },
+];
+
+// ---- run + render ----
+const sections = [...new Set(cases.map((c) => c.section))];
+let pass = 0;
+
+const blocks = sections
+   .map((section) => {
+      const rows = cases
+         .filter((c) => c.section === section)
+         .map((c) => {
+            const nsVal = String(ns[c.name](...c.args));
+            const namedVal = String(named[c.name](...c.args));
+            const ok =
+               nsVal === c.expected &&
+               namedVal === c.expected &&
+               nsVal === namedVal;
+            if (ok) pass++;
+            const shown = nsVal === "" ? "[] (empty)" : nsVal;
+            return `
+      <div class="case ${ok ? "pass" : "fail"}">
+        <span class="badge">${ok ? "PASS" : "FAIL"}</span>
+        <code class="call">${c.label}</code>
+        <span class="arrow">&rarr;</span>
+        <code class="result">${shown}</code>
+        ${ok ? "" : `<span class="exp">expected ${c.expected}</span>`}
+      </div>`;
+         })
+         .join("");
+      return `<section><h2>${section}</h2>${rows}</section>`;
+   })
+   .join("");
+
+const total = cases.length;
+const allGreen = pass === total;
+
+document.querySelector<HTMLDivElement>("#app")!.innerHTML = `
+  <div class="wrap">
+    <header>
+      <h1>codymath <span class="ver">0.7.0</span> — real-world test</h1>
+      <div class="score ${allGreen ? "ok" : "bad"}">${pass} / ${total} passed</div>
+      <p class="note">Each case runs in BOTH modes: namespace <code>arithmetic.X</code> and named <code>X</code>. A case passes only if both match the expected value and each other.</p>
+    </header>
+    ${blocks}
+    <footer>codymath · tested by theorems</footer>
+  </div>
+`;
+
+const style = document.createElement("style");
+style.textContent = `
+  :root { color-scheme: dark; }
+  body { margin: 0; background: #0d1117; color: #e6edf3; font-family: system-ui, sans-serif; }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 32px 20px 64px; }
+  header { margin-bottom: 28px; }
+  h1 { font-size: 22px; margin: 0 0 12px; font-weight: 650; }
+  .ver { color: #7ee787; font-weight: 600; }
+  .score { display: inline-block; font-size: 20px; font-weight: 700; padding: 8px 16px; border-radius: 10px; }
+  .score.ok { background: #15351f; color: #7ee787; border: 1px solid #2ea04366; }
+  .score.bad { background: #3a1518; color: #ff7b72; border: 1px solid #f8514966; }
+  .note { color: #8b949e; font-size: 13px; line-height: 1.5; margin: 14px 0 0; }
+  .note code { background: #161b22; padding: 1px 6px; border-radius: 5px; color: #79c0ff; }
+  section { margin-top: 26px; }
+  h2 { font-size: 13px; text-transform: uppercase; letter-spacing: .08em; color: #8b949e; border-bottom: 1px solid #21262d; padding-bottom: 7px; margin: 0 0 10px; }
+  .case { display: flex; align-items: center; gap: 10px; padding: 6px 10px; border-radius: 8px; font-size: 13.5px; flex-wrap: wrap; }
+  .case.pass:hover { background: #11161d; }
+  .case.fail { background: #2a1416; }
+  .badge { font-size: 10.5px; font-weight: 700; padding: 2px 7px; border-radius: 5px; letter-spacing: .04em; }
+  .pass .badge { background: #15351f; color: #7ee787; }
+  .fail .badge { background: #3a1518; color: #ff7b72; }
+  .call { font-family: ui-monospace, "SF Mono", Menlo, monospace; color: #d2a8ff; }
+  .arrow { color: #6e7681; }
+  .result { font-family: ui-monospace, "SF Mono", Menlo, monospace; color: #79c0ff; }
+  .exp { color: #ff7b72; font-size: 12px; margin-left: 6px; }
+  footer { margin-top: 40px; text-align: center; color: #6e7681; font-size: 12px; letter-spacing: .04em; }
+`;
+document.head.appendChild(style);
+
+```
+
+![CodyMath Logo][testAlgebra08]
+
+[testAlgebra08]: ./assets/img/testsImgs/algebra/test0001.jpeg
+
+![CodyMath Logo][testAlgebra09]
+
+[testAlgebra09]: ./assets/img/testsImgs/algebra/test0002.jpeg
+
+![CodyMath Logo][testAlgebra10]
+
+[testAlgebra10]: ./assets/img/testsImgs/algebra/test0003.jpeg
+
+![CodyMath Logo][testAlgebra011]
+
+[testAlgebra011]: ./assets/img/testsImgs/algebra/test0004.jpeg
+
+![CodyMath Logo][testAlgebra012]
+
+[testAlgebra012]: ./assets/img/testsImgs/algebra/test0005.jpeg
+
 </details>
+
+[🚀 Click here to see a real mini-project using the library](https://jacksondouglasdesouza.github.io/mini-project-codymath-function-tests-01/)
+
+---
+
+### Module: `constants/constants`
+
+**Usage**
+
+```ts
+import { constants } from "codymath";
+
+constants.phi; // 1.618033988749895  (golden ratio)
+constants.tau; // 6.283185307179586  (2π)
+constants.catalan; // 0.915965594177219  (Catalan's G)
+```
+
+**Mathematical Constants** — a collection of **24 high-precision fundamental constants**, each verified bit-for-bit (zero-ULP) against high-precision references. In some cases the stored value is _more accurate_ than the naïve `Math.*` computation — for example, `sqrtPi` avoids the double-rounding error of `Math.sqrt(Math.PI)`.
+
+**Circle & transcendental**
+
+| Constant Name  | Symbol | Syntax          | Description                                            | Library Key |
+| :------------- | :----: | :-------------- | :----------------------------------------------------- | :---------- |
+| Pi             | $\pi$  | `constants.pi`  | The ratio of a circle's circumference to its diameter. | `pi`        |
+| Euler's Number |  $e$   | `constants.e`   | The base of the natural logarithm.                     | `e`         |
+| Tau            | $\tau$ | `constants.tau` | A full turn in radians, equal to 2π.                   | `tau`       |
+
+**Roots**
+
+| Constant Name        |        Symbol        | Syntax              | Description                                          | Library Key |
+| :------------------- | :------------------: | :------------------ | :--------------------------------------------------- | :---------- |
+| Square Root of 2     |      $\sqrt{2}$      | `constants.sqrt2`   | Pythagoras' constant; the diagonal of a unit square. | `sqrt2`     |
+| Square Root of 3     |      $\sqrt{3}$      | `constants.sqrt3`   | Theodorus' constant; the space diagonal of a cube.   | `sqrt3`     |
+| Square Root of 5     |      $\sqrt{5}$      | `constants.sqrt5`   | The core of the golden ratio: φ = (1 + √5)/2.        | `sqrt5`     |
+| Reciprocal Root of 2 | $\frac{1}{\sqrt{2}}$ | `constants.sqrt1_2` | Equals √2/2; the value of sin(45°) = cos(45°).       | `sqrt1_2`   |
+| Square Root of e     |      $\sqrt{e}$      | `constants.sqrtE`   | The square root of Euler's number.                   | `sqrtE`     |
+| Square Root of Pi    |     $\sqrt{\pi}$     | `constants.sqrtPi`  | The square root of Pi, also equal to Γ(1/2).         | `sqrtPi`    |
+
+**Logarithms**
+
+| Constant Name     |    Symbol     | Syntax             | Description                                      | Library Key |
+| :---------------- | :-----------: | :----------------- | :----------------------------------------------- | :---------- |
+| Natural Log of 2  |    $\ln 2$    | `constants.ln2`    | The natural logarithm of 2.                      | `ln2`       |
+| Natural Log of 10 |   $\ln 10$    | `constants.ln10`   | The natural logarithm of 10.                     | `ln10`      |
+| Log Base 2 of e   |  $\log_2 e$   | `constants.log2e`  | Base-2 logarithm of e; the reciprocal of ln 2.   | `log2e`     |
+| Log Base 10 of e  | $\log_{10} e$ | `constants.log10e` | Base-10 logarithm of e; the reciprocal of ln 10. | `log10e`    |
+
+**Golden ratio & relatives**
+
+| Constant Name  |  Symbol   | Syntax                    | Description                                            | Library Key     |
+| :------------- | :-------: | :------------------------ | :----------------------------------------------------- | :-------------- |
+| Golden Ratio   | $\varphi$ | `constants.phi`           | The golden ratio, the positive root of x² = x + 1.     | `phi`           |
+| Golden Angle   | ≈ 137.5°  | `constants.goldenAngle`   | The golden angle in radians, π·(3 − √5).               | `goldenAngle`   |
+| Plastic Number |  $\rho$   | `constants.plasticNumber` | The real root of x³ = x + 1; the "cubic" golden ratio. | `plasticNumber` |
+
+**Number theory**
+
+| Constant Name      |   Symbol   | Syntax                      | Description                                                     | Library Key       |
+| :----------------- | :--------: | :-------------------------- | :-------------------------------------------------------------- | :---------------- |
+| Euler-Mascheroni   |  $\gamma$  | `constants.eulerMascheroni` | The limiting difference between the harmonic series and ln(n).  | `eulerMascheroni` |
+| e to the Gamma     | $e^\gamma$ | `constants.eToTheGamma`     | One of the Mertens' constants from number theory.               | `eToTheGamma`     |
+| Catalan's Constant |    $G$     | `constants.catalan`         | Appears in combinatorics, definite integrals, and lattice sums. | `catalan`         |
+| Apéry's Constant   | $\zeta(3)$ | `constants.apery`           | The zeta function at 3; proven irrational in 1979.              | `apery`           |
+
+**Gamma function values**
+
+| Constant Name |        Symbol         | Syntax                     | Description                             | Library Key      |
+| :------------ | :-------------------: | :------------------------- | :-------------------------------------- | :--------------- |
+| Gamma of 1/3  | $\Gamma(\frac{1}{3})$ | `constants.gammaOneThird`  | The value of the Gamma function at 1/3. | `gammaOneThird`  |
+| Gamma of 1/4  | $\Gamma(\frac{1}{4})$ | `constants.gammaOneFourth` | The value of the Gamma function at 1/4. | `gammaOneFourth` |
+
+**Conversion factors**
+
+| Constant Name      |   Symbol    | Syntax               | Description                                            | Library Key |
+| :----------------- | :---------: | :------------------- | :----------------------------------------------------- | :---------- |
+| Radians to Degrees | `rad → deg` | `constants.radToDeg` | The conversion factor from radians to degrees (180/π). | `radToDeg`  |
+| Degrees to Radians | `deg → rad` | `constants.degToRad` | The conversion factor from degrees to radians (π/180). | `degToRad`  |
+
+<details>
+<summary><strong>🧪 Click here - Function tests executed in console.log</strong></summary>
+
+```javascript
+// #### Usage Example (constants)
+// Import the constants object
+import { constants } from "codymath";
+
+// 1. Pi (π)
+console.log(`π = ${constants.pi}`);
+// Output: π = 3.141592653589793
+
+// 2. Euler's Number (e)
+console.log(`e = ${constants.e}`);
+// Output: e = 2.718281828459045
+
+// 3. Golden Ratio (φ)
+console.log(`φ = ${constants.phi}`);
+// Output: φ = 1.618033988749895
+console.log(`φ² === φ + 1 ? ${constants.phi ** 2 === constants.phi + 1}`);
+// Output: φ² === φ + 1 ? true
+
+// 4. Tau (τ = 2π)
+console.log(`τ = ${constants.tau}`);
+// Output: τ = 6.283185307179586
+console.log(`τ === 2π ? ${constants.tau === 2 * constants.pi}`);
+// Output: τ === 2π ? true
+
+// 5. Square Root of 2 (√2)
+console.log(`√2 = ${constants.sqrt2}`);
+// Output: √2 = 1.4142135623730951
+
+// 6. Square Root of 3 (√3)
+console.log(`√3 = ${constants.sqrt3}`);
+// Output: √3 = 1.7320508075688772
+
+// 7. Square Root of 5 (√5)
+console.log(`√5 = ${constants.sqrt5}`);
+// Output: √5 = 2.23606797749979
+console.log(
+   `(1 + √5) / 2 === φ ? ${(1 + constants.sqrt5) / 2 === constants.phi}`,
+);
+// Output: (1 + √5) / 2 === φ ? true
+
+// 8. Reciprocal Root of 2 (1/√2)
+console.log(`1/√2 = ${constants.sqrt1_2}`);
+// Output: 1/√2 = 0.7071067811865476
+console.log(`√2 / 2 === 1/√2 ? ${constants.sqrt2 / 2 === constants.sqrt1_2}`);
+// Output: √2 / 2 === 1/√2 ? true
+
+// 9. Natural Logarithm of 2 (ln 2)
+console.log(`ln 2 = ${constants.ln2}`);
+// Output: ln 2 = 0.6931471805599453
+console.log(`e^(ln 2) === 2 ? ${Math.exp(constants.ln2) === 2}`);
+// Output: e^(ln 2) === 2 ? true
+
+// 10. Natural Logarithm of 10 (ln 10)
+console.log(`ln 10 = ${constants.ln10}`);
+// Output: ln 10 = 2.302585092994046
+
+// 11. Base-2 Logarithm of e (log₂ e)
+console.log(`log₂ e = ${constants.log2e}`);
+// Output: log₂ e = 1.4426950408889634
+console.log(`log₂e · ln2 === 1 ? ${constants.log2e * constants.ln2 === 1}`);
+// Output: log₂e · ln2 === 1 ? true
+
+// 12. Base-10 Logarithm of e (log₁₀ e)
+console.log(`log₁₀ e = ${constants.log10e}`);
+// Output: log₁₀ e = 0.4342944819032518
+console.log(`log₁₀e · ln10 === 1 ? ${constants.log10e * constants.ln10 === 1}`);
+// Output: log₁₀e · ln10 === 1 ? true
+
+// 13. Catalan's Constant (G)
+console.log(`G = ${constants.catalan}`);
+// Output: G = 0.915965594177219
+
+// 14. Apéry's Constant (ζ(3))
+console.log(`ζ(3) = ${constants.apery}`);
+// Output: ζ(3) = 1.2020569031595942
+
+// 15. Golden Angle (radians)
+console.log(`golden angle = ${constants.goldenAngle} rad`);
+// Output: golden angle = 2.399963229728653 rad
+console.log(`= ${constants.goldenAngle * constants.radToDeg}°`);
+// Output: = 137.50776405003785°
+
+// 16. Plastic Number (ρ)
+console.log(`ρ = ${constants.plasticNumber}`);
+// Output: ρ = 1.324717957244746
+console.log(
+   `ρ³ === ρ + 1 ? ${constants.plasticNumber ** 3 === constants.plasticNumber + 1}`,
+);
+// Output: ρ³ === ρ + 1 ? true
+
+// 17. Euler–Mascheroni Constant (γ)
+console.log(`γ = ${constants.eulerMascheroni}`);
+// Output: γ = 0.5772156649015329
+
+// 18. e to the Gamma (e^γ)
+console.log(`e^γ = ${constants.eToTheGamma}`);
+// Output: e^γ = 1.781072417990198
+
+// 19. Square Root of e (√e)
+console.log(`√e = ${constants.sqrtE}`);
+// Output: √e = 1.6487212707001282
+
+// 20. Square Root of Pi (√π)
+console.log(`√π = ${constants.sqrtPi}`);
+// Output: √π = 1.772453850905516
+
+// 21. Gamma(1/3)
+console.log(`Γ(1/3) = ${constants.gammaOneThird}`);
+// Output: Γ(1/3) = 2.6789385347077475
+
+// 22. Gamma(1/4)
+console.log(`Γ(1/4) = ${constants.gammaOneFourth}`);
+// Output: Γ(1/4) = 3.625609908221908
+
+// 23. Radians → Degrees
+const radians = 1;
+console.log(`${radians} rad = ${constants.radToDeg * radians}°`);
+// Output: 1 rad = 57.29577951308232°
+
+// 24. Degrees → Radians
+const degrees = 180;
+const rad = constants.degToRad * degrees;
+console.log(`${degrees}° = ${rad} rad`);
+// Output: 180° = 3.141592653589793 rad
+console.log(`Equal to π? ${rad === constants.pi}`);
+// Output: Equal to π? true
+```
+
+</details>
+
+</details>
+
+<details>
+<summary><strong>🧪Click here to see the test result </strong></summary>
+
+```js
+function initializeTests() {
+   const { constants } = CodyMath;
+   const { greekAlphabet } = CodyMath;
+   const resultsContainer = document.getElementById("test-results-container");
+   const usageCodeBlock = document.getElementById("usage-code-block");
+
+   const referenceValues = {
+      pi: constants.pi,
+      e: constants.e,
+      eulerMascheroni: constants.eulerMascheroni,
+      eToTheGamma: constants.eToTheGamma,
+      sqrtE: constants.sqrtE,
+      sqrtPi: constants.sqrtPi,
+      radToDeg: constants.radToDeg,
+      degToRad: constants.degToRad,
+      gammaOneThird: constants.gammaOneThird,
+      gammaOneFourth: constants.gammaOneFourth,
+   };
+
+   const constantsToTest = [
+      { symbol: "π", key: "pi" },
+      { symbol: "e", key: "e" },
+      { symbol: "γ", key: "eulerMascheroni" },
+      { symbol: "e^γ", key: "eToTheGamma" },
+      { symbol: "√e", key: "sqrtE" },
+      { symbol: "√π", key: "sqrtPi" },
+      { symbol: "rad → deg", key: "radToDeg" },
+      { symbol: "deg → rad", key: "degToRad" },
+      { symbol: "Γ(1/3)", key: "gammaOneThird" },
+      { symbol: "Γ(1/4)", key: "gammaOneFourth" },
+   ];
+
+   function runTests() {
+      if (!resultsContainer) return;
+      resultsContainer.innerHTML = "";
+
+      constantsToTest.forEach((item, index) => {
+         const libValue = constants[item.key];
+         const refValue = referenceValues[item.key];
+         const isApproved = libValue === refValue;
+
+         const row = document.createElement("div");
+         row.className = "test-result-row";
+         row.style.animationDelay = `${index * 100}ms`;
+
+         const symbolEl = document.createElement("span");
+         symbolEl.className = "symbol";
+         symbolEl.textContent = item.symbol;
+
+         const progressContainer = document.createElement("div");
+         progressContainer.className = "progress-bar-container";
+
+         const progressBar = document.createElement("div");
+         progressBar.className = `progress-bar ${
+            isApproved ? "approved" : "rejected"
+         }`;
+
+         const statusIcon = document.createElement("span");
+         statusIcon.className = `status-icon ${
+            isApproved ? "approved" : "rejected"
+         }`;
+         statusIcon.textContent = isApproved ? "✔" : "❌";
+
+         progressContainer.appendChild(progressBar);
+         row.appendChild(symbolEl);
+         row.appendChild(progressContainer);
+         row.appendChild(statusIcon);
+         resultsContainer.appendChild(row);
+
+         setTimeout(
+            () => {
+               progressBar.style.width = "100%";
+            },
+            100 + index * 100,
+         );
+      });
+   }
+
+   function populateUsageExamples() {
+      if (!usageCodeBlock) return;
+
+      function runExample(codeSnippet, fn) {
+         let result;
+         try {
+            result = fn();
+         } catch (err) {
+            result = `Error: ${err.message}`;
+         }
+         return `${codeSnippet}\n// Expected Output ➜ ${result}\n`;
+      }
+
+      const codeExamples = [
+         runExample(
+            `1. Pi (${greekAlphabet.pi.lower})\nconsole.log(\`\${greekAlphabet.pi.lower} = \${constants.pi}\`);`,
+            () =>
+               ` π = 3.141592653589793 // \n\n RESULT = ⟦ ${greekAlphabet.pi.lower} = ${constants.pi} ⟧`,
+         ),
+         runExample(
+            `2. Euler's Number (e)\nconsole.log(\`e = \${constants.e}\`);`,
+            () =>
+               ` e = 2.718281828459045 // \n\n RESULT = ⟦ e = ${constants.e} ⟧`,
+         ),
+         runExample(
+            `3. Euler–Mascheroni Constant (γ)\nconsole.log(\`γ = \${constants.eulerMascheroni}\`);`,
+            () =>
+               ` γ = ${constants.eulerMascheroni} // \n\n RESULT = ⟦ γ = ${constants.eulerMascheroni} ⟧`,
+         ),
+         runExample(
+            `4. e to the Gamma (e^γ)\nconsole.log(\`e^γ = \${constants.eToTheGamma}\`);`,
+            () =>
+               ` e^γ = ${constants.eToTheGamma} // \n\n RESULT = ⟦ e^γ = ${constants.eToTheGamma} ⟧`,
+         ),
+         runExample(
+            `5. Square Root of e (√e)\nconsole.log(\`√e = \${constants.sqrtE}\`);`,
+            () =>
+               ` √e = ${constants.sqrtE} // \n\n RESULT = ⟦ √e = ${constants.sqrtE} ⟧`,
+         ),
+         runExample(
+            `6. Square Root of Pi (√π)\nconsole.log(\`√π = \${constants.sqrtPi}\`);`,
+            () =>
+               ` √π = ${constants.sqrtPi} // \n\n RESULT = ⟦ √π = ${constants.sqrtPi} ⟧`,
+         ),
+         runExample(
+            `7. Radians → Degrees\nconst radians = 1;\nconsole.log(\`\${radians} rad = \${constants.radToDeg * radians}°\`);`,
+            () => {
+               const radians = 1;
+               const result = `${radians} rad = ${constants.radToDeg * radians}°`;
+               return ` ${result} // \n\n RESULT = ⟦ ${result} ⟧`;
+            },
+         ),
+         runExample(
+            `8. Degrees → Radians\nconst degrees = 180;\nconst rad = constants.degToRad * degrees;\nconsole.log(\`\${degrees}° = \${rad} rad\`);\nconsole.log(\`Equal to π? \${rad === constants.pi}\`);`,
+            () => {
+               const degrees = 180;
+               const rad = constants.degToRad * degrees;
+               const result = `${degrees}° = ${rad} rad\nEqual to π? ${rad === constants.pi}`;
+               return ` ${result} // \n\n RESULT = ⟦ ${result} ⟧`;
+            },
+         ),
+         runExample(
+            `9. Gamma(1/3)\nconsole.log(\`Γ(1/3) = \${constants.gammaOneThird}\`);`,
+            () =>
+               ` Γ(1/3) = ${constants.gammaOneThird} // \n\n RESULT = ⟦ Γ(1/3) = ${constants.gammaOneThird} ⟧`,
+         ),
+         runExample(
+            `10. Gamma(1/4)\nconsole.log(\`Γ(1/4) = \${constants.gammaOneFourth}\`);`,
+            () =>
+               ` Γ(1/4) = ${constants.gammaOneFourth} // \n\n RESULT = ⟦ Γ(1/4) = ${constants.gammaOneFourth} ⟧`,
+         ),
+      ];
+
+      usageCodeBlock.textContent = codeExamples.join("\n");
+   }
+
+   runTests();
+   populateUsageExamples();
+}
+
+const libraryCheckInterval = setInterval(() => {
+   if (typeof CodyMath !== "undefined") {
+      clearInterval(libraryCheckInterval);
+      initializeTests();
+   }
+}, 100);
+```
+
+![constTest][ctTest]
+
+[ctTest]: ./assets/img/testsImgs/constants/constantsTest01.png
+
+![constTest01][ct01Test]
+
+[ct01Test]: ./assets/img/testsImgs/constants/constantsTest02.png
+
+![constTest02][ct02Test]
+
+[ct02Test]: ./assets/img/testsImgs/constants/constantsTest03.png
+
+![constTest03][ct03Test]
+
+[ct03Test]: ./assets/img/testsImgs/constants/constantsTest04.png
+
+![constTest04][ct04Test]
+
+[ct04Test]: ./assets/img/testsImgs/constants/constantsTest05.png
+
+</details>
+
+## Current Features
+
+### Module: `alphabets/greek`
+
+- **Alphabets:** Provides the full 24 letters of the Greek alphabet for use in formulas and notation. Below is a complete list of the available letters.
+  | Letter | Lowercase | Uppercase | Library Key |
+  | :--- | :---: | :---: | :--- |
+  | Alpha | α | Α | `alpha` |
+  | Beta | β | Β | `beta` |
+  | Gamma | γ | Γ | `gamma` |
+  | Delta | δ | Δ | `delta` |
+  | Epsilon | ε | Ε | `epsilon` |
+  | Zeta | ζ | Ζ | `zeta` |
+  | Eta | η | Η | `eta` |
+  | Theta | θ | Θ | `theta` |
+  | Iota | ι | Ι | `iota` |
+  | Kappa | κ | Κ | `kappa` |
+  | Lambda | λ | Λ | `lambda` |
+  | Mu | μ | Μ | `mu` |
+  | Nu | ν | Ν | `nu` |
+  | Xi | ξ | Ξ | `xi` |
+  | Omicron | ο | Ο | `omicron` |
+  | Pi | π | Π | `pi` |
+  | Rho | ρ | Ρ | `rho` |
+  | Sigma | σ | Σ | `sigma` |
+  | Tau | τ | Τ | `tau` |
+  | Upsilon | υ | Υ | `upsilon` |
+  | Phi | φ | Φ | `phi` |
+  | Chi | χ | Χ | `chi` |
+  | Psi | ψ | Ψ | `psi` |
+  | Omega | ω | Ω | `omega` |
+
+```javascript
+//#### Usage Example
+// Import the module
+import { greekAlphabet } from "codymath";
+
+// Access the properties of a specific letter.
+// IMPORTANT: You MUST specify a property (.lower or .upper) to get the character.
+// Calling the letter name directly (e.g., greekAlphabet.pi) will return an object, not the symbol.
+console.log("The symbol for Pi is:", greekAlphabet.pi.upper);
+// Output: The symbol for Pi is: Π
+//OR
+// Access the properties of a specific letter
+console.log("The symbol for Pi is:", greekAlphabet.pi.lower);
+// Output: The symbol for Pi is: π
+
+// Use different properties in a sentence
+const sigma = greekAlphabet.sigma;
+console.log(
+   `The letter ${sigma.name} is often used for summations (${sigma.upper}) and standard deviation (${sigma.lower}).`,
+);
+// Output: The letter Sigma is often used for summations (Σ) and standard deviation (σ).
+```
+
+<details>
+<summary><strong>🧪Click here to see the test result via CDN 🌐</strong></summary>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <title>CodyMath CDN Test</title>
+      <script src="https://cdn.jsdelivr.net/npm/codymath@latest/dist/codymath.umd.js"></script>
+      <link rel="stylesheet" href="./index.css" />
+   </head>
+   <body>
+      <main>
+         <h1>CodyMath CDN Test</h1>
+         <div id="output1"></div>
+         <div id="output2"></div>
+         <div id="output3"></div>
+         <div id="output4"></div>
+         <div id="output5"></div>
+         <div id="output6"></div>
+         <div id="output7"></div>
+         <div id="output8"></div>
+         <div id="output9"></div>
+         <div id="output10"></div>
+         <div id="output11"></div>
+         <div id="output12"></div>
+         <div id="output13"></div>
+         <div id="output14"></div>
+         <div id="output15"></div>
+         <div id="output16"></div>
+         <div id="output17"></div>
+         <div id="output18"></div>
+         <div id="output19"></div>
+         <div id="output20"></div>
+         <div id="output21"></div>
+         <div id="output22"></div>
+         <div id="output23"></div>
+         <div id="output24"></div>
+         <div id="output25"></div>
+      </main>
+      <script src="./index.js"></script>
+   </body>
+</html>
+```
+
+---
+
+```js
+// 2. You can now use the global 'CodyMath' object
+const { greekAlphabet } = CodyMath;
+
+const alpha = greekAlphabet.alpha;
+const beta = greekAlphabet.beta;
+const gamma = greekAlphabet.gamma;
+const delta = greekAlphabet.delta;
+const epsilon = greekAlphabet.epsilon;
+const zeta = greekAlphabet.zeta;
+const eta = greekAlphabet.eta;
+const theta = greekAlphabet.theta;
+const iota = greekAlphabet.iota;
+const kappa = greekAlphabet.kappa;
+const lambda = greekAlphabet.lambda;
+const mu = greekAlphabet.mu;
+const nu = greekAlphabet.nu;
+const xi = greekAlphabet.xi;
+const omicron = greekAlphabet.omicron;
+const pi = greekAlphabet.pi;
+const rho = greekAlphabet.rho;
+const sigma = greekAlphabet.sigma;
+const tau = greekAlphabet.tau;
+const upsilon = greekAlphabet.upsilon;
+const phi = greekAlphabet.phi;
+const chi = greekAlphabet.chi;
+const psi = greekAlphabet.psi;
+const omega = greekAlphabet.omega;
+
+// Example of how to display it on the page
+document.getElementById("output1").innerText =
+   `The Greek letter is ${alpha.name} (${alpha.upper}, ${alpha.lower})`;
+document.getElementById("output2").innerText =
+   `The Greek letter is ${beta.name} (${beta.upper}, ${beta.lower})`;
+document.getElementById("output3").innerText =
+   `The Greek letter is ${gamma.name} (${gamma.upper}, ${gamma.lower})`;
+document.getElementById("output4").innerText =
+   `The Greek letter is ${delta.name} (${delta.upper}, ${delta.lower})`;
+document.getElementById("output5").innerText =
+   `The Greek letter is ${epsilon.name} (${epsilon.upper}, ${epsilon.lower})`;
+document.getElementById("output6").innerText =
+   `The Greek letter is ${zeta.name} (${zeta.upper}, ${zeta.lower})`;
+document.getElementById("output7").innerText =
+   `The Greek letter is ${eta.name} (${eta.upper}, ${eta.lower})`;
+document.getElementById("output8").innerText =
+   `The Greek letter is ${theta.name} (${theta.upper}, ${theta.lower})`;
+document.getElementById("output9").innerText =
+   `The Greek letter is ${iota.name} (${iota.upper}, ${iota.lower})`;
+document.getElementById("output10").innerText =
+   `The Greek letter is ${kappa.name} (${kappa.upper}, ${kappa.lower})`;
+document.getElementById("output11").innerText =
+   `The Greek letter is ${lambda.name} (${lambda.upper}, ${lambda.lower})`;
+document.getElementById("output12").innerText =
+   `The Greek letter is ${mu.name} (${mu.upper}, ${mu.lower})`;
+document.getElementById("output13").innerText =
+   `The Greek letter is ${nu.name} (${nu.upper}, ${nu.lower})`;
+document.getElementById("output14").innerText =
+   `The Greek letter is ${xi.name} (${xi.upper}, ${xi.lower})`;
+document.getElementById("output15").innerText =
+   `The Greek letter is ${omicron.name} (${omicron.upper}, ${omicron.lower})`;
+document.getElementById("output16").innerText =
+   `The Greek letter is ${pi.name} (${pi.upper}, ${pi.lower})`;
+document.getElementById("output17").innerText =
+   `The Greek letter is ${rho.name} (${rho.upper}, ${rho.lower})`;
+document.getElementById("output18").innerText =
+   `The Greek letter is ${sigma.name} (${sigma.upper}, ${sigma.lower})`;
+document.getElementById("output19").innerText =
+   `The Greek letter is ${tau.name} (${tau.upper}, ${tau.lower})`;
+document.getElementById("output20").innerText =
+   `The Greek letter is ${upsilon.name} (${upsilon.upper}, ${upsilon.lower})`;
+document.getElementById("output21").innerText =
+   `The Greek letter is ${phi.name} (${phi.upper}, ${phi.lower})`;
+document.getElementById("output22").innerText =
+   `The Greek letter is ${chi.name} (${chi.upper}, ${chi.lower})`;
+document.getElementById("output23").innerText =
+   `The Greek letter is ${psi.name} (${psi.upper}, ${psi.lower})`;
+document.getElementById("output24").innerText =
+   `The Greek letter is ${omega.name} (${omega.upper}, ${omega.lower})`;
+```
+
+---
+
+![cdnTest][cdnTest]
+
+[cdnTest]: ./assets/img/testsImgs/greek/cdnTestCodyMathLib.svg
+
+</details>
+
+<details>
+<summary><strong>🧪Click here to see the test result locally via NPM package 📦</strong></summary>
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>CodyMath Local NPM Package Test</title>
+      <script src="https://cdn.tailwindcss.com"></script>
+      <link
+         href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&display=swap"
+         rel="stylesheet"
+      />
+      <style>
+         body {
+            font-family: "Inter", sans-serif;
+         }
+         .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+         }
+      </style>
+   </head>
+   <body
+      class="bg-gray-900 text-white flex items-center justify-center min-h-screen p-4"
+   >
+      <div
+         class="w-full max-w-2xl bg-gray-800 rounded-lg shadow-xl p-8 border border-gray-700"
+      >
+         <div class="logo-container mb-6">
+            <img
+               src="./../img/logoCodyMath.svg"
+               alt="CodyMath Logo"
+               width="300px"
+            />
+         </div>
+         <h1 class="text-2xl font-bold text-center mb-2">
+            Local NPM Package Test
+         </h1>
+         <p class="text-center text-gray-400 mb-6">
+            Testing `codymath` imported from `node_modules`.
+         </p>
+
+         <div class="bg-gray-900 rounded-md p-4 border border-gray-600">
+            <h2 class="font-semibold text-lg mb-2 text-green-400">
+               Test Results:
+            </h2>
+            <pre
+               class="text-sm text-gray-300 whitespace-pre-wrap"
+            ><code id="output">Loading and testing library...</code></pre>
+         </div>
+
+         <div class="mt-6 bg-gray-900 rounded-md p-4 border border-gray-600">
+            <h2 class="font-semibold text-lg mb-4 text-green-400">
+               Greek Alphabet:
+            </h2>
+            <div
+               id="greek-alphabet-display"
+               class="flex flex-wrap gap-x-4 gap-y-2 text-lg text-center"
+            ></div>
+         </div>
+      </div>
+
+      <script type="module" src="main.js"></script>
+   </body>
+</html>
+```
+
+---
+
+```js
+import { greekAlphabet } from "codymath";
+
+const outputElement = document.getElementById("output");
+let results = [];
+
+try {
+   if (greekAlphabet && typeof greekAlphabet === "object") {
+      results.push("✅ SUCCESS: Module `greekAlphabet` loaded.");
+   } else {
+      throw new Error("Module `greekAlphabet` is not an object.");
+   }
+
+   const letterCount = Object.keys(greekAlphabet).length;
+   if (letterCount === 24) {
+      results.push(`✅ SUCCESS: All 24 letters found.`);
+   } else {
+      throw new Error(`FAILURE: Expected 24 letters, found ${letterCount}.`);
+   }
+
+   const pi = greekAlphabet.pi;
+   if (pi && pi.name === "Pi" && pi.lower === "π") {
+      results.push("✅ SUCCESS: Object `pi` is correct.");
+   } else {
+      results.push("❌ FAILURE: Object `pi` is incorrect!");
+   }
+
+   const omega = greekAlphabet.omega;
+   results.push("");
+   results.push("--- Usage Example ---");
+   results.push(`Using Omega: ${omega.name} -> ${omega.upper} ${omega.lower}`);
+
+   outputElement.textContent = results.join("\n");
+   outputElement.style.color = "#6EE7B7";
+
+   const alphabetContainer = document.getElementById("greek-alphabet-display");
+   if (alphabetContainer) {
+      const alphabetHTML = Object.values(greekAlphabet)
+         .map((letter) => {
+            return `<span class="w-20 flex items-center justify-center p-2 bg-gray-700 rounded-md" title="${letter.name}">${letter.upper} ${letter.lower}</span>`;
+         })
+         .join("");
+
+      alphabetContainer.innerHTML = alphabetHTML;
+   }
+} catch (error) {
+   results.push(`❌ CRITICAL ERROR: Could not run the tests.`);
+   results.push(error.message);
+   outputElement.textContent = results.join("\n");
+   outputElement.style.color = "#F87171";
+}
+```
+
+---
+
+![cdnTest][packageTest]
+
+[packageTest]: ./assets/img/testsImgs/greek/localNpmTestCodyMathLib.svg
+
+</details>
+
+---
 
 ---
 
